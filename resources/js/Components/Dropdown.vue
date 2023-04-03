@@ -16,6 +16,13 @@ const props = defineProps({
     },
 });
 
+const ALIGN_CLASSES = {
+    left: 'origin-top-left left-0',
+    right: 'origin-top-right right-0'
+};
+
+const ALIGN_CLASSES_DEFAULT = 'origin-top';
+
 const closeOnEscape = (e) => {
     if (open.value && e.key === 'Escape') {
         open.value = false;
@@ -32,13 +39,7 @@ const widthClass = computed(() => {
 });
 
 const alignmentClasses = computed(() => {
-    if (props.align === 'left') {
-        return 'origin-top-left left-0';
-    } else if (props.align === 'right') {
-        return 'origin-top-right right-0';
-    } else {
-        return 'origin-top';
-    }
+    return ALIGN_CLASSES[props.align] | ALIGN_CLASSES_DEFAULT
 });
 
 const open = ref(false);
