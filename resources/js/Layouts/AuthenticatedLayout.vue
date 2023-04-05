@@ -188,7 +188,7 @@ const notification = computed(() => usePage().props.flash.notification ? usePage
 
             <!-- Page Content -->
             <main>
-                <div v-if="notification">{{ notification }}</div>
+                <div v-if="notification" :class="notification.status == 200 ? 'alert success' : 'alert danger'">{{ notification.message }}</div>
                 <slot />
             </main>
         </div>

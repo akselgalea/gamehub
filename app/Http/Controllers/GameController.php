@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GameRequest;
 use App\Models\Category;
 use App\Models\Game;
 use Illuminate\Http\Request;
@@ -17,15 +18,16 @@ class GameController extends Controller
     }
 
     public function index() {
-        return Inertia::render('Admin/Games/Index');
+        return Inertia::render('Admin/Games/Index', ['games' => Game::all()]);
     }
 
     public function create() {
         return Inertia::render('Admin/Games/Create', ['categories' => Category::all()]);
     }
 
-    public function store(Request $request) {
-        return redirect()->route('games.create')->with('notification', 'sucess');
+    public function store(GameRequest $request) {
+        $res = $this->game->store($request);
+        return redirect()->route('games.create')->with('notification', $res);
     }
 
     public function edit($id) {

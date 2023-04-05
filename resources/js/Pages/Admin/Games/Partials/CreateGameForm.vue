@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 
 const user = usePage().props.auth.user;
 
@@ -22,6 +22,14 @@ const form = useForm({
     category_id: null,
     user_id: user.id,
 });
+
+const sendForm = () => {
+    form.post(
+        route('games.create'), {
+            onSuccess: () => form.reset()
+        }
+    )
+}
 </script>
 
 <template>
@@ -35,7 +43,7 @@ const form = useForm({
             </p>
         </header>
 
-        <form @submit.prevent="form.post(route('games.create'))" class="mt-7">
+        <form @submit.prevent="sendForm()" class="mt-7">
             <div>
                 <InputLabel for="name" value="Nombre"/>
                 
@@ -69,6 +77,7 @@ const form = useForm({
                     id="description"
                     class="mt-1 block w-full"
                     v-model="form.description"
+                    rows="4"
                 />
 
                 <InputError class="mt-2" :message="form.errors.description" />
