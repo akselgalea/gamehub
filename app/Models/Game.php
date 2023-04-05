@@ -39,4 +39,15 @@ class Game extends Model
             return ['status' => 500, 'message' => $e->getMessage()];
         }
     }
+
+    public function edit($req) {
+        $validated = $req->validated();
+
+        try {
+            $this->update($validated);
+            return ['status' => 200, 'message' => 'Juego actualizado con exito'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
 }

@@ -1,6 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
     games: {
@@ -8,8 +10,6 @@ const props = defineProps({
         required: true
     }
 })
-
-console.log(props.games);
 </script>
 
 <template>
@@ -27,7 +27,11 @@ console.log(props.games);
                 </header>
 
                 <div v-for="(game, index) in games" :key="index">
-                    {{ game.name }}
+                    <div>{{ game.name }}</div>
+
+                    <Link :href="route('games.edit', {id: game.id})">
+                        <PrimaryButton>Editar</PrimaryButton>
+                    </Link>
                 </div>
             </div>
         </div>

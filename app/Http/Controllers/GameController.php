@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GameRequest;
+use App\Http\Requests\GameCreateRequest;
+use App\Http\Requests\GameUpdateRequest;
 use App\Models\Category;
 use App\Models\Game;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class GameController extends Controller
 {
@@ -25,17 +24,18 @@ class GameController extends Controller
         return Inertia::render('Admin/Games/Create', ['categories' => Category::all()]);
     }
 
-    public function store(GameRequest $request) {
+    public function store(GameCreateRequest $request) {
         $res = $this->game->store($request);
         return redirect()->route('games.create')->with('notification', $res);
     }
 
     public function edit($id) {
-        return Inertia::render('Admin/Games/Edit', ['game' => Game::find($id)]);
+        return Inertia::render('Admin/Games/Edit', ['game' => Game::find($id), 'categories' => Category::all()]);
     }
 
-    public function update($id, Request $request) {
-        return redirect()->route('games.edit', $id);
+    public function update($id, GameUpdateRequest $request) {
+        $res = $this->game->find($id)->edit($request);
+        return redirect()->route('games.edit', $id)->with('notification', $res);
     }
 
     public function destroy($id) {
