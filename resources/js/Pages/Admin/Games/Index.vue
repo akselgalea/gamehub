@@ -24,6 +24,8 @@ const props = defineProps({
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 text-white">
                 <header>
                     <h2>Todos los juegos</h2>
+
+                    <p class="mt-3" v-if="games.length == 0">No se encontraron juegos.</p>
                 </header>
 
                 <div v-for="(game, index) in games" :key="index">
