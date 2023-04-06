@@ -1,19 +1,27 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import { Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
-    games: {
-        type: Array,
+    game: {
+        type: Object,
         required: true
     }
 })
+
+const setFullscreen = () => {
+    const gameIFrame = document.getElementById('game');
+
+    gameIFrame.requestFullscreen();
+}
+
+console.log(`${props.game.file}/index.html`)
 </script>
 
 <template>
-    <Head title="Todos los juegos" />
+    <Head :title="game.name" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -23,19 +31,13 @@ const props = defineProps({
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 text-white">
                 <header>
-                    <h2>Todos los juegos</h2>
+                    <h2>{{game.name}}</h2>
                 </header>
 
-                <div v-for="(game, index) in games" :key="index">
-                    <div>{{ game.name }}</div>
-
-                    <Link :href="route('games.play', {id: game.id})">
-                        <PrimaryButton>Jugar</PrimaryButton>
-                    </Link>
-                    <Link :href="route('games.edit', {id: game.id})">
-                        <PrimaryButton>Editar</PrimaryButton>
-                    </Link>
+                <div class="max-w-7xl h-full mx-auto sm:px-6 lg:px-8 space-y-6">
+                    <iframe id="game" :src="game.file + '/index.html'" class="w-full" height="600"></iframe>
                 </div>
+                <PrimaryButton @click="setFullscreen">Fullscreen</PrimaryButton>
             </div>
         </div>
     </AuthenticatedLayout>

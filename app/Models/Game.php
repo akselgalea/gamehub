@@ -44,7 +44,7 @@ class Game extends Model implements HasMedia
             $zipper = new Madzipper;
             $slug = Str::of($game->name)->slug('-');
             $link = "/uploads/games/$slug";
-            $zipper->make($pathzip)->folder('html5game')->extractTo(base_path() . $link);
+            $zipper->make($pathzip)->folder('html5game')->extractTo(base_path() . "/public/$link");
             $zipper->close();
             
             $game->update(['file' => $link]);

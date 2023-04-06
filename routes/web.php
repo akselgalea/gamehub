@@ -40,7 +40,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/new', [GameController::class, 'store'])->name('games.store');
         Route::get('/{id}/edit', [GameController::class, 'edit'])->name('games.edit');
         Route::post('{id}/edit', [GameController::class, 'update'])->name('games.update');
-        Route::delete('/{id}/delete', [GameController::class, 'destroy'])->name('games.destroy');
+        Route::delete('/{id}/delete', [GameController::class, 'destroy'])->name('games.destroy');  
+        Route::get('/{id}/play', [GameController::class, 'play'])->name('games.play');
     });
 });
 

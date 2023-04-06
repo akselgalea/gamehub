@@ -41,4 +41,8 @@ class GameController extends Controller
     public function destroy($id) {
         return to_route('games.index');
     }
+
+    public function play($id) {
+        return Inertia::render('Games/Play', ['game' => Game::find($id)]);
+    }
 }
