@@ -22,21 +22,30 @@ const props = defineProps({
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 text-white">
-                <header>
-                    <h2>Todos los juegos</h2>
+                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                    <header>
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Todos los juegos</h2>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">En este apartado se puede ver el listado de todos los juegos subidos a la plataforma.</p>
+                    </header>
 
-                    <p class="mt-3" v-if="games.length == 0">No se encontraron juegos.</p>
-                </header>
-
-                <div v-for="(game, index) in games" :key="index">
-                    <div>{{ game.name }}</div>
-
-                    <Link :href="route('games.play', {id: game.id})">
-                        <PrimaryButton>Jugar</PrimaryButton>
-                    </Link>
-                    <Link :href="route('games.edit', {id: game.id})">
-                        <PrimaryButton>Editar</PrimaryButton>
-                    </Link>
+                    <section class="mt-5">
+                        <p class="text-sm text-gray-600 dark:text-gray-400" v-if="games.length == 0">No se encontraron juegos.</p>
+                        
+                        <div class="flex flex-wrap gap-10 w-full">
+                            <div v-for="(game, index) in games" :key="index">
+                                <div class="first-letter:uppercase">{{ game.name }}</div>
+                                
+                                <div class="flex gap-2">
+                                    <Link :href="route('games.play', {id: game.id})">
+                                        <PrimaryButton>Jugar</PrimaryButton>
+                                    </Link>
+                                    <Link :href="route('games.edit', {id: game.id})">
+                                        <PrimaryButton>Editar</PrimaryButton>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

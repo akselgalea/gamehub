@@ -25,6 +25,10 @@ class Game extends Model implements HasMedia
         'user_id'
     ];
 
+    protected $append = [
+        'slug'
+    ];
+
     public function category(): BelongsTo {
         return $this->belongsTo(Category::class);
     }
@@ -33,21 +37,43 @@ class Game extends Model implements HasMedia
         return $this->belongsTo(User::class);
     }
 
+    public function getSlugAttribute() {
+        return Str::of($this->name)->slug('-');
+    }
+
+    /* 
+        * Guarda los archivos del juego
+        * Necesita ser llamado desde una request tipo GameCreateRequest o GameUpdateRequest que contenga el campo 'file'
+    */
+    public function storeGameFiles($isUpdate = false) {
+        try {
+            $this->addMediaFromRequest('file')->toMediaCollection('games');
+            $pathzip = $this->getMedia('games')->first()->getPath();
+    
+            $zipper = new Madzipper;
+            $link = "/uploads/games/$this->slug";
+            $zipper->make($pathzip)->folder('html5game')->extractTo(base_path() . "/public/$link");
+            $zipper->close();
+            
+            $this->update(['file' => $link]);
+            
+            return ['success' => true, 'message' => 'Archivos subidos con exito'];
+        } catch (Exception $e) {
+            if(!$isUpdate) $this->delete();
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
     public function store($req) {
         $validated = $req->validated();
 
         try {
             $game = Game::create($validated);
-            $game->addMediaFromRequest('file')->toMediaCollection('games');
-            $pathzip = $game->getMedia('games')->first()->getPath();
+            $store = $game->storeGameFiles();
 
-            $zipper = new Madzipper;
-            $slug = Str::of($game->name)->slug('-');
-            $link = "/uploads/games/$slug";
-            $zipper->make($pathzip)->folder('html5game')->extractTo(base_path() . "/public/$link");
-            $zipper->close();
-            
-            $game->update(['file' => $link]);
+            // Si hay un error al subir los archivos se manda un mensaje de error
+            if(!$store['success'])
+                throw new Exception($store['message']);
             
             return ['status' => 200, 'message' => 'Juego creado con exito'];
         } catch (Exception $e) {

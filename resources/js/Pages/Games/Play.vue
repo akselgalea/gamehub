@@ -16,8 +16,6 @@ const setFullscreen = () => {
 
     gameIFrame.requestFullscreen();
 }
-
-console.log(`${props.game.file}/index.html`)
 </script>
 
 <template>
@@ -34,7 +32,7 @@ console.log(`${props.game.file}/index.html`)
                     <h2>{{game.name}}</h2>
                 </header>
 
-                <div class="max-w-7xl h-full mx-auto sm:px-6 lg:px-8 space-y-6">
+                <div class="max-w-7xl h-full mx-auto">
                     <iframe id="game" :src="game.file + '/index.html'" class="w-full" height="600"></iframe>
                 </div>
                 <PrimaryButton @click="setFullscreen">Fullscreen</PrimaryButton>

@@ -25,7 +25,10 @@ const form = useForm({
 const sendForm = () => {
     form.post(
         route('games.create'), {
-            onSuccess: () => form.reset()
+            onSuccess: () => {
+                form.reset();
+                form.file = null;
+            }
         }
     )
 }
