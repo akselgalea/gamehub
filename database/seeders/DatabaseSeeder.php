@@ -20,19 +20,19 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        DB::table('category')->insert([
+        DB::table('categories')->insert([
             'name' => 'matematicas'
         ]);
 
-        DB::table('category')->insert([
+        DB::table('categories')->insert([
             'name' => 'lenguaje'
         ]);
 
-        DB::table('category')->insert([
+        DB::table('categories')->insert([
             'name' => 'ingles'
         ]);
 
-        DB::table('category')->insert([
+        DB::table('categories')->insert([
             'name' => 'otros'
         ]);
     }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, GameController};
+use App\Http\Controllers\{ProfileController, GameController, ParameterController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +42,12 @@ Route::middleware('auth')->group(function () {
         Route::post('{id}/edit', [GameController::class, 'update'])->name('games.update');
         Route::delete('/{id}/delete', [GameController::class, 'destroy'])->name('games.destroy');  
         Route::get('/{id}/play', [GameController::class, 'play'])->name('games.play');
+    });
+
+    Route::prefix('games/parameters')->group(function () {    
+        Route::post('/new', [ParameterController::class, 'store'])->name('games.params.store');
+        Route::put('{id}/edit', [ParameterController::class, 'update'])->name('games.params.update');
+        Route::delete('/{param}/delete', [ParameterController::class, 'delete'])->name('games.params.destroy');
     });
 });
 

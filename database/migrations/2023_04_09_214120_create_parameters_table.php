@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('games', function (Blueprint $table) {
+        Schema::create('parameters', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->string('file');
-            $table->bigInteger('category_id')->unsigned();
-            $table->foreignId('user_id');
-            $table->foreign('category_id')->references('id')->on('categories');
+            $table->enum('type', ['int', 'float', 'string', 'boolean']);
+            $table->foreignId('game_id');
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('games');
+        Schema::dropIfExists('parameters');
     }
 };

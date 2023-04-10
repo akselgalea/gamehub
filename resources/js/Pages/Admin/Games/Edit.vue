@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import UpdateGameForm from './Partials/UpdateGameForm.vue';
+import GameParameters from './Partials/GameParameters.vue';
 
 defineProps({
     game: {
@@ -27,6 +28,14 @@ defineProps({
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                     <UpdateGameForm :game="game" :categories="categories"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="pb-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                    <GameParameters :game="game.id" :parameters="game.parameters" />
                 </div>
             </div>
         </div>

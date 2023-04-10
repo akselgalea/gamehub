@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class GameCreateRequest extends FormRequest
+class ParameterCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,12 +22,18 @@ class GameCreateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $types = [
+            'int',
+            'float',
+            'string',
+            'boolean'
+        ];
+
         return [
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'max:500'],
-            'file' => ['required', 'mimes:zip'],
-            'category_id' => ['required', 'integer', 'exists:categories,id'],
-            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'type' => ['required', Rule::in($types)],
+            'description' => ['required', 'max:500'],
+            'game_id' => ['required', 'exists:games,id'],
         ];
     }
 
@@ -36,7 +43,8 @@ class GameCreateRequest extends FormRequest
             'required' => 'El campo :attribute es obligatorio',
             'integer' => 'El campo :attribute debe tener un valor numerico',
             'max:255' => 'El campo :attribute no debe superar los 255 caracteres',
-            'file.mimes' => 'Solo se aceptan archivos .zip'
+            'max:500' => 'El campo :attribute no debe superar los 500 caracteres',
+            'exists' => 'Este :attribute no existe'
         ];
     }
 
@@ -46,7 +54,7 @@ class GameCreateRequest extends FormRequest
             'name' => 'nombre',
             'description' => 'descripcion',
             'file' => 'archivo',
-            'category_id' => 'categoria'
+            'game_id' => 'juego'
         ];
     }
 }

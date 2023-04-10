@@ -30,7 +30,8 @@ class GameController extends Controller
     }
 
     public function edit($id) {
-        return Inertia::render('Admin/Games/Edit', ['game' => Game::find($id), 'categories' => Category::all()]);
+        $game = $this->game->with('parameters')->find($id);
+        return Inertia::render('Admin/Games/Edit', ['game' => $game, 'categories' => Category::all()]);
     }
 
     public function update($id, GameUpdateRequest $request) {

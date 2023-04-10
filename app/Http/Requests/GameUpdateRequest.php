@@ -24,7 +24,7 @@ class GameUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'max:500'],
-            'category_id' => ['required', 'integer'],
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
         ];
     }
 

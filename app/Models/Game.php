@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Madnest\Madzipper\Madzipper;
 use Spatie\MediaLibrary\HasMedia;
@@ -30,11 +31,15 @@ class Game extends Model implements HasMedia
     ];
 
     public function category(): BelongsTo {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
     public function creator(): BelongsTo {
         return $this->belongsTo(User::class);
+    }
+
+    public function parameters(): HasMany {
+        return $this->hasMany(Parameter::class);    
     }
 
     public function getSlugAttribute() {
