@@ -5,6 +5,7 @@ import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
+import Checkbox from '@/Components/Checkbox.vue';
 
 const user = usePage().props.auth.user;
 
@@ -16,6 +17,7 @@ defineProps({
 
 const form = useForm({
     name: '',
+    gm2game: false,
     description: '',
     file: null,
     category_id: null,
@@ -46,7 +48,23 @@ const sendForm = () => {
         </header>
 
         <form @submit.prevent="sendForm()" class="mt-7">
-            <div>
+            <div class="w-40">
+                <InputLabel for="gm2game">
+                    <div class="flex gap-2 items-center">
+                        <Checkbox 
+                            id="gm2game"
+                            v-model="form.gm2game"
+                            :checked="false"
+                        />
+    
+                        Es de Game Maker?
+                    </div>
+                </InputLabel>
+                
+
+                <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+            <div class="mt-5">
                 <InputLabel for="name" value="Nombre"/>
                 
                 <TextInput 

@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->string('file');
+            $table->boolean('gm2game')->default(false);
             $table->bigInteger('category_id')->unsigned();
+            $table->json('extra')->nullable();
             $table->foreignId('user_id');
             $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();
