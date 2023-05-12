@@ -54,9 +54,10 @@ class Game extends Model implements HasMedia
         return Str::of($this->name)->slug('-');
     }
 
-    /* 
-        * Guarda los archivos del juego
-        * Necesita ser llamado desde una request tipo GameCreateRequest o GameUpdateRequest que contenga el campo 'file'
+    /** 
+     * Guarda los archivos del juego
+     * Necesita ser llamado desde una request tipo GameCreateRequest o GameUpdateRequest que contenga el campo 'file'
+     * retorna un mensaje de si la subida fue exitosa 
     */
     public function storeGameFiles($isUpdate = false) {
         try {
@@ -70,11 +71,13 @@ class Game extends Model implements HasMedia
             // Borra los archivos, si existe el directorio
             // if (Storage::exists($path2extract)) (new Filesystem)->cleanDirectory($path2extract);
             $zipper->make($pathzip)->folder('html5game')->extractTo($path2extract);
-            
+        
             if($this->gm2game) {
                 // Recupera archivo html5game para obtener nombre de archivo .js de GameMaker
                 $dothtml = $zipper->make($pathzip)->getFileContent('index.html');
-                preg_match_all('/html5game\/([^*]*).js/', $dothtml, $matches);
+                $dothtml = Str::replaceFirst('src="html5game/', 'src="', $dothtml);
+                file_put_contents($path2extract . '/index.html', $dothtml);
+                preg_match_all('/\/([^*]*).js/', $dothtml, $matches);
                 $gamedata = ["type" => 'GM2', "filename" => $matches[1][0]];
                 $this->extra = json_encode($gamedata);
             }
@@ -83,21 +86,22 @@ class Game extends Model implements HasMedia
             $this->file = $link;
             $this->save();
             
-            return ['success' => true, 'message' => 'Archivos subidos con exito'];
+            return ['status' => 200, 'message' => 'Archivos subidos con exito'];
         } catch (Exception $e) {
             if(!$isUpdate) $this->delete();
-            return ['success' => false, 'message' => $e->getMessage()];
+            return ['status' => 500, 'message' => $e->getMessage()];
         }
     }
 
     public function store($req) {
+        
         $validated = $req->validated();
         try {
             $game = Game::create($validated);
-            $store = $game->storeGameFiles($req->gm2game);
+            $store = $game->storeGameFiles();
 
             // Si hay un error al subir los archivos se manda un mensaje de error
-            if(!$store['success'])
+            if($store['status'] != 200) 
                 throw new Exception($store['message']);
             
             return ['status' => 200, 'message' => 'Juego creado con exito'];
@@ -115,5 +119,16 @@ class Game extends Model implements HasMedia
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }
+    }
+
+    public function play($id) {
+        $game = Game::find($id);
+        /* if($game->gm2game) {
+            $extra = json_decode($game->extra, true);
+            $location = $game->file . '/' . $extra['filename'] . ".js";
+        } else */
+        $location = $game->file . '/index.html';
+
+        return ['game' => $game, 'location' => $location];
     }
 }

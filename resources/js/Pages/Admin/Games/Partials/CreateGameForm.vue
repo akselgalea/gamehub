@@ -54,7 +54,7 @@ const sendForm = () => {
                         <Checkbox 
                             id="gm2game"
                             v-model="form.gm2game"
-                            :checked="false"
+                            :checked="form.gm2game"
                         />
     
                         Es de Game Maker?

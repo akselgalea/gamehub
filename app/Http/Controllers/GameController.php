@@ -44,6 +44,7 @@ class GameController extends Controller
     }
 
     public function play($id) {
-        return Inertia::render('Games/Play', ['game' => Game::find($id)]);
+        $res = $this->game->play($id);
+        return Inertia::render('Games/Play', ['game' => $res['game'], 'location' => $res['location']]);
     }
 }
