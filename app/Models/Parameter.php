@@ -28,7 +28,7 @@ class Parameter extends Model
 
         try {
             Parameter::create($validated);
-            return ['status' => 200, 'message' => 'Parametro creado con exito'];
+            return ['status' => 200, 'message' => 'Parametro creado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }
@@ -39,7 +39,7 @@ class Parameter extends Model
 
         try {
             $this->update($validated);
-            return ['status' => 200, 'message' => 'Parametro actualizado con exito'];
+            return ['status' => 200, 'message' => 'Parametro actualizado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }
@@ -49,7 +49,7 @@ class Parameter extends Model
         try {
             $param = Parameter::find($id);
             $param->delete();
-            return ['status' => 200, 'message' => 'Parametro eliminado con exito', 'game_id' => $param->game_id];
+            return ['status' => 200, 'message' => 'Parametro eliminado con éxito!', 'game_id' => $param->game_id];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }

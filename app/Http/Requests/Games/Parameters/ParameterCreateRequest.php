@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Games\Parameters;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class GameUpdateRequest extends FormRequest
+class ParameterCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,10 +22,18 @@ class GameUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $types = [
+            'int',
+            'float',
+            'string',
+            'boolean'
+        ];
+
         return [
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'max:500'],
-            'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'type' => ['required', Rule::in($types)],
+            'description' => ['required', 'max:500'],
+            'game_id' => ['required', 'exists:games,id'],
         ];
     }
 
@@ -34,6 +43,8 @@ class GameUpdateRequest extends FormRequest
             'required' => 'El campo :attribute es obligatorio',
             'integer' => 'El campo :attribute debe tener un valor numerico',
             'max:255' => 'El campo :attribute no debe superar los 255 caracteres',
+            'max:500' => 'El campo :attribute no debe superar los 500 caracteres',
+            'exists' => 'Este :attribute no existe'
         ];
     }
 
@@ -42,7 +53,8 @@ class GameUpdateRequest extends FormRequest
         return [
             'name' => 'nombre',
             'description' => 'descripcion',
-            'category_id' => 'categoria'
+            'file' => 'archivo',
+            'game_id' => 'juego'
         ];
     }
 }

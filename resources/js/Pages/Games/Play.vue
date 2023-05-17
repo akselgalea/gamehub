@@ -1,7 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import { onBeforeMount } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
@@ -33,14 +32,14 @@ const setFullscreen = () => {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 text-white">
                 <header>
-                    <h2 class="first-letter:uppercase">{{game.name}}</h2>
+                    <h2 class="first-letter:uppercase text-gray-600 dark:text-gray-400">{{game.name}}</h2>
                 </header>
 
                 <div class="max-w-7xl h-full mx-auto">
                     <iframe id="game" class="w-full" height="600" :src="location"></iframe>
                 </div>
 
-                <PrimaryButton @click="setFullscreen">Fullscreen</PrimaryButton>
+                <PrimaryButton @click="setFullscreen">Pantalla completa</PrimaryButton>
             </div>
         </div>
     </AuthenticatedLayout>

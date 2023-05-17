@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\{ParameterCreateRequest, ParameterUpdateRequest};
+use App\Http\Requests\Games\Parameters\{ParameterCreateRequest, ParameterUpdateRequest};
 use App\Models\Parameter;
 class ParameterController extends Controller
 {

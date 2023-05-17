@@ -15,10 +15,15 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\User::factory()->create([
+            'name' => 'admin',
+            'email' => 'admin@pucv.cl',
+        ]);
+        
+        \App\Models\User::factory()->create([
+            'name' => 'tester',
+            'email' => 'tester@pucv.cl',
+        ]);
 
         DB::table('categories')->insert([
             'name' => 'matematicas'

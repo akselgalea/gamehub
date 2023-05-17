@@ -57,10 +57,14 @@ const closeModal = () => {
 </script>
 
 <template>
-    <PrimaryButton @click="showModal">Agregar parametro</PrimaryButton>
+    <PrimaryButton @click="showModal">Agregar parámetro</PrimaryButton>
 
     <Modal :show="showingModal" @close="closeModal">
         <div class="p-6">
+            <h2 class="text-lg mb-3 font-medium text-gray-900 dark:text-gray-100">
+                Agregar parámetro
+            </h2>
+
             <div>
                 <InputLabel for="name" value="Nombre"/>
                 

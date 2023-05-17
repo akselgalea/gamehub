@@ -86,7 +86,7 @@ class Game extends Model implements HasMedia
             $this->file = $link;
             $this->save();
             
-            return ['status' => 200, 'message' => 'Archivos subidos con exito'];
+            return ['status' => 200, 'message' => 'Archivos subidos con éxito!'];
         } catch (Exception $e) {
             if(!$isUpdate) $this->delete();
             return ['status' => 500, 'message' => $e->getMessage()];
@@ -104,7 +104,7 @@ class Game extends Model implements HasMedia
             if($store['status'] != 200) 
                 throw new Exception($store['message']);
             
-            return ['status' => 200, 'message' => 'Juego creado con exito'];
+            return ['status' => 200, 'message' => 'Juego creado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }
@@ -115,9 +115,19 @@ class Game extends Model implements HasMedia
 
         try {
             $this->update($validated);
-            return ['status' => 200, 'message' => 'Juego actualizado con exito'];
+            return ['status' => 200, 'message' => 'Juego actualizado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function erase($req) {
+        try {
+            Game::find($req->id)->delete();
+            
+            return ['status' => 200, 'message' => 'Juego eliminado con éxito!'];
+        } catch(Exception $e) {
+            return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar el juego.'];
         }
     }
 

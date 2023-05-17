@@ -11,15 +11,15 @@ const props = defineProps({
 });
 
 const statusClasses = {
-    200: 'success',
-    404: 'not-found',
-    500: 'error',
-    400: 'not-permitted'
+    200: 'bg-green-600',
+    404: 'bg-blue-400',
+    500: 'bg-red-600',
+    400: 'bg-orange-600'
 };
 </script>
 
 <template>
-    <div :class="statusClasses[status]">
-        <div>{{ message }}</div>
+    <div :class="statusClasses[status] + ' max-w-6xl mx-auto py-6 px-4 sm:px-6 lg:px-8 mt-10 rounded-md h-10 flex items-center'">
+        <div class="text-md font-medium text-white">{{ message }}</div>
     </div>
 </template>

@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GameCreateRequest;
-use App\Http\Requests\GameUpdateRequest;
+use App\Http\Requests\Games\{GameCreateRequest, GameUpdateRequest, GameDeleteRequest};
 use App\Models\Category;
 use App\Models\Game;
 use Inertia\Inertia;
@@ -39,8 +38,9 @@ class GameController extends Controller
         return redirect()->route('games.edit', $id)->with('notification', $res);
     }
 
-    public function destroy($id) {
-        return to_route('games.index');
+    public function destroy(GameDeleteRequest $request) {
+        $res = $this->game->erase($request);
+        return redirect()->route('games.index')->with('notification', $res);
     }
 
     public function play($id) {

@@ -1,5 +1,5 @@
 <script setup>
-import NewParamForm from './Parameters/NewParamForm.vue';
+import NewParamForm from '../Parameters/NewParamForm.vue';
 
 const props = defineProps({
     game: {
@@ -18,7 +18,6 @@ const types = {
     'string': 'Cadena de caracteres',
     'boolean': 'Verdadero o falso'
 }
-
 </script>
 
 <template>
