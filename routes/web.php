@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\{ProfileController, GameController, ParameterController};
+use App\Models\{AdministratorPanel};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,6 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::prefix('controlpanel')->group(function () {
+        Route::get('/users', [AdministratorPanel::class, 'users_panel'])->name('users_panel.index');
+    });
 
     Route::prefix('games')->group(function () {
         Route::get('/', [GameController::class, 'index'])->name('games.index');
