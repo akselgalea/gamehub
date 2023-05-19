@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Madnest\Madzipper\Madzipper;
@@ -123,11 +124,26 @@ class Game extends Model implements HasMedia
 
     public function erase($req) {
         try {
-            Game::find($req->id)->delete();
-            
+            $game = Game::findOrFail($req->id);
+            $gameFolder = public_path($game->file);
+
+            if ($game->deleteFolder($gameFolder))
+                $game->delete();
+            else
+                throw new Exception('Error al eliminar los archivos del juego.');
+
             return ['status' => 200, 'message' => 'Juego eliminado con éxito!'];
         } catch(Exception $e) {
             return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar el juego.'];
+        }
+    }
+
+    public function deleteFolder($link) {
+        try {
+            File::deleteDirectory($link);
+            return true;
+        } catch (Exception $e) {
+            return false;
         }
     }
 

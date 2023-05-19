@@ -44,8 +44,6 @@ const createParam = () => {
     form.post(route('games.params.store'), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
-        onError: () => nameInput.value.focus(),
-        onFinish: () => form.reset(),
     });
 };
 
@@ -85,7 +83,7 @@ const closeModal = () => {
                 <InputLabel for="type" value="Tipo"/>
 
                 <select id="type" v-model="form.type" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option :value="!form.type ? form.type : ''" hidden :selected="!form.type">Elige una opcion</option>
+                    <option :value="!form.type ? form.type : ''" hidden :selected="!form.type">Elige una opción</option>
                     <option v-for="[type, text] in Object.entries(types)" :value="type">{{ text }}</option>
                 </select>
 
