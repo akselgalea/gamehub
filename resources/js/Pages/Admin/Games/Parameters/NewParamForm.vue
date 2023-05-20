@@ -18,8 +18,8 @@ const props = defineProps({
 });
 
 const types = {
-    'int': 'Numero',
-    'float': 'Numero flotante',
+    'int': 'Número',
+    'float': 'Número flotante',
     'string': 'Cadena de caracteres',
     'boolean': 'Verdadero o falso'
 }

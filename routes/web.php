@@ -44,16 +44,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/new', [GameController::class, 'create'])->name('games.create');
         Route::post('/new', [GameController::class, 'store'])->name('games.store');
         Route::get('/{id}', [GameController::class, 'edit'])->name('games.edit');
-        Route::post('{id}', [GameController::class, 'update'])->name('games.update');
+        Route::patch('{id}', [GameController::class, 'update'])->name('games.update');
         Route::delete('/{id}', [GameController::class, 'destroy'])->name('games.destroy');  
         Route::get('/{id}/play', [GameController::class, 'play'])->name('games.play');
+        
+        Route::prefix('parameters')->group(function () {
+            Route::post('/new', [ParameterController::class, 'store'])->name('games.params.store');
+            Route::patch('{id}', [ParameterController::class, 'update'])->name('games.params.update');
+            Route::delete('/{id}', [ParameterController::class, 'destroy'])->name('games.params.destroy');
+        });
     });
 
-    Route::prefix('games/parameters')->group(function () {    
-        Route::post('/new', [ParameterController::class, 'store'])->name('games.params.store');
-        Route::put('{id}', [ParameterController::class, 'update'])->name('games.params.update');
-        Route::delete('/{id}', [ParameterController::class, 'delete'])->name('games.params.destroy');
-    });
 });
 
 require __DIR__.'/auth.php';

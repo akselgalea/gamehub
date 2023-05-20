@@ -84,7 +84,7 @@ const sendForm = () => {
 
                 <select id="category" v-model="form.category_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option :value="!form.category_id ? form.category_id : ''" hidden :selected="!form.category_id">Elige una opción</option>
-                    <option v-for="(cat, index) in categories" :key="index" :value="cat.id">{{ cat.name }}</option>
+                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                 </select>
 
                 <InputError class="mt-2" :message="form.errors.category_id" />
@@ -106,7 +106,7 @@ const sendForm = () => {
             <div class="mt-5">
                 <InputLabel for="file" value="Archivo"/>
                 
-                <input type="file" class="text-white" @input="form.file = $event.target.files[0]" required />
+                <input type="file" class="dark:text-white" @input="form.file = $event.target.files[0]" required />
 
                 <InputError class="mt-2" :message="form.errors.file" />
             </div>

@@ -1,7 +1,7 @@
 <script setup>
 import NewParamForm from '../Parameters/NewParamForm.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
+import EditParamForm from '../Parameters/EditParamForm.vue';
+import DeleteParamForm from '../Parameters/DeleteParamForm.vue';
 
 const props = defineProps({
     game: {
@@ -15,8 +15,8 @@ const props = defineProps({
 })
 
 const types = {
-    'int': 'Numero',
-    'float': 'Numero flotante',
+    'int': 'Número',
+    'float': 'Número flotante',
     'string': 'Cadena de caracteres',
     'boolean': 'Verdadero o falso'
 }
@@ -50,8 +50,8 @@ const types = {
                             <td class="px-3 text-justify">{{ types[param.type] }}</td>
                             <td class="px-3 text-justify">{{ param.description }}</td>
                             <td class="px-3 flex gap-1 justify-center">
-                                <PrimaryButton><i class="fas fa-edit"></i></PrimaryButton>
-                                <DangerButton><i class="fas fa-trash-alt"></i></DangerButton>
+                                <EditParamForm :param="param" :key="param.id" />
+                                <DeleteParamForm :paramId="param.id" :paramName="param.name" :key="param.id" />
                             </td>
                         </tr>
                     </tbody>
@@ -61,14 +61,6 @@ const types = {
 
         <div class="flex items-center gap-4 mt-10">
             <NewParamForm :game="game" />
-        </div>
-
-        <div class="flex items-center cap-4 mt-10">
-            <EditParamForm :game="game" />
-        </div>
-
-        <div class="flex items-center cap-4 mt-10">
-            <DeleteParamForm :game="game.name" />
         </div>
     </section>
 </template>

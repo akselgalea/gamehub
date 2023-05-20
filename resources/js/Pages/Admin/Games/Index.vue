@@ -33,14 +33,14 @@ const props = defineProps({
                         
                         <div class="flex flex-wrap gap-10 w-full">
                             <div v-for="(game, index) in games" :key="index">
-                                <div class="first-letter:uppercase text-gray-600 dark:text-gray-400">{{ game.name }}</div>
+                                <div class="first-letter:uppercase text-xl font-bold text-gray-600 dark:text-gray-400">{{ game.name }}</div>
                                 
                                 <div class="flex gap-2">
                                     <Link :href="route('games.play', {id: game.id})">
                                         <PrimaryButton>Jugar</PrimaryButton>
                                     </Link>
                                     <Link :href="route('games.edit', {id: game.id})">
-                                        <PrimaryButton>Editar</PrimaryButton>
+                                        <PrimaryButton>Gestionar</PrimaryButton>
                                     </Link>
                                 </div>
                             </div>

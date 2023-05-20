@@ -54,7 +54,6 @@ class ParameterCreateRequest extends FormRequest
             'name' => 'nombre',
             'type' => 'tipo',
             'description' => 'descripcion',
-            'file' => 'archivo',
             'game_id' => 'juego'
         ];
     }

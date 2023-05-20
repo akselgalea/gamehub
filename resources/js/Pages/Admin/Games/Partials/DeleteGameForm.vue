@@ -37,8 +37,8 @@ const confirmGameDeletion = () => {
 const deleteGame = () => {
     form.delete(route('games.destroy', props.gameId), {
         preserveScroll: true,
-        // onSuccess: () => closeModal(),
-        onError: () => passwordInput.value.focus(),
+        onSuccess: () => closeModal(),
+        onError: () => confirmingInput.value.focus(),
     });
 };
 

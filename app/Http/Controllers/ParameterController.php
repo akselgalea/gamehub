@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Games\Parameters\{ParameterCreateRequest, ParameterUpdateRequest};
+use App\Http\Requests\Games\Parameters\{ParameterCreateRequest, ParameterUpdateRequest, ParameterDeleteRequest};
 use App\Models\Parameter;
 class ParameterController extends Controller
 {
@@ -17,13 +17,13 @@ class ParameterController extends Controller
         return redirect()->route('games.edit', $request->game_id)->with('notification', $res);
     }
 
-    public function update(ParameterUpdateRequest $request) {
-        $res = $this->param->edit($request);
-        return redirect()->route('games.edit', $request->game_id)->with('notification', $res);
+    public function update($id, ParameterUpdateRequest $request) {
+        $res = $this->param->find($id)->edit($request);
+        return redirect()->back()->with('notification', $res);
     }
 
-    public function destroy($id) {
-        $res = $this->param->erase($id);
-        return redirect()->route('games.edit', $res['game_id'])->with('notification', $res);
+    public function destroy(ParameterDeleteRequest $request) {
+        $res = $this->param->erase($request);
+        return redirect()->back()->with('notification', $res);
     }
 }

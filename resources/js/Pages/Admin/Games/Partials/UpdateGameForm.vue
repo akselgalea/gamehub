@@ -25,7 +25,7 @@ const form = useForm({
 });
 
 const sendForm = () => {
-    form.post(route('games.update', {id: props.game.id}));
+    form.patch(route('games.update', {id: props.game.id}));
 }
 </script>
 

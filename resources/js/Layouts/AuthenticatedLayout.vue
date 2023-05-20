@@ -83,7 +83,7 @@ const notification = computed(() => usePage().props.flash.notification ? usePage
                             </div>
                             
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('users_panel.index')">
+                                <NavLink :href="route('users_panel.index')" :active="route().current('users_panel.index')">
                                     Usuarios
                                 </NavLink>
                             </div>
