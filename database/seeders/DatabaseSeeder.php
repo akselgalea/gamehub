@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'admin',
-            'rol_id' => '1',
+            'rol_id' => '2',
             'email' => 'admin@pucv.cl',
         ]);
         

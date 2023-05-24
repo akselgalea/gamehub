@@ -1,5 +1,7 @@
 <script setup>
 import NewParamForm from '../Parameters/NewParamForm.vue';
+import EditParamForm from '../Parameters/EditParamForm.vue';
+import DeleteParamForm from '../Parameters/DeleteParamForm.vue';
 
 const props = defineProps({
     game: {
@@ -13,8 +15,8 @@ const props = defineProps({
 })
 
 const types = {
-    'int': 'Numero',
-    'float': 'Numero flotante',
+    'int': 'Número',
+    'float': 'Número flotante',
     'string': 'Cadena de caracteres',
     'boolean': 'Verdadero o falso'
 }
@@ -30,18 +32,30 @@ const types = {
             </p>
         </header>
 
-        <div class="mt-5">
+        <div class="mt-5 flex flex-wrap gap-10 w-full">
             <p class="text-sm text-gray-600 dark:text-white" v-if="parameters.length == 0">
                 Este juego aun no posee parametros de lanzamiento.
             </p>
             <template v-else>
-                <div v-for="(param, index) in parameters" :key="index">
-                    <div>
-                        <div>{{ param.name }}</div>
-                        <div>{{ types[param.type] }}</div>
-                        <div>{{ param.description }}</div>
-                    </div>
-                </div>
+                <table class="rounded-sm shadow table-fixed w-full border-collapse">
+                    <thead class="border">
+                        <th>Nombre</th>
+                        <th>Tipo de dato</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(param, index) in parameters" :key="index" class="border">
+                            <td class="px-3 text-justify">{{ param.name }}</td>
+                            <td class="px-3 text-justify">{{ types[param.type] }}</td>
+                            <td class="px-3 text-justify">{{ param.description }}</td>
+                            <td class="px-3 flex gap-1 justify-center">
+                                <EditParamForm :param="param" :key="param.name" />
+                                <DeleteParamForm :paramId="param.id" :paramName="param.name" :key="param.id" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </template>
         </div>
 

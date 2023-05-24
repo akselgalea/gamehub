@@ -25,7 +25,7 @@ const form = useForm({
 });
 
 const sendForm = () => {
-    form.post(route('games.update', {id: props.game.id}));
+    form.patch(route('games.update', {id: props.game.id}));
 }
 </script>
 
@@ -59,7 +59,7 @@ const sendForm = () => {
                 <InputLabel for="category" value="Categoria"/>
 
                 <select id="category" v-model="form.category_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option :value="!form.category_id ? form.category_id : ''" hidden :selected="!form.category_id">Elige una opcion</option>
+                    <option :value="!form.category_id ? form.category_id : ''" hidden :selected="!form.category_id">Elige una opción</option>
                     <option v-for="(cat, index) in categories" :key="index" :value="cat.id">{{ cat.name }}</option>
                 </select>
 

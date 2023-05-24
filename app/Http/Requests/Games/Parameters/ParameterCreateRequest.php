@@ -52,8 +52,8 @@ class ParameterCreateRequest extends FormRequest
     {
         return [
             'name' => 'nombre',
+            'type' => 'tipo',
             'description' => 'descripcion',
-            'file' => 'archivo',
             'game_id' => 'juego'
         ];
     }

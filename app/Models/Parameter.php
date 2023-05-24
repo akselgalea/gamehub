@@ -45,11 +45,10 @@ class Parameter extends Model
         }
     }
 
-    public function erase($id) {
+    public function erase($req) {
         try {
-            $param = Parameter::find($id);
-            $param->delete();
-            return ['status' => 200, 'message' => 'Parametro eliminado con éxito!', 'game_id' => $param->game_id];
+            Parameter::findOrFail($req->id)->delete();
+            return ['status' => 200, 'message' => 'Parametro eliminado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }
