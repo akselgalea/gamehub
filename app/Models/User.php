@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Parental\HasChildren;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasChildren;
 
     /**
      * The attributes that are mass assignable.
@@ -20,9 +21,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'rol_id',
+        'role_id',
         'email',
         'password',
+        'type',
+        'curso_id'
+    ];
+
+    protected $childTypes = [
+        'admin' => Admin::class,
+        'student' => Student::class,
     ];
 
     /**
