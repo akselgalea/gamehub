@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('controlpanel')->group(function () {
-        Route::get('/users', [AdministratorPanel::class, 'users_panel'])->name('users_panel.index');
+        Route::get('/users', [AdministratorPanel::class, 'index_users_panel'])->name('users_panel.index');
     });
 
     Route::prefix('games')->group(function () {

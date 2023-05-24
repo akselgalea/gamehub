@@ -12,11 +12,10 @@ class AdministratorPanel extends Model
 {
     use HasFactory;
 
-    public function users_panel() {
-        // $users = User::all()->toArray();
-        // dd($users);
-        
+    public function index_users_panel() {
+
         return Inertia::render('Admin/Users/Index', ['users' => (User::all()->except(Auth::id()))->toArray()]); //obtiene todos los usuarios registrados en un arreglo, excepto el usuario logueado 
+    
     }
 
 }
