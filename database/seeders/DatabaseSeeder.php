@@ -29,13 +29,13 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'admin',
-            'rol_id' => '2',
+            'role_id' => '2',
             'email' => 'admin@pucv.cl',
         ]);
         
         \App\Models\User::factory()->create([
             'name' => 'tester',
-            'rol_id' => '1',
+            'role_id' => '1',
             'email' => 'tester@pucv.cl',
         ]);
 
