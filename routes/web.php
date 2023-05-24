@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, GameController, ParameterController};
+use App\Http\Controllers\{ProfileController, GameController, ParameterController, SchoolController};
 use App\Models\{AdministratorPanel};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +53,16 @@ Route::middleware('auth')->group(function () {
             Route::patch('{id}', [ParameterController::class, 'update'])->name('games.params.update');
             Route::delete('/{id}', [ParameterController::class, 'destroy'])->name('games.params.destroy');
         });
+    });
+
+
+    Route::prefix('schools')->group(function () {
+        Route::get('/', [SchoolController::class, 'index'])->name('schools.index');
+        Route::get('/new', [SchoolController::class, 'create'])->name('schools.create');
+        Route::post('/new', [SchoolController::class, 'store'])->name('schools.store');
+        Route::get('/{id}', [SchoolController::class, 'edit'])->name('schools.edit');
+        Route::patch('{id}', [SchoolController::class, 'update'])->name('schools.update');
+        Route::delete('/{id}', [SchoolController::class, 'destroy'])->name('schools.destroy');
     });
 
 });

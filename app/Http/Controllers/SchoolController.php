@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Schools\{SchoolCreateRequest, SchoolUpdateRequest, SchoolDeleteRequest};
 use Illuminate\Http\Request;
 use App\Models\School;
+use Inertia\Inertia;
 
 class SchoolController extends Controller
 {
@@ -14,7 +16,7 @@ class SchoolController extends Controller
     }
 
     public function index() {
-        $res = $this->school->index();
+        return Inertia::render('Admin/Schools/Index', ['schools' => $this->school->all()]);
     }
 
     public function get($id) {
@@ -22,22 +24,26 @@ class SchoolController extends Controller
     }
 
     public function create() {
-
+        return Inertia::render('Admin/Schools/Create', ['schools' => $this->school->all()]);
     }
 
-    public function store() {
-        $res = $this->school->store();
+    public function store(SchoolCreateRequest $request) {
+        $res = $this->school->add($request);
+        return redirect()->back()->with('notificatio', $res);
     }
 
-    public function edit() {
-        $res = $this->school->get();
+    public function edit($id) {
+        $school = $this->school->find($id);
+        return Inertia::render('Admin/Schools/Edit', ['school' => $school]);
     }
 
     public function update() {
-        $res = $this->school->edit();
+        $res = $this->school->edit($id, $request);
+        return redirect()->route('schools.edit', $id)->with('notification', $res);
     }
 
     public function destroy(Request $request) {
-        $res = $this->school->destroy();
+        $res = $this->school->erase($request);
+        return redirect()->route('schools.index')->with('notification', $res);
     }
 }

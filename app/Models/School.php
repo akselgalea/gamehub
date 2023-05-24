@@ -34,4 +34,16 @@ class School extends Model
     {
         return $this->hasManyThrough(Student::class, Grade::class);
     }
+
+    public function add($req)
+    {
+        $validated = $req->validated();
+
+        try {
+            School::create($validated);
+            return ['status' => 200, 'message' => 'Colegio añadido con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
 }
