@@ -50,7 +50,7 @@ const types = {
                             <td class="px-3 text-justify">{{ types[param.type] }}</td>
                             <td class="px-3 text-justify">{{ param.description }}</td>
                             <td class="px-3 flex gap-1 justify-center">
-                                <EditParamForm :param="param" :key="param.id" />
+                                <EditParamForm :param="param" :key="param.name" />
                                 <DeleteParamForm :paramId="param.id" :paramName="param.name" :key="param.id" />
                             </td>
                         </tr>

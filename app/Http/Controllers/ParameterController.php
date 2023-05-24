@@ -19,7 +19,7 @@ class ParameterController extends Controller
 
     public function update($id, ParameterUpdateRequest $request) {
         $res = $this->param->find($id)->edit($request);
-        return redirect()->back()->with('notification', $res);
+        return redirect()->route('games.edit', $request->game_id)->with('notification', $res);
     }
 
     public function destroy(ParameterDeleteRequest $request) {

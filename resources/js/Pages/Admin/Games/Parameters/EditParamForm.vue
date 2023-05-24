@@ -28,6 +28,7 @@ const form = useForm({
     name: props.param.name,
     type: props.param.type,
     description: props.param.description,
+    game_id: props.param.game_id
 });
 
 const showingModal = ref(false);
@@ -48,9 +49,16 @@ const createParam = () => {
 
 const closeModal = () => {
     showingModal.value = false;
-
     form.reset();
+    formSetInitialValues();
 };
+
+const formSetInitialValues = () => {
+    form.name = props.param.name;
+    form.type = props.param.type;
+    form.description = props.param.description;
+    form.game_id = props.param.game_id;
+}
 </script>
 
 <template>
