@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Inertia\Inertia;
 
 class Experiment extends Model
 {
@@ -27,5 +28,17 @@ class Experiment extends Model
 
     public function games(): HasManyThrough {
         return $this->hasManyThrough(Game::class, GameInstance::class);
+    }
+
+    public function store($req) {
+        
+        $validated = $req->validated();
+        try {
+            $experiment = Experiment::create($validated);
+
+            return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
     }
 }

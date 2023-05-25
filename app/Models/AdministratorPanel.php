@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 use Auth;
+use App\Models\Experiment;
 
 class AdministratorPanel extends Model
 {

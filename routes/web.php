@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, GameController, ParameterController};
-use App\Models\{AdministratorPanel};
+use App\Http\Controllers\{ProfileController, GameController, ParameterController, ExperimentController};
+use App\Models\{AdministratorPanel, Experiment};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,8 +36,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('controlpanel')->group(function () {
-        Route::get('/users', [AdministratorPanel::class, 'index_users_panel'])->name('users_panel.index');
+        Route::get('/users', [AdministratorPanel::class, 'index_users_panel'])->name('users_panel.index'); // Ruta para ver el panel de administracion de los usuarios
+        Route::get('/experiments', [ExperimentController::class, 'index'])->name('experiments_panel.index'); // Ruta para ver el panel de administracion de los experimentos
+        
     });
+
+    Route::prefix('experiments')->group(function () {
+        Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
+        Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
+    });
+
 
     Route::prefix('games')->group(function () {
         Route::get('/', [GameController::class, 'index'])->name('games.index');

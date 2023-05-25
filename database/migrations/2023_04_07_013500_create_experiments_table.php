@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->enum('status', ['detenido', 'activo'])->default('detenido');
+            $table->enum('status', ['detenido', 'activo'])->default('detenido'); // refiriendoce al estado del experimento
+            $table->bigInteger('time_limit')->nullable(); // tiempo limite del experimento
             $table->timestamps();
             $table->softDeletes();
         });
