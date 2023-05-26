@@ -44,6 +44,16 @@ Route::middleware('auth')->group(function () {
     Route::prefix('experiments')->group(function () {
         Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
         Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
+        
+    });
+
+    Route::prefix('experimentManagement')->group(function () {
+        Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
+
+        // Informacion general del experimento //
+
+        Route::get('{id}/edit', [ExperimentController::class, 'generalInformationEdit'])->name('experiment_information.edit');
+        Route::patch('{id}/update', [ExperimentController::class, 'generalInformationUpdate'])->name('experiment_information.update');
     });
 
 

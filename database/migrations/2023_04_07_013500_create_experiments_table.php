@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('experiments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('admin_id'); // guarda el id del creador del experimento
             $table->string('name');
             $table->text('description')->nullable();
             $table->enum('status', ['detenido', 'activo'])->default('detenido'); // refiriendoce al estado del experimento

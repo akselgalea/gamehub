@@ -16,6 +16,7 @@ class Experiment extends Model
     protected $table = 'experiments';
 
     protected $fillable = [
+        'admin_id',
         'name',
         'description',
         'status', // Detenido, Activo
@@ -37,6 +38,19 @@ class Experiment extends Model
             $experiment = Experiment::create($validated);
 
             return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    // Edita la informacion general de un experimento //
+    
+    public function edit($req) {
+        $validated = $req->validated();
+
+        try {
+            $this->update($validated);
+            return ['status' => 200, 'message' => 'Datos del experimento actualizado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }

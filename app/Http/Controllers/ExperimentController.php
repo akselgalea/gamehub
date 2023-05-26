@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Experiments\ExperimentCreateRequest;
+use App\Http\Requests\Experiments\{ExperimentCreateRequest, ExperimentUpdateRequest};
 use App\Models\Experiment;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,6 +29,26 @@ class ExperimentController extends Controller
         $res = $this->experiment->store($request);
         return redirect()->route('experiments.create')->with('notification', $res);
     }
+
+    // Panel para gestionar un experimento //
+
+    public function experimentManagement($id) {
+        return Inertia::render('Admin/Experiments/Management/ExperimentManagement', ['experiment' => Experiment::find($id)]);
+    }
+
+    // Panel referente a la informacion general de un experimento //
+
+    public function generalInformationEdit($id) {
+        return Inertia::render('Admin/Experiments/Edit', ['experiment' => Experiment::find($id)]);
+    }
+
+    public function generalInformationUpdate($id, ExperimentUpdateRequest $request) {
+        $res = $this->experiment->find($id)->edit($request);
+        // return redirect()->route('experiment_information.edit', $id)->with('notification', $res);   // Te redirecciona al formulario ya modificado
+        return redirect()->route('experiment.management', $id)->with('notification', $res);  // Te redirecciona al panel de gestion de experimento
+    }
+
+
 
     public function show(Experiment $experiment)
     {

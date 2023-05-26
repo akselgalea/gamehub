@@ -5,7 +5,7 @@ namespace App\Http\Requests\Experiments;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ExperimentCreateRequest extends FormRequest
+class ExperimentUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,6 @@ class ExperimentCreateRequest extends FormRequest
             'description' => ['nullable', 'max:500'],
             'status' => ['required', Rule::in(['activo', 'detenido'])],
             'time_limit' => ['required', 'integer', 'nullable'],
-            'admin_id' => ['required', 'integer', 'exists:users,id'],
         ];
     }
 

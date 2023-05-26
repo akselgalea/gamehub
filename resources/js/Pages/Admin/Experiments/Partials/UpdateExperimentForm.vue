@@ -1,41 +1,42 @@
 <script setup>
+
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm, usePage } from '@inertiajs/vue3';
-import Checkbox from '@/Components/Checkbox.vue';
+import { useForm } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 
-const user = usePage().props.auth.user;
+const props = defineProps({
+    experiment: {
+        name: '',
+        description: '',
+        status: null,
+        time_limit: null,
+        required: true
+    },
+})
 
 const form = useForm({
-    name: '',
-    description: '',
-    status: null,
-    time_limit: null,
-    admin_id: user.id,
+    name: props.experiment.name,
+    description: props.experiment.description,
+    status: props.experiment.status,
+    time_limit: props.experiment.time_limit,
 });
 
 const sendForm = () => {
-    form.post(
-        route('experiments.create'), {
-            onSuccess: () => {
-                form.reset();
-                form.file = null;
-            }
-        }
-    )
+    form.patch(route('experiment_information.update', {id: props.experiment.id}));
 }
 </script>
 
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Crear experimento</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Editar informacion del experimento</h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Para hacer esto debes completar el siguiente formulario.
+                En este apartado puedes modificar la informacion general del experimento.
             </p>
         </header>
 
@@ -96,12 +97,19 @@ const sendForm = () => {
             </div>
 
             <div class="flex items-center gap-4 mt-10">
-                <PrimaryButton :disabled="form.processing">Crear</PrimaryButton>
+
+                <Link :href="route('experiment.management', {id: experiment.id})">
+                    <PrimaryButton>Volver</PrimaryButton>
+                </Link>
+
+                <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
 
                 <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
-                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Creado.</p>
+                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
                 </Transition>
+
             </div>
+
         </form>
     </section>
 </template>
