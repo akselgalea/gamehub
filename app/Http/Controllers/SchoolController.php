@@ -29,12 +29,13 @@ class SchoolController extends Controller
 
     public function store(SchoolCreateRequest $request) {
         $res = $this->school->add($request);
-        return redirect()->back()->with('notificatio', $res);
+        return redirect()->back()->with('notification', $res);
     }
 
     public function edit($id) {
         $school = $this->school->find($id);
-        return Inertia::render('Admin/Schools/Edit', ['school' => $school]);
+        $grades = $school->grades->toArray();
+        return Inertia::render('Admin/Schools/Edit', ['school' => $school, 'grades' => $grades]);
     }
 
     public function update() {
@@ -42,7 +43,7 @@ class SchoolController extends Controller
         return redirect()->route('schools.edit', $id)->with('notification', $res);
     }
 
-    public function destroy(Request $request) {
+    public function destroy(SchoolDeleteRequest $request) {
         $res = $this->school->erase($request);
         return redirect()->route('schools.index')->with('notification', $res);
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Grade;
+use App\Http\Requests\Grades\{GradeCreateRequest, GradeDeleteRequest};
 
 class GradeController extends Controller
 {
@@ -25,8 +26,9 @@ class GradeController extends Controller
 
     }
 
-    public function store() {
-        $res = $this->grade->store();
+    public function store(GradeCreateRequest $request) {
+        $res = $this->grade->add($request);
+        return redirect()->back()->with('notification', $res);
     }
 
     public function edit() {
@@ -37,7 +39,8 @@ class GradeController extends Controller
         $res = $this->grade->edit();
     }
 
-    public function destroy(Request $request) {
-        $res = $this->grade->destroy();
+    public function destroy($id, GradeDeleteRequest $request) {
+        $res = $this->grade->erase($id, $request);
+        return redirect()->back()->with('notification', $res);
     }
 }

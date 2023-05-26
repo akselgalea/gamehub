@@ -13,6 +13,7 @@ class Grade extends Model
     protected $table = 'grades';
 
     protected $fillable = [
+        'id',
         'name',
         'school_id'
     ];
@@ -36,5 +37,26 @@ class Grade extends Model
     public function students(): HasMany
     {
         return $this->hasMany(Student::class);
+    }
+
+    public function add($req)
+    {
+        $validated = $req->validated();
+
+        try {
+            Grade::create($validated);
+            return ['status' => 200, 'message' => 'Curso añadido con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function erase($id, $req) {
+        try {
+            Grade::findOrFail($id)->delete();
+            return ['status' => 200, 'message' => 'Colegio eliminado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
     }
 }

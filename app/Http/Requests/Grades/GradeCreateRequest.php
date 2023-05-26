@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Schools;
+namespace App\Http\Requests\Grades;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SchoolDeleteRequest extends FormRequest
+class GradeCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,19 +21,16 @@ class SchoolDeleteRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->request->get('id');
-
         return [
-            'id' => 'required|exists:schools,id',
-            'name' => "required|exists:schools,name,id,$id"
+            'name' => ['required', 'string', 'max:255'],
+            'school_id' => ['required', 'numeric', 'exists:schools,id']
         ];
     }
 
-    public function messages(): array
+    public function messages(): array 
     {
         return [
-            'required' => 'El campo :attribute es obligatorio.',
-            'name.exists' => 'El nombre que ingresaste no coincide con el solicitado.'
+            'required' => 'El campo :attribute es obligatorio'
         ];
     }
 

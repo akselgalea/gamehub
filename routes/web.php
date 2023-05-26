@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, GameController, ParameterController, SchoolController};
+use App\Http\Controllers\{ProfileController, GameController, ParameterController, SchoolController, GradeController};
 use App\Models\{AdministratorPanel};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +63,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}', [SchoolController::class, 'edit'])->name('schools.edit');
         Route::patch('{id}', [SchoolController::class, 'update'])->name('schools.update');
         Route::delete('/{id}', [SchoolController::class, 'destroy'])->name('schools.destroy');
+        
+        Route::prefix('schools')->group(function () {
+            Route::get('/', [GradeController::class, 'index'])->name('schools.grades.index');
+            Route::post('/new', [GradeController::class, 'store'])->name('schools.grades.store');
+            Route::delete('/{id}', [GradeController::class, 'destroy'])->name('schools.grades.destroy');
+        });
     });
 
 });
