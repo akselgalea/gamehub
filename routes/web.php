@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('schools')->group(function () {
             Route::get('/', [GradeController::class, 'index'])->name('schools.grades.index');
             Route::post('/new', [GradeController::class, 'store'])->name('schools.grades.store');
+            Route::patch('/{id}', [GradeController::class, 'update'])->name('schools.grades.update');
             Route::delete('/{id}', [GradeController::class, 'destroy'])->name('schools.grades.destroy');
         });
     });

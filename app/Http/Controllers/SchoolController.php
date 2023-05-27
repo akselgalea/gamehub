@@ -38,7 +38,7 @@ class SchoolController extends Controller
         return Inertia::render('Admin/Schools/Edit', ['school' => $school, 'grades' => $grades]);
     }
 
-    public function update() {
+    public function update($id, SchoolUpdateRequest $request) {
         $res = $this->school->edit($id, $request);
         return redirect()->route('schools.edit', $id)->with('notification', $res);
     }

@@ -2,28 +2,26 @@
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-
 import Modal from '@/Components/Modal.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 
 const props = defineProps({
-    schoolId: {
-        type: Number,
+    grade: {
+        type: Object,
         required: true
     }
 });
 
+const form = useForm({
+    id: props.grade.id,
+    name: props.grade.name,
+});
+
 const showingModal = ref(false);
 const nameInput = ref(null);
-
-const form = useForm({
-    name: '',
-    school_id: props.schoolId
-});
 
 const showModal = () => {
     showingModal.value = true;
@@ -31,8 +29,8 @@ const showModal = () => {
     nextTick(() => nameInput.value.focus());
 };
 
-const createGrade = () => {
-    form.post(route('schools.grades.store'), {
+const updateGrade = () => {
+    form.patch(route('schools.grades.update', {id: props.grade.id}), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
     });
@@ -40,18 +38,22 @@ const createGrade = () => {
 
 const closeModal = () => {
     showingModal.value = false;
-
     form.reset();
+    formSetInitialValues();
 };
+
+const formSetInitialValues = () => {
+    form.name = props.grade.name;
+}
 </script>
 
 <template>
-    <PrimaryButton @click="showModal">Agregar curso</PrimaryButton>
+    <PrimaryButton @click="showModal"><i class="fas fa-edit"></i></PrimaryButton>
 
     <Modal :show="showingModal" @close="closeModal">
         <div class="p-6">
             <h2 class="text-lg mb-3 font-medium text-gray-900 dark:text-gray-100">
-                Agregar curso
+                Editar curso
             </h2>
 
             <div>
@@ -65,7 +67,7 @@ const closeModal = () => {
                     v-model="form.name"
                     required
                     autofocus
-                    @keyup.enter="createGrade"
+                    @keyup.enter="updateGrade"
                 />
 
                 <InputError class="mt-2" :message="form.errors.name" />
@@ -78,7 +80,7 @@ const closeModal = () => {
                     class="ml-3"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
-                    @click="createGrade"
+                    @click="updateGrade"
                 >
                     Guardar
                 </PrimaryButton>

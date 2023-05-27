@@ -2,6 +2,7 @@
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import CreateGradeForm from './Partials/CreateGradeForm.vue';
 import DeleteGradeForm from './Partials/DeleteGradeForm.vue';
+import UpdateGradeForm from './Partials/UpdateGradeForm.vue';
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -28,14 +29,14 @@ const props = defineProps({
         </p>
 
         <table class="mt-10 rounded-sm shadow table-auto w-full border-collapse" v-else>
-            <thead class="dark:text-gray-100">
+            <thead class="dark:text-gray-100 border">
                 <th>Curso</th>
                 <th>Estudiantes</th>
                 <th>Gestionar curso</th>
             </thead>
             <tbody class="dark:text-white">
-                <tr v-for="(grade, index) in grades">
-                    <td>{{grade.name}}</td>
+                <tr v-for="(grade, index) in grades" class="border">
+                    <td class="text-center">{{grade.name}}</td>
                     <td>
                         <div class="flex justify-center">
                             <PrimaryButton><i class="fas fa-users"></i></PrimaryButton>
@@ -43,9 +44,7 @@ const props = defineProps({
                     </td>
                     <td>
                         <div class="flex justify-center gap-1">
-                            <Link :href="null">
-                                <PrimaryButton><i class="fas fa-edit"></i></PrimaryButton>
-                            </Link>
+                            <UpdateGradeForm :grade="grade" :key="grade.id" />
 
                             <DeleteGradeForm :gradeId="grade.id" :gradeName="grade.name" :key="index" />
                         </div>

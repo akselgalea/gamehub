@@ -49,6 +49,18 @@ class School extends Model
         }
     }
 
+    public function edit($id, $req)
+    {
+        $validated = $req->validated();
+
+        try {
+            School::findOrFail($id)->update($validated);
+            return ['status' => 200, 'message' => 'Colegio añadido con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
     public function erase($req) {
         try {
             $school = School::findOrFail($req->id);

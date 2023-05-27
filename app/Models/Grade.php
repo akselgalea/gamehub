@@ -51,6 +51,18 @@ class Grade extends Model
         }
     }
 
+    public function edit($id, $req)
+    {
+        $validated = $req->validated();
+
+        try {
+            Grade::findOrFail($id)->update($validated);
+            return ['status' => 200, 'message' => 'Curso actualizado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
     public function erase($id, $req) {
         try {
             Grade::findOrFail($id)->delete();

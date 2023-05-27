@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Grade;
-use App\Http\Requests\Grades\{GradeCreateRequest, GradeDeleteRequest};
+use App\Http\Requests\Grades\{GradeCreateRequest, GradeUpdateRequest, GradeDeleteRequest};
 
 class GradeController extends Controller
 {
@@ -35,8 +35,9 @@ class GradeController extends Controller
         $res = $this->grade->get();
     }
 
-    public function update() {
-        $res = $this->grade->edit();
+    public function update($id, GradeUpdateRequest $request) {
+        $res = $this->grade->edit($id, $request);
+        return redirect()->back()->with('notification', $res);
     }
 
     public function destroy($id, GradeDeleteRequest $request) {
