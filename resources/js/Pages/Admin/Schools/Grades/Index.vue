@@ -20,20 +20,20 @@ const props = defineProps({
     <main>
         <header>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cursos</h2>
-            <p>Listado de todos los cursos</p>
+            <p class="text-gray-600 dark:text-white">Listado de todos los cursos</p>
         </header>
         
         <p class="text-sm text-gray-600 dark:text-white" v-if="grades.length == 0">
-            Este juego aun no posee parametros de lanzamiento.
+            Este colegio aun no posee cursos.
         </p>
 
         <table class="mt-10 rounded-sm shadow table-auto w-full border-collapse" v-else>
-            <thead>
+            <thead class="dark:text-gray-100">
                 <th>Curso</th>
                 <th>Estudiantes</th>
                 <th>Gestionar curso</th>
             </thead>
-            <tbody>
+            <tbody class="dark:text-white">
                 <tr v-for="(grade, index) in grades">
                     <td>{{grade.name}}</td>
                     <td>
