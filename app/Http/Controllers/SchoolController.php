@@ -19,8 +19,16 @@ class SchoolController extends Controller
         return Inertia::render('Admin/Schools/Index', ['schools' => $this->school->all()]);
     }
 
+    public function getAll() {
+        return $this->school->with('grades')->get();
+    }
+
+    public function grades($id) {
+        return $this->school->find($id)->grades();
+    }
+
     public function get($id) {
-        $res = $this->school->get();
+        return null;
     }
 
     public function create() {

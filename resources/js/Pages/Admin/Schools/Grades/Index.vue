@@ -39,13 +39,14 @@ const props = defineProps({
                     <td class="text-center">{{grade.name}}</td>
                     <td>
                         <div class="flex justify-center">
-                            <PrimaryButton><i class="fas fa-users"></i></PrimaryButton>
+                            <Link :href="route('schools.grades.get', {id: grade.id})">
+                                <PrimaryButton><i class="fas fa-users"></i></PrimaryButton>
+                            </Link>
                         </div>
                     </td>
                     <td>
                         <div class="flex justify-center gap-1">
                             <UpdateGradeForm :grade="grade" :key="grade.id" />
-
                             <DeleteGradeForm :gradeId="grade.id" :gradeName="grade.name" :key="index" />
                         </div>
                     </td>

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Grades\{GradeCreateRequest, GradeUpdateRequest, GradeDeleteRequest};
 use Illuminate\Http\Request;
 use App\Models\Grade;
-use App\Http\Requests\Grades\{GradeCreateRequest, GradeUpdateRequest, GradeDeleteRequest};
+use Inertia\Inertia;
 
 class GradeController extends Controller
 {
@@ -15,11 +16,15 @@ class GradeController extends Controller
     }
 
     public function index() {
-        $res = $this->grade->index();
+        return $this->grade->all();
     }
 
     public function get($id) {
-        $res = $this->grade->get();
+        $grade = Grade::find($id);
+        $school = $grade->school;
+        $students = $grade->students;
+
+        return Inertia::render('Admin/Schools/Grades/View', ['school' => $school, 'grade' => $grade, 'students' => $students]);
     }
 
     public function create() {

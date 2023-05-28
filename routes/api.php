@@ -1,7 +1,5 @@
 <?php
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{ProfileController, GameController, ParameterController, SchoolController, GradeController, Studentcontroller};
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +11,19 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::middleware('auth')->group(function () {
+    Route::prefix('api')->group(function () {
+        Route::prefix('schools')->group(function () {
+            Route::get('/get-all', [SchoolController::class, 'getAll'])->name('api.schools.index');
+            
+            Route::prefix('{school}/grades')->group(function () {
+                Route::get('/', [SchoolController::class, 'grades'])->name('api.schools.grades');
+            });
+        });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+        Route::prefix('students')->group(function () {
+            Route::get('{id}/school-info', [StudentController::class, 'schoolInfo'])->name('api.students.school_info');
+            Route::patch('{id}/school-info', [StudentController::class, 'gradeUpdate'])->name('api.students.school_info.update');
+        });
+    });
 });

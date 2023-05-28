@@ -55,4 +55,12 @@ class User extends Authenticatable
     public function games(): HasMany {
         return $this->hasMany(User::class);
     }
+
+    public function isAdmin(): Boolean {
+        return $this->type == 'admin';
+    }
+
+    public function isStudent(): Boolean {
+        return $this->type == 'student';
+    }
 }
