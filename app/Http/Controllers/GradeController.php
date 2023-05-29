@@ -19,8 +19,8 @@ class GradeController extends Controller
         return $this->grade->all();
     }
 
-    public function get($id) {
-        $grade = Grade::find($id);
+    public function get($schoolId, $gradeId) {
+        $grade = Grade::find($gradeId);
         $school = $grade->school;
         $students = $grade->students;
 

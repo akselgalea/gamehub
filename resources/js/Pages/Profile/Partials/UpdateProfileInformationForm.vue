@@ -3,20 +3,25 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import EmailVerificationLink from './EmailVerificationLink.vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 
-defineProps({
+const props = defineProps({
     mustVerifyEmail: {
         type: Boolean,
     },
     status: {
         type: String,
     },
+    userData: {
+        type: Object
+    }
 });
 
-const user = usePage().props.auth.user;
+const user = props.userData ?? usePage().props.auth.user;
 
 const form = useForm({
+    id: user.id,
     name: user.name,
     email: user.email,
 });
@@ -28,7 +33,7 @@ const form = useForm({
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Información del perfil</h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Actualiza la información de tu perfil y tu dirección de correo electrónico.
+                Actualiza la información del perfil y la dirección de correo electrónico.
             </p>
         </header>
 
@@ -64,26 +69,7 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div v-if="mustVerifyEmail && user.email_verified_at === null">
-                <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                    Tu dirección de correo electrónico no ha sido verificada
-                    <Link
-                        :href="route('verification.send')"
-                        method="post"
-                        as="button"
-                        class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                    >
-                        Haz click aquí para reenviar el correo de verificación.
-                    </Link>
-                </p>
-
-                <div
-                    v-show="status === 'verification-link-sent'"
-                    class="mt-2 font-medium text-sm text-green-600 dark:text-green-400"
-                >
-                    Un nuevo link de verificacón ha sido enviado a tu correo.
-                </div>
-            </div>
+            <EmailVerificationLink v-if="!userData" :mustVerifyEmail="mustVerifyEmail" :status="status" />
 
             <div class="flex items-center gap-4">
                 <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>

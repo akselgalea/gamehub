@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Link, Head } from '@inertiajs/vue3';
+import AdminUserEdit from '@/Pages/Admin/Users/Edit.vue';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
     grade: {
@@ -50,7 +50,7 @@ const props = defineProps({
                                     <td class="text-center">{{student.name}}</td>
                                     <td>
                                         <div class="flex justify-center gap-1">
-                                            <PrimaryButton>Perfil</PrimaryButton>
+                                            <AdminUserEdit :user="student" :key="index" />
                                         </div>
                                     </td>
                                 </tr>

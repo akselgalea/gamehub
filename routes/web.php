@@ -64,8 +64,9 @@ Route::middleware('auth')->group(function () {
         Route::patch('{id}', [SchoolController::class, 'update'])->name('schools.update');
         Route::delete('/{id}', [SchoolController::class, 'destroy'])->name('schools.destroy');
         
+        Route::get('/{school}/grades/{grade}', [GradeController::class, 'get'])->name('schools.grades.get');
+
         Route::prefix('/grades')->group(function () {
-            Route::get('/', [GradeController::class, 'get'])->name('schools.grades.get');
             Route::post('/new', [GradeController::class, 'store'])->name('schools.grades.store');
             Route::patch('/{id}', [GradeController::class, 'update'])->name('schools.grades.update');
             Route::delete('/{id}', [GradeController::class, 'destroy'])->name('schools.grades.destroy');

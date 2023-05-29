@@ -39,7 +39,7 @@ const props = defineProps({
                     <td class="text-center">{{grade.name}}</td>
                     <td>
                         <div class="flex justify-center">
-                            <Link :href="route('schools.grades.get', {id: grade.id})">
+                            <Link :href="route('schools.grades.get', {school: schoolId, grade: grade.id})">
                                 <PrimaryButton><i class="fas fa-users"></i></PrimaryButton>
                             </Link>
                         </div>

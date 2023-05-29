@@ -56,11 +56,11 @@ class User extends Authenticatable
         return $this->hasMany(User::class);
     }
 
-    public function isAdmin(): Boolean {
+    public function isAdmin() {
         return $this->type == 'admin';
     }
 
-    public function isStudent(): Boolean {
+    public function isStudent() {
         return $this->type == 'student';
     }
 }

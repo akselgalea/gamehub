@@ -5,9 +5,16 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { onBeforeMount, ref } from 'vue';
 
+const props = defineProps({
+    // Propiedad que indica qué usuario se está editando
+    userId: {
+        type: Number
+    }
+});
+
 const axios = window.axios;
 
-const studentId = usePage().props.auth.user.id;
+const studentId = props.userId ?? usePage().props.auth.user.id;
 const studentSchool = ref(null);
 const studentGrade = ref(null);
 
@@ -70,7 +77,7 @@ onBeforeMount(() => {
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Información del colegio</h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Actualiza la información sobre a que colegio y curso perteneces.
+                Actualiza la información sobre a que colegio y curso pertenece.
             </p>
         </header>
 

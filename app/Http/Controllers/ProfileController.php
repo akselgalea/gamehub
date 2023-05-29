@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\User;
+use Exception;
 
 class ProfileController extends Controller
 {
@@ -29,26 +31,51 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = User::find($request->id);
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
+        
+        $res = ['status' => 200, 'message' => 'Perfil actualizado con éxito'];
 
-        return Redirect::route('profile.edit');
+        return redirect()->back()->with('notification', $res);
     }
 
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);
 
+        if($request->userId)
+            return $this->destroyOthersAccount($request->userId);
+
+        else
+            return $this->destroyMyAccount($request);
+    }
+    
+    public function destroyOthersAccount($id) {
+        try {
+            if(!Auth()->user()->isAdmin()) 
+                throw new Exception ('No tienes permisos para realizar esta operación.');
+
+            User::findOrFail($id)->delete();
+            $res = ['status' => 200, 'message' => 'Usuario eliminado con éxito!'];
+        } catch(Exception $e) {
+            $res = ['status' => 500, 'message' => $e->getMessage()];
+        }
+
+        return redirect()->back()->with('notification', $res);
+    }
+
+    public function destroyMyAccount($request) {
         $user = $request->user();
 
         Auth::logout();
