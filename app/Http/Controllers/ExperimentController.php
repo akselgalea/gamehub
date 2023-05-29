@@ -6,6 +6,7 @@ use App\Http\Requests\Experiments\{ExperimentCreateRequest, ExperimentUpdateRequ
 use App\Models\Experiment;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Controllers\UserInExperiment;
 
 
 class ExperimentController extends Controller
@@ -33,8 +34,18 @@ class ExperimentController extends Controller
     // Panel para gestionar un experimento //
 
     public function experimentManagement($id) {
-        return Inertia::render('Admin/Experiments/Management/ExperimentManagement', ['experiment' => Experiment::find($id)]);
+        $experiment = Experiment::find($id);
+        return Inertia::render('Admin/Experiments/Management/ExperimentManagement', ['experiment' => $experiment, 'users' => $experiment->users->toArray()]);
     }
+
+    // public function experimentUser($id) {
+
+    //     $experiment = Experiment::find($id);
+    //     $users = $experiment->users->toArray();
+    //     dd($users);
+
+    //     return $experiment_user;
+    // }
 
     // Panel referente a la informacion general de un experimento //
 

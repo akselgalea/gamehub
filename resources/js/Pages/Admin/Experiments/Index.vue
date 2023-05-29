@@ -3,15 +3,26 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Modal from '@/Components/Modal.vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     experiments: {
         type: Array,
         required: true
-    },
-    show: false
+    }
 })
+
+const showingModal = ref(false);
+
+const showModal = () => {
+    showingModal.value = true;
+};
+
+const closeModal = () => {
+    showingModal.value = false;
+};
 
 </script>
 
@@ -40,7 +51,7 @@ const props = defineProps({
                                 <div class="first-letter:uppercase">Estado: {{ experiment.status }}</div>
 
                                 <div class="flex gap-2">
-                                    <Link @click="show=true">
+                                    <Link @click="showModal">
                                         <PrimaryButton>Ver detalles</PrimaryButton>
                                     </Link>
 
@@ -50,7 +61,7 @@ const props = defineProps({
                                 </div>
 
                                 <Modal
-                                :show="show"
+                                :show="showingModal" @close="closeModal"
                                 >
                                 <div class="py-12">
                                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 text-white">
@@ -61,9 +72,7 @@ const props = defineProps({
                                                     <div class="first-letter:uppercase">Descripcion: {{ experiment.description }}</div>
                                                     <div class="first-letter:uppercase">Tiempo limite: {{ experiment.time_limit }}</div>
                                                     <div class="flex gap-2">
-                                                        <Link @click="show=false">
-                                                            <PrimaryButton>Cerrar</PrimaryButton>
-                                                        </Link>
+                                                        <SecondaryButton @click="closeModal"> Cerrar </SecondaryButton>
                                                     </div>
                                             </section>
                                         </div>

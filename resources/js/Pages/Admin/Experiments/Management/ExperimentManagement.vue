@@ -5,10 +5,20 @@ import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Modal from '@/Components/Modal.vue';
 import ExperimentInformation from '@/Pages/Admin/Experiments/Management/GeneralInformation/Index.vue';
+import AssociatedUsers from '@/Pages/Admin/Experiments/Management/AssociatedUsers/Index.vue';
+import EntryPoints from '@/Pages/Admin/Experiments/Management/AssociatedUsers/Index.vue';
 
 const props = defineProps({
     experiment: {
         type: Object,
+        required: true
+    },
+    users: {
+        type: Array,
+        required: true
+    },
+    entrypoints: {
+        type: Array,
         required: true
     }
 })
@@ -29,6 +39,18 @@ const props = defineProps({
 
             
         </div> 
+
+        <div class="row">
+            
+            <AssociatedUsers :users = "users"/>
+
+        </div> 
+
+        <div >
+
+            
+
+        </div>
 
     </AuthenticatedLayout>
 </template>

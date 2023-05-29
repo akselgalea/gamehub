@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Inertia\Inertia;
 
@@ -29,6 +30,14 @@ class Experiment extends Model
 
     public function games(): HasManyThrough {
         return $this->hasManyThrough(Game::class, GameInstance::class);
+    }
+
+    public function users(): BelongsToMany {
+        return $this->belongsToMany(User::class, 'experiment_user' , 'user_id', 'experiment_id');
+    }
+
+    public function entrypoints(): HasMany {
+        return $this->hasMany(EntryPoint::class);
     }
 
     public function store($req) {

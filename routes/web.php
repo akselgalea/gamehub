@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, GameController, ParameterController, ExperimentController};
+use App\Http\Controllers\{ProfileController, GameController, ParameterController, ExperimentController, EntryPointController};
 use App\Models\{AdministratorPanel, Experiment};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +45,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
         Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
         
+    });
+
+    Route::prefix('entrypoints')->group(function () {
+        Route::get('/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
+        Route::post('/new', [EntryPointController::class, 'store'])->name('entrypoints.store');
+        Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
+        Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
     });
 
     Route::prefix('experimentManagement')->group(function () {
