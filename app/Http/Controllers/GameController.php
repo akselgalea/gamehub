@@ -19,6 +19,10 @@ class GameController extends Controller
         return Inertia::render('Admin/Games/Index', ['games' => Game::all()]);
     }
 
+    public function get($id) {
+        return Inertia::render('Admin/Games/Index', ['games' => Game::find($id)]);
+    }
+
     public function create() {
         return Inertia::render('Admin/Games/Create', ['categories' => Category::all()]);
     }
