@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Experiments\EntryPoints\{EntryPointCreateRequest, EntryPointUpdateRequest};
 use App\Models\EntryPoint;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class EntryPointController extends Controller
 {
@@ -13,9 +15,9 @@ class EntryPointController extends Controller
         $this->entrypoint = $entrypoint;
     }
 
-    public function index()
+    public function index($id)
     {
-        return Inertia::render('Admin/Experiments/Index', ['experiments' => Experiment::all()->toArray()]);
+        return Inertia::render('Admin/Experiments/Management/Entrypoints/Index', ['entrypoints' => EntryPoint::all()->toArray(), 'experiment_id' => $id]);
     }
 
     /**
@@ -29,10 +31,10 @@ class EntryPointController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EntryPointCreateRequest $request)
     {
         $res = $this->entrypoint->store($request);
-        return redirect()->route('entrypoints.create')->with('notification', $res);
+        return redirect()->back()->with('notification', $res);
     }
 
     /**

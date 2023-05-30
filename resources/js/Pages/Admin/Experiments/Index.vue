@@ -51,9 +51,7 @@ const closeModal = () => {
                                 <div class="first-letter:uppercase">Estado: {{ experiment.status }}</div>
 
                                 <div class="flex gap-2">
-                                    <Link @click="showModal">
-                                        <PrimaryButton>Ver detalles</PrimaryButton>
-                                    </Link>
+                                        <PrimaryButton @click="showModal">Ver detalles</PrimaryButton>
 
                                     <Link :href="route('experiment.management', {id: experiment.id})">
                                         <PrimaryButton>Gestionar</PrimaryButton>

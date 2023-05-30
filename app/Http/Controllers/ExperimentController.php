@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Experiments\{ExperimentCreateRequest, ExperimentUpdateRequest};
-use App\Models\Experiment;
+use App\Models\{Experiment, User};
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Controllers\UserInExperiment;
@@ -35,17 +35,12 @@ class ExperimentController extends Controller
 
     public function experimentManagement($id) {
         $experiment = Experiment::find($id);
-        return Inertia::render('Admin/Experiments/Management/ExperimentManagement', ['experiment' => $experiment, 'users' => $experiment->users->toArray()]);
+        return Inertia::render('Admin/Experiments/Management/ExperimentManagement',
+        ['experiment' => $experiment,
+         'users' => $experiment->users->toArray(),
+         'entrypoints' => $experiment->entrypoints->toArray()
+        ]);
     }
-
-    // public function experimentUser($id) {
-
-    //     $experiment = Experiment::find($id);
-    //     $users = $experiment->users->toArray();
-    //     dd($users);
-
-    //     return $experiment_user;
-    // }
 
     // Panel referente a la informacion general de un experimento //
 
@@ -59,7 +54,13 @@ class ExperimentController extends Controller
         return redirect()->route('experiment.management', $id)->with('notification', $res);  // Te redirecciona al panel de gestion de experimento
     }
 
-
+    public function usersExperiment($id) {
+        $experiment = Experiment::find($id);
+        return Inertia::render('Admin/Experiments/Management/AssociatedUsers/Edit', 
+        ['experiment_id'=> $id,
+         'noAssociatedUsers' => User::whereDoesntHave('experiments')->get()->toArray(),
+         'associatedUsers' => $experiment->users->toArray(),]);
+    }
 
     public function show(Experiment $experiment)
     {

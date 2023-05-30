@@ -36,8 +36,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('controlpanel')->group(function () {
+        
+        // Administracion de usuarios //
+        
         Route::get('/users', [AdministratorPanel::class, 'index_users_panel'])->name('users_panel.index'); // Ruta para ver el panel de administracion de los usuarios
+
+
         Route::get('/experiments', [ExperimentController::class, 'index'])->name('experiments_panel.index'); // Ruta para ver el panel de administracion de los experimentos
+
+        
         
     });
 
@@ -48,7 +55,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('entrypoints')->group(function () {
-        Route::get('/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
+        Route::get('{id}/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
         Route::post('/new', [EntryPointController::class, 'store'])->name('entrypoints.store');
         Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
         Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
@@ -61,6 +68,13 @@ Route::middleware('auth')->group(function () {
 
         Route::get('{id}/edit', [ExperimentController::class, 'generalInformationEdit'])->name('experiment_information.edit');
         Route::patch('{id}/update', [ExperimentController::class, 'generalInformationUpdate'])->name('experiment_information.update');
+
+        // Usuarios asociados al experimento //
+
+        Route::prefix('users')->group(function () {
+            Route::get('/new', [ExperimentController::class, 'usersExperiment'])->name('users_experiment.index');
+        });
+        
     });
 
 

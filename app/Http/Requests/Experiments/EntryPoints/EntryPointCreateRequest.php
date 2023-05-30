@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\EntryPoints;
+namespace App\Http\Requests\Experiments\EntryPoints;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ExperimentCreateRequest extends FormRequest
+class EntryPointCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class ExperimentCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => ['nullable', 'max:500'],
+            'token' => ['required','string', 'max:500'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'max:500'],
             'obfuscated' => ['required', 'boolean'],

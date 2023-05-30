@@ -6,7 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Modal from '@/Components/Modal.vue';
 import ExperimentInformation from '@/Pages/Admin/Experiments/Management/GeneralInformation/Index.vue';
 import AssociatedUsers from '@/Pages/Admin/Experiments/Management/AssociatedUsers/Index.vue';
-import EntryPoints from '@/Pages/Admin/Experiments/Management/AssociatedUsers/Index.vue';
+import EntryPoints from '@/Pages/Admin/Experiments/Management/Entrypoints/Index.vue';
 
 const props = defineProps({
     experiment: {
@@ -42,13 +42,13 @@ const props = defineProps({
 
         <div class="row">
             
-            <AssociatedUsers :users = "users"/>
+            <AssociatedUsers :users = "users" :experiment_id = "experiment.id"/>
 
         </div> 
 
-        <div >
+        <div class="row">
 
-            
+            <EntryPoints :entrypoints = "entrypoints" :experiment_id = "experiment.id"/>
 
         </div>
 

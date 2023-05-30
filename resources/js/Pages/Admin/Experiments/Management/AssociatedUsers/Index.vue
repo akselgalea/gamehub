@@ -5,10 +5,15 @@ import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
-    entrypoints: {
+    users: {
         type: Array,
         required: true
+    },
+    experiment_id: {
+        type: Number,
+        required: true
     }
+    
 })
 
 </script>
@@ -37,6 +42,10 @@ const props = defineProps({
                                     </Link>
                                 </div>
                         </div>
+
+                        <Link :href="route('users_experiment.index', {id: experiment_id})">
+                            <PrimaryButton>Editar</PrimaryButton>
+                        </Link>
                     </div>
 
                 </section>
