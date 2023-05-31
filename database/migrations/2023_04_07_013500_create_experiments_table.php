@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('experiments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admin_id'); // guarda el id del creador del experimento
             $table->string('name');
             $table->text('description')->nullable();
             $table->enum('status', ['detenido', 'activo'])->default('detenido'); // refiriendoce al estado del experimento
             $table->bigInteger('time_limit')->nullable(); // tiempo limite del experimento
+            $table->foreignId('admin_id'); // guarda el id del creador del experimento
             $table->timestamps();
             $table->softDeletes();
         });

@@ -1,0 +1,61 @@
+<script setup>
+// import NewSurveyForm from '../Surveyeters/NewSurveyForm.vue';
+// import EditSurveyForm from '../Surveyeters/EditSurveyForm.vue';
+// import DeleteSurveyForm from '../Surveyeters/DeleteSurveyForm.vue';
+
+defineProps({
+    surveys: {
+        type: Array,
+        required: true
+    },
+});
+
+const types = {
+    'test': 'prueba',
+    'survey': 'encuesta'
+}
+</script>
+
+<template>
+    <section>
+        <header>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Encuestas del experimento</h2>
+
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                Puedes realizar encuestas a los estudiantes que participen del experimento.
+                A continuación las encuestas que ya existen para este experimento.
+            </p>
+        </header>
+
+        <div class="mt-5 flex flex-wrap gap-10 w-full">
+            <p class="text-sm text-gray-600 dark:text-white" v-if="surveys.length == 0">
+                Este experimento aun no posee encuestas.
+            </p>
+            <template v-else>
+                <table class="rounded-sm shadow table-fixed w-full border-collapse">
+                    <thead class="border">
+                        <th>Nombre</th>
+                        <th>Tipo de dato</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(survey, index) in surveys" :key="index" class="border">
+                            <td class="px-3 text-justify">{{ survey.name }}</td>
+                            <td class="px-3 text-justify">{{ types[survey.type] }}</td>
+                            <td class="px-3 text-justify">{{ survey.description }}</td>
+                            <td class="px-3 flex gap-1 justify-center">
+                                <!-- <EditSurveyForm :survey="survey" :key="survey.name" />
+                                <DeleteSurveyForm :surveyId="survey.id" :surveyName="survey.name" :key="survey.id" /> -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </template>
+        </div>
+
+        <div class="flex items-center gap-4 mt-10">
+            <!-- <NewSurveyForm :game="game" /> -->
+        </div>
+    </section>
+</template>

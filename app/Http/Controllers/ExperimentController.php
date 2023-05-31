@@ -31,23 +31,17 @@ class ExperimentController extends Controller
         return redirect()->route('experiments.create')->with('notification', $res);
     }
 
-    // Panel para gestionar un experimento //
-
+    // Panel para gestionar un experimento
     public function experimentManagement($id) {
         $experiment = Experiment::find($id);
-        return Inertia::render('Admin/Experiments/Management/ExperimentManagement', ['experiment' => $experiment, 'users' => $experiment->users->toArray()]);
+
+        return Inertia::render('Admin/Experiments/View', [
+            'experiment' => $experiment,
+            'users' => $experiment->users->toArray(),
+            'entrypoints' => $experiment->entrypoints->toArray(),
+            'surveys' => $experiment->surveys->toArray()
+        ]);
     }
-
-    // public function experimentUser($id) {
-
-    //     $experiment = Experiment::find($id);
-    //     $users = $experiment->users->toArray();
-    //     dd($users);
-
-    //     return $experiment_user;
-    // }
-
-    // Panel referente a la informacion general de un experimento //
 
     public function generalInformationEdit($id) {
         return Inertia::render('Admin/Experiments/Edit', ['experiment' => Experiment::find($id)]);

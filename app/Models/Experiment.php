@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\{HasMany, HasManyThrough, BelongsToMany, BelongsTo};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Inertia\Inertia;
 
@@ -17,12 +15,16 @@ class Experiment extends Model
     protected $table = 'experiments';
 
     protected $fillable = [
-        'admin_id',
         'name',
         'description',
         'status', // Detenido, Activo
-        'time_limit' // In minutes
+        'time_limit', // In minutes
+        'admin_id',
     ];
+
+    public function creator(): BelongsTo {
+        return $this->belongsTo(Admin::class, 'admin_id');
+    }
 
     public function instances(): HasMany {
         return $this->hasMany(GameInstance::class);
@@ -38,6 +40,10 @@ class Experiment extends Model
 
     public function entrypoints(): HasMany {
         return $this->hasMany(EntryPoint::class);
+    }
+
+    public function surveys(): HasMany {
+        return $this->hasMany(Survey::class);
     }
 
     public function store($req) {

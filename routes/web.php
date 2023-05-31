@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, GameController, ParameterController, ExperimentController, EntryPointController, SchoolController, GradeController};
-use App\Models\{AdministratorPanel, Experiment};
+use App\Http\Controllers\{GameController, ParameterController, ExperimentController, EntryPointController, SurveyController};
+use App\Http\Controllers\{ProfileController, SchoolController, GradeController};
+use App\Models\{AdministratorPanel, Experiment, Game};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\File;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('experiments')->group(function () {
         Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
         Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
-        
+        Route::get('/{id}/surveys/new', [SurveyController::class, 'create'])->name('surveys.create');
+        Route::post('/{id}/surveys/new', [SurveyController::class, 'store'])->name('surveys.store');
     });
 
     Route::prefix('entrypoints')->group(function () {
@@ -79,6 +82,25 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [ParameterController::class, 'destroy'])->name('games.params.destroy');
         });
     });
+
+    Route::get('/uploads/games/{slug}/{filename}', function($slug, $filename){
+        $game = Game::where('slug', $slug)->first();
+        
+        if (substr($filename, 0, strlen('html5game')) == 'html5game') {
+            $filename = substr($filename, strlen('html5game'));
+        }
+        
+        $path = base_path() . $game->file . '/'. $filename;
+        if(!File::exists($path)) {
+            return response()->json(['message' => 'File not found.', 'path' => $path, 'filename' => $filename], 404);
+        }
+
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    })->where('filename', '(.*)');
 
 
     Route::prefix('schools')->group(function () {

@@ -11,10 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('grades', function (Blueprint $table) {
+        Schema::create('surveys', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('school_id')->cascadeOnDelete();
+            $table->string('description');
+            $table->enum('type', ['test', 'survey']);
+            $table->json('body');
+            $table->date('init_date');
+            $table->date('end_date');
+            $table->foreignId('experiment_id');
             $table->timestamps();
         });
     }
@@ -24,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('grades');
+        Schema::dropIfExists('surveys');
     }
 };

@@ -41,6 +41,11 @@ const notification = computed(() => usePage().props.flash.notification ? usePage
                             </div>
 
                             <!-- Navigation Links -->
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                    Dashboard
+                                </NavLink>
+                            </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <a href="javascript:;" :class="linkClasses('experiments')">
@@ -76,13 +81,7 @@ const notification = computed(() => usePage().props.flash.notification ? usePage
                                     </Dropdown>
                                 </a>
                             </div>
-
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>
-                            </div>
-
+                            
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <a href="javascript:;" :class="linkClasses('games')">
                                     <Dropdown align="right" width="48">
