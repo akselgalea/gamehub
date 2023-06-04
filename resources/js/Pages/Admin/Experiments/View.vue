@@ -57,12 +57,12 @@ const props = defineProps({
                         </section>
                     </div>
                     
-                    <div class="col-span-2 row-sp   an-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                    <div class="col-span-2 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                         <AssociatedUsers :users="users" />
                     </div>
 
                     <div class="col-span-2 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                        <AssociatedSurveys :surveys="surveys" />
+                        <AssociatedSurveys :experimentId="experiment.id" :surveys="surveys" />
                     </div>
                 </div>
             </div>

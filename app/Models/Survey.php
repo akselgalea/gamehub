@@ -13,7 +13,7 @@ class Survey extends Model
 
     protected $table = 'surveys';
 
-    protected $fields = [
+    protected $fillable = [
         'name',
         'description',
         'type',

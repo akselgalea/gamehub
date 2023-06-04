@@ -19,7 +19,7 @@ class SurveyController extends Controller
         return Inertia::render('Admin/Experiments/Surveys/Create', ['experimentId' => $id]);
     }
 
-    public function store(Request $request) {
+    public function store(SurveyCreateRequest $request) {
         $res = $this->survey->store($request);
         return redirect()->back()->with('notification', $res);
     }

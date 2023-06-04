@@ -1,9 +1,12 @@
 <script setup>
-// import NewSurveyForm from '../Surveyeters/NewSurveyForm.vue';
-// import EditSurveyForm from '../Surveyeters/EditSurveyForm.vue';
-// import DeleteSurveyForm from '../Surveyeters/DeleteSurveyForm.vue';
+import { Link } from '@inertiajs/vue3';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 defineProps({
+    experimentId: {
+        type: Number,
+        required: true
+    },
     surveys: {
         type: Array,
         required: true
@@ -27,15 +30,19 @@ const types = {
             </p>
         </header>
 
-        <div class="mt-5 flex flex-wrap gap-10 w-full">
+        <div class="mt-5 w-full">
+            <Link :href="route('surveys.create', {id: experimentId})">
+                <PrimaryButton class="mb-5">Nueva encuesta</PrimaryButton>
+            </Link>
+
             <p class="text-sm text-gray-600 dark:text-white" v-if="surveys.length == 0">
                 Este experimento aun no posee encuestas.
             </p>
             <template v-else>
-                <table class="rounded-sm shadow table-fixed w-full border-collapse">
+                <table class="rounded-sm shadow table-fixed w-full border-collapse text-gray-900 dark:text-white">
                     <thead class="border">
                         <th>Nombre</th>
-                        <th>Tipo de dato</th>
+                        <th>Tipo de encuesta</th>
                         <th>Descripción</th>
                         <th>Acciones</th>
                     </thead>

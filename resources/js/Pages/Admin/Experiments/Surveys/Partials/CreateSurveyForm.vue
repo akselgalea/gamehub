@@ -35,7 +35,7 @@ const form = useForm({
 
 const sendForm = () => {
     form.post(
-        route('surveys.create'), {
+        route('surveys.store', {id: props.experimentId}), {
             onSuccess: () => {
                 form.reset();
                 surveyBody.value = [];
@@ -159,7 +159,7 @@ const changeType = (type) => {
             </div>
 
             <div class="mt-5">
-                
+                <CreateQuestionForm :type="form.type" />
             </div>
 
             <div class="flex items-center gap-4 mt-10">

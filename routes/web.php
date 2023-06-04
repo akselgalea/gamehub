@@ -44,6 +44,11 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('experiments')->group(function () {
+        Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
+        Route::get('{id}/edit', [ExperimentController::class, 'generalInformationEdit'])->name('experiment_information.edit');
+        Route::patch('{id}/update', [ExperimentController::class, 'generalInformationUpdate'])->name('experiment_information.update');
+
+        // CRUD
         Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
         Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
         Route::get('/{id}/surveys/new', [SurveyController::class, 'create'])->name('surveys.create');
@@ -55,15 +60,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/new', [EntryPointController::class, 'store'])->name('entrypoints.store');
         Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
         Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
-    });
-
-    Route::prefix('experimentManagement')->group(function () {
-        Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
-
-        // Informacion general del experimento //
-
-        Route::get('{id}/edit', [ExperimentController::class, 'generalInformationEdit'])->name('experiment_information.edit');
-        Route::patch('{id}/update', [ExperimentController::class, 'generalInformationUpdate'])->name('experiment_information.update');
     });
 
 
@@ -83,6 +79,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
+    // Obtener archivos juegos GameHub.
     Route::get('/uploads/games/{slug}/{filename}', function($slug, $filename){
         $game = Game::where('slug', $slug)->first();
         

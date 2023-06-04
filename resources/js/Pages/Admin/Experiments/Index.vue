@@ -47,8 +47,8 @@ const closeModal = () => {
 
                         <div class="flex flex-wrap gap-10 w-full">
                             <div v-for="(experiment, index) in experiments" :key="index">
-                                <div class="first-letter:uppercase text-grey-900 dark:text-white">Experimento: {{ experiment.name }}</div>
-                                <div class="first-letter:uppercase text-grey-900 dark:text-white">Estado: {{ experiment.status }}</div>
+                                <div class="first-letter:uppercase text-gray-900  dark:text-white">Experimento: {{ experiment.name }}</div>
+                                <div class="first-letter:uppercase text-gray-900 dark:text-white">Estado: {{ experiment.status }}</div>
 
                                 <div class="flex gap-2">
                                     <PrimaryButton @click="showModal">Ver detalles</PrimaryButton>
