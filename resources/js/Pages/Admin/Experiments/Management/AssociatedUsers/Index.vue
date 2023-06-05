@@ -36,18 +36,22 @@ const props = defineProps({
                             <div v-for="(user, index) in users" :key="index">
                             <div class="first-letter:uppercase">Usuario: {{ user.name }}</div>
                             <div class="first-letter:uppercase">Correo: {{ user.email }}</div>
-                                <div class="flex gap-2">
+                                <!-- <div class="flex gap-2">
                                     <Link :href="route('experiment_information.edit', {id: user.id})">
                                         <PrimaryButton>Editar</PrimaryButton>
                                     </Link>
-                                </div>
+                                </div> -->
                         </div>
 
-                        <Link :href="route('users_experiment.index', {id: experiment_id})">
-                            <PrimaryButton>Editar</PrimaryButton>
-                        </Link>
                     </div>
+                </section>
 
+                <section  class="mt-4 flex items-center justify-center">
+
+                    <Link :href="route('users_experiment.edit', {id: experiment_id})">
+                        <PrimaryButton>Editar</PrimaryButton>
+                    </Link>
+                    
                 </section>
             </div>
         </div>

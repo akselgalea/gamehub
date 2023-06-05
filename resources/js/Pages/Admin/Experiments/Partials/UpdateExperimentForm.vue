@@ -98,15 +98,15 @@ const sendForm = () => {
 
             <div class="flex items-center gap-4 mt-10">
 
-                <Link :href="route('experiment.management', {id: experiment.id})">
-                    <PrimaryButton>Volver</PrimaryButton>
-                </Link>
-
                 <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
 
                 <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
                     <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
                 </Transition>
+
+                <Link :href="route('experiment.management', {id: experiment.id})">
+                    <PrimaryButton>Volver</PrimaryButton>
+                </Link>
 
             </div>
 

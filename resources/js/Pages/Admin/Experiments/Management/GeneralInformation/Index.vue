@@ -34,14 +34,18 @@ const props = defineProps({
                         <div class="first-letter:uppercase">Estado: {{ experiment.status }}</div>
                         <div class="first-letter:uppercase">Descripcion: {{ experiment.description }}</div>
                         <div class="first-letter:uppercase">Tiempo limite: {{ experiment.time_limit }}</div>
-                            <div class="flex gap-2">
-                                <Link :href="route('experiment_information.edit', {id: experiment.id})">
-                                    <PrimaryButton>Editar</PrimaryButton>
-                                </Link>
-                            </div>
-
                     </div>
+
                 </section>
+
+                <section class="mt-4 flex items-center justify-center">
+
+                        <Link :href="route('experiment_information.edit', {id: experiment.id})">
+                            <PrimaryButton>Editar</PrimaryButton>
+                        </Link>
+
+                </section>
+
             </div>
         </div>
     </div>

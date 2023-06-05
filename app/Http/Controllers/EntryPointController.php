@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Experiments\EntryPoints\{EntryPointCreateRequest, EntryPointUpdateRequest};
+use App\Http\Requests\Experiments\EntryPoints\{EntryPointCreateRequest, EntryPointUpdateRequest, EntryPointDeleteRequest};
 use App\Models\EntryPoint;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,53 +20,36 @@ class EntryPointController extends Controller
         return Inertia::render('Admin/Experiments/Management/Entrypoints/Index', ['entrypoints' => EntryPoint::all()->toArray(), 'experiment_id' => $id]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create($id)
     {
         return Inertia::render('Admin/Experiments/Management/Entrypoints/Create', ['experiment_id' => $id]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(EntryPointCreateRequest $request)
     {
         $res = $this->entrypoint->store($request);
         return redirect()->back()->with('notification', $res);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(EntryPoint $entryPoint)
+    public function show($id)
     {
-        //
+        return Inertia::render('Admin/Experiments/Management/Entrypoints/Edit', ['entrypoints' => EntryPoint::all()->toArray(), 'experiment_id' => $id]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(EntryPoint $entryPoint)
+    public function edit($id)
     {
-        //
+        $entrypoint = EntryPoint::find($id);
+        return Inertia::render('Admin/Experiments/Management/Entrypoints/Partials/UpdateEntryPointForm', ['entrypoint' => $entrypoint, 'experiment_id' => $entrypoint->experiment_id]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update($id, EntryPointUpdateRequest $request)
     {
         $res = $this->entrypoint->find($id)->edit($request);
-        return redirect()->route('experiment.management', $id)->with('notification', $res);  // Te redirecciona al panel de gestion de experimento
+        return redirect()->back()->with('notification', $res);  // Te redirecciona al panel de gestion de experimento
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(EntryPoint $entryPoint)
-    {
-        //
+    public function destroy(EntryPointDeleteRequest $request) {
+        $res = $this->entrypoint->erase($request);
+        return redirect()->back()->with('notification', $res);
     }
 }

@@ -6,22 +6,24 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 
+const props = defineProps({
+    user: {
+        name: '',
+        email: '',
+        password: '',
+        required: true
+    },
+})
+
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-    terms: false,
+    name: props.user.name,
+    email: props.user.email,
+    password: props.user.password,
+    password_confirmation: props.user.password,
 });
 
 const sendForm = () => {
-    form.post(
-        route('user.store'), {
-            onSuccess: () => {
-                form.reset();
-            }
-        }
-    )
+    form.patch(route('user.update', {id: props.user.id}));
 }
 
 </script>
@@ -29,10 +31,10 @@ const sendForm = () => {
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Crear Usuario</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Editar Usuario</h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                En este apartado se pueden crear usuarios que puedan acceder a la plataforma.
+                En este apartado se pueden editar los datos del usuario.
             </p>
         </header>
 
@@ -101,7 +103,7 @@ const sendForm = () => {
             <div class="flex items-center gap-4 mt-10">
 
                 <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Crear usuario
+                    Guardar
                 </PrimaryButton>
 
                 <Link :href="route('users_panel.index')">
@@ -109,7 +111,7 @@ const sendForm = () => {
                  </link>
 
                 <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
-                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Creado.</p>
+                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
                 </Transition>
             </div>
         </form>

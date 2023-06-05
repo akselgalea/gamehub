@@ -38,8 +38,14 @@ Route::middleware('auth')->group(function () {
     Route::prefix('controlpanel')->group(function () {
         
         // Administracion de usuarios //
-        
-        Route::get('/users', [AdministratorPanel::class, 'index_users_panel'])->name('users_panel.index'); // Ruta para ver el panel de administracion de los usuarios
+        Route::prefix('users')->group(function () {
+            Route::get('/', [AdministratorPanel::class, 'indexUsersPanel'])->name('users_panel.index'); // Ruta para ver el panel de administracion de los usuarios
+            Route::get('/new', [AdministratorPanel::class, 'userCreate'])->name('user.create');
+            Route::post('/new', [AdministratorPanel::class, 'userStore'])->name('user.store');
+            Route::get('{id}/edit', [AdministratorPanel::class, 'userEdit'])->name('user.edit');
+            Route::patch('{id}/update', [AdministratorPanel::class, 'userUpdate'])->name('user.update');
+        });
+         
 
 
         Route::get('/experiments', [ExperimentController::class, 'index'])->name('experiments_panel.index'); // Ruta para ver el panel de administracion de los experimentos
@@ -54,13 +60,6 @@ Route::middleware('auth')->group(function () {
         
     });
 
-    Route::prefix('entrypoints')->group(function () {
-        Route::get('{id}/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
-        Route::post('/new', [EntryPointController::class, 'store'])->name('entrypoints.store');
-        Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
-        Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
-    });
-
     Route::prefix('experimentManagement')->group(function () {
         Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
 
@@ -72,9 +71,20 @@ Route::middleware('auth')->group(function () {
         // Usuarios asociados al experimento //
 
         Route::prefix('users')->group(function () {
-            Route::get('/new', [ExperimentController::class, 'usersExperiment'])->name('users_experiment.index');
+            Route::get('{id}/new', [ExperimentController::class, 'usersExperiment'])->name('users_experiment.edit');
+            Route::post('/link', [ExperimentController::class, 'userAssociateExperiment'])->name('user_experiment.link');
+            Route::post('/unlink', [ExperimentController::class, 'userDisassociateExperiment'])->name('user_experiment.unlink');
         });
-        
+
+        // Entrypoints asociados al experimento //
+        Route::prefix('entrypoints')->group(function () {
+            Route::get('{id}/show', [EntryPointController::class, 'show'])->name('entrypoints.show');
+            Route::get('{id}/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
+            Route::post('/new', [EntryPointController::class, 'store'])->name('entrypoints.store');
+            Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
+            Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
+            Route::delete('/{id}', [EntryPointController::class, 'destroy'])->name('entrypoints.destroy');  
+        });
     });
 
 

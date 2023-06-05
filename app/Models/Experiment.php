@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Inertia\Inertia;
+use App\Http\Requests\Experiments\Users\{UserAssociateRequest, UserDisassociateRequest};
 
 class Experiment extends Model
 {
@@ -53,7 +54,7 @@ class Experiment extends Model
         }
     }
 
-    // Edita la informacion general de un experimento //
+    // Actualiza la informacion general de un experimento //
     
     public function edit($req) {
         $validated = $req->validated();
@@ -61,6 +62,50 @@ class Experiment extends Model
         try {
             $this->update($validated);
             return ['status' => 200, 'message' => 'Datos del experimento actualizado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    // Devuelve los usuarios asociados y no asociados al experimento para permitir la vinculacion de los mismos //
+
+    public function usersExperiment($id) {
+        $experiment = Experiment::find($id);
+        return Inertia::render('Admin/Experiments/Management/AssociatedUsers/Edit', 
+        ['experiment_id'=> $id,
+         'noAssociatedUsers' => User::whereDoesntHave('experiments')->get()->toArray(),
+         'associatedUsers' => $experiment->users->toArray(),]);
+    }
+
+    public function userAssociateExperiment($req) {
+
+        $validated = $req->validated();
+        $user = User::find($validated['user_id']);
+        $experiment = Experiment::find($validated['experiment_id']);
+
+        $experiment->users()->attach($user);
+        try {
+            
+            
+            
+            return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function userDisassociateExperiment($req) {
+
+        $validated = $req->validated();
+ 
+        try {
+
+            $user = User::find($validated['user_id']);
+            $experiment = Experiment::find($validated['experiment_id']);
+
+            $experiment->users()->detach($user);
+
+            return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('experiment_id');
-            $table->foreignId('game_instance_id');
+            $table->foreignId('game_instance_id')->nullable()->default(null);
             $table->timestamps();
         });
     }

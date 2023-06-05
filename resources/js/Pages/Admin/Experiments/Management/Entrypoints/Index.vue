@@ -34,19 +34,23 @@ const props = defineProps({
 
                         <div class="flex flex-wrap gap-10 w-full">
                             <div v-for="(entrypoint, index) in entrypoints" :key="index">
-                            <div class="first-letter:uppercase">Entrypoint: {{ entrypoint.name }}</div>
-                            <div class="first-letter:uppercase">Descripcion: {{ entrypoint.description }}</div>
-                                <div class="flex gap-2">
+                                <div class="first-letter:uppercase">Entrypoint: {{ entrypoint.name }}</div>
+                                <div class="first-letter:uppercase">Descripcion: {{ entrypoint.description }}</div>
+                                <!-- <div class="flex gap-2">
                                     <Link :href="route('entrypoints.edit', {id: entrypoint.id})">
                                         <PrimaryButton>Editar</PrimaryButton>
                                     </Link>
-                                </div>
+                                </div> -->
+                            </div>
                         </div>
+                        
+                </section>
 
-                        <Link :href="route('entrypoints.create', {id: experiment_id})">
-                            <PrimaryButton>Agregar</PrimaryButton>
-                        </Link>
-                    </div>
+                <section class="mt-4 flex items-center justify-center">
+
+                    <Link :href="route('entrypoints.show', {id: experiment_id})">
+                        <PrimaryButton>Editar</PrimaryButton>
+                    </Link>
 
                 </section>
             </div>

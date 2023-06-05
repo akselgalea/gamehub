@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Http\Requests\Users\{UserCreateRequest};
 
 class User extends Authenticatable
 {
@@ -51,5 +52,17 @@ class User extends Authenticatable
 
     public function experiments(): BelongsToMany {
         return $this->belongsToMany(Experiment::class, 'experiment_user', 'experiment_id' , 'user_id');
+    }
+
+    public function store(UserCreateRequest $req) {
+        
+        $validated = $req->validated();
+
+        try {
+            $user = User::create($validated);
+            return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
     }
 }

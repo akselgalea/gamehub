@@ -38,13 +38,21 @@ const props = defineProps({
                                 <div class="first-letter:uppercase">{{ user.email }}</div>
 
                                 <div class="flex gap-2">
-                                    <Link :href="route('users_panel.index', {id: user.id})">
+                                    <Link :href="route('user.edit', {id: user.id})">
                                         <PrimaryButton>Editar</PrimaryButton>
                                     </Link>
                                 </div>
                             </div>
+                            
                         </div>
                     </section>
+ 
+                    <section class="mt-5 flex items-center justify-center">
+                        <Link :href="route('user.create')">
+                                <PrimaryButton>Crear nuevo usuario</PrimaryButton>
+                            </Link>
+                    </section>
+
                 </div>
             </div>
         </div>

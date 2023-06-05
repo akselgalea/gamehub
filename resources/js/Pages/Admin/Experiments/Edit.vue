@@ -5,14 +5,14 @@ import UpdateExperimentForm from './Partials/UpdateExperimentForm.vue';
 
 defineProps({
     experiment: {
-        type: Array,
+        type: Object,
         required: true
     },
 });
 </script>
 
 <template>
-    <Head title="Subir un juego" />
+    <Head title="Editar un experimento" />
 
     <AuthenticatedLayout>
         <template #header>
