@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Experiments\Surveys\{SurveyCreateRequest, SurveyUpdateRequest, SurveyDeleteRequest};
+use App\Http\Requests\Experiments\Surveys\{SurveyQuestionCreateRequest};
 use Illuminate\Http\Request;
 use App\Models\Survey;
 use Inertia\Inertia;
@@ -22,6 +23,10 @@ class SurveyController extends Controller
     public function store(SurveyCreateRequest $request) {
         $res = $this->survey->store($request);
         return redirect()->back()->with('notification', $res);
+    }
+
+    public function questionCreate(SurveyQuestionCreateRequest $request) {
+        return redirect()->back();
     }
 
     // public function update($id, SurveyUpdateRequest $request) {

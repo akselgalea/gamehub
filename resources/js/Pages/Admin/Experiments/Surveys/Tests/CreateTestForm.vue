@@ -6,7 +6,6 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Modal from '@/Components/Modal.vue';
 import CreateSurveyQuestion from './CreateSurveyQuestion.vue';
-import SurveyQuestion from './SurveyQuestion.vue';
 import { useForm } from '@inertiajs/vue3';
 import { formDate } from '@/Helpers/date';
 import { ref } from 'vue';
@@ -16,6 +15,12 @@ const props = defineProps({
         type: String
     }
 });
+
+const typesWithOptions = [
+    'checkbox',
+    'radio',
+    'select'
+];
 
 const showingModal = ref(false);
 const surveyBody = ref([]);
@@ -32,13 +37,10 @@ const form = useForm({
 
 const sendForm = () => {
     form.post(
-        route('api.surveys.survey_question.store', {id: props.experimentId}), {
+        route('surveys.store', {id: props.experimentId}), {
             onSuccess: () => {
                 form.reset();
                 surveyBody.value = [];
-            },
-            onError: (e) => {
-                console.log(e);
             }
         }
     )
@@ -54,6 +56,7 @@ const sendForm = () => {
 */
 const addQuestion = (question) => {
     surveyBody.value.push(question);
+    console.log(surveyBody.value);
 }
 
 const showModal = () => {
@@ -146,29 +149,8 @@ const closeModal = () => {
                 </Modal>
             </div>
 
-            <div class="mt-5">
-                <p class="text-sm text-gray-600 dark:text-white" v-if="surveyBody.length == 0">
-                    Esta encuesta aun no posee preguntas.
-                </p>
-                <template v-else>
-                    <table class="rounded-sm shadow table-fixed w-full border-collapse text-gray-900 dark:text-white">
-                        <thead class="border">
-                            <th>Encabezado</th>
-                            <th>Tipo</th>
-                            <th>Acciones</th>
-                        </thead>
-                        <tbody>
-                            <tr class="border" v-for="(question, index) in surveyBody" :key="index">
-                                <td class="px-3 text-justify">{{ question.question }}</td>
-                                <td class="px-3 text-justify">{{ question.type == 'open' ? 'Pregunta abierta' : 'Likert' }}</td>
-                                <td class="px-3 text-justify">
-                                    <PrimaryButton type="button">Test</PrimaryButton>
-                                    <PrimaryButton type="button">Test</PrimaryButton>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </template>
+            <div v-for="question in surveyBody">
+                <pre>{{ question }}</pre>
             </div>
 
             <div class="flex items-center gap-4 mt-10">

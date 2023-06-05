@@ -47,7 +47,7 @@ const types = {
                         <th>Acciones</th>
                     </thead>
                     <tbody>
-                        <tr v-for="(survey, index) in surveys" :key="index" class="border">
+                        <tr class="border" v-for="(survey, index) in surveys" :key="index">
                             <td class="px-3 text-justify">{{ survey.name }}</td>
                             <td class="px-3 text-justify">{{ types[survey.type] }}</td>
                             <td class="px-3 text-justify">{{ survey.description }}</td>
