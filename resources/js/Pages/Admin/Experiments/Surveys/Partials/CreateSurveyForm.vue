@@ -4,12 +4,14 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import DangerButton from '@/Components/DangerButton.vue';
 import Modal from '@/Components/Modal.vue';
 import CreateSurveyQuestion from './CreateSurveyQuestion.vue';
-import SurveyQuestion from './SurveyQuestion.vue';
+import UpdateSurveyQuestion from './UpdateSurveyQuestion.vue';
 import { useForm } from '@inertiajs/vue3';
 import { formDate } from '@/Helpers/date';
 import { ref } from 'vue';
+import { noti } from '@/Helpers/notifications';
 
 const props = defineProps({
     experimentId: {
@@ -23,16 +25,18 @@ const surveyBody = ref([]);
 const form = useForm({
     name: '',
     description: '',
-    type: '',
-    body: surveyBody.value,
+    type: 'survey',
+    body: null,
     init_date: formDate(new Date()),
     end_date: formDate(new Date()),
     experiment_id: props.experimentId,
 });
 
 const sendForm = () => {
+    form.body = JSON.stringify(surveyBody.value);
+
     form.post(
-        route('api.surveys.survey_question.store', {id: props.experimentId}), {
+        route('surveys.store', {id: props.experimentId}), {
             onSuccess: () => {
                 form.reset();
                 surveyBody.value = [];
@@ -63,6 +67,18 @@ const showModal = () => {
 const closeModal = () => {
     showingModal.value = false;
 };
+
+const updateQuestion = (question, index) => {
+    surveyBody.value[index] = question;
+    noti('success', 'Pregunta actualizada con éxito!', 'top-center');
+}
+
+const deleteQuestion = (index) => {
+    if(confirm('¿Estás seguro que deseas eliminar esta pregunta?')) {
+        surveyBody.value = surveyBody.value.filter((item, idx) => idx != index);
+        noti('success', 'Pregunta eliminada con éxito!', 'top-center');
+    }
+}
 
 </script>
 
@@ -161,9 +177,9 @@ const closeModal = () => {
                             <tr class="border" v-for="(question, index) in surveyBody" :key="index">
                                 <td class="px-3 text-justify">{{ question.question }}</td>
                                 <td class="px-3 text-justify">{{ question.type == 'open' ? 'Pregunta abierta' : 'Likert' }}</td>
-                                <td class="px-3 text-justify">
-                                    <PrimaryButton type="button">Test</PrimaryButton>
-                                    <PrimaryButton type="button">Test</PrimaryButton>
+                                <td class="px-3 flex gap-1 justify-center">
+                                    <UpdateSurveyQuestion :question="question" @update-question="updateQuestion($event, index)" />
+                                    <DangerButton type="button" @click="deleteQuestion(index)"><i class="fas fa-trash-alt"></i></DangerButton>
                                 </td>
                             </tr>
                         </tbody>

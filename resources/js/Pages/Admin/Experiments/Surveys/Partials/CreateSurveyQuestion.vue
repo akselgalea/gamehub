@@ -60,7 +60,7 @@ const onlyNecessaryFields = (data) => {
         <InputError class="mt-2" :message="form.errors.question" />
     </div>
 
-    <div v-if="form.type == 'likert'">
+    <template v-if="form.type == 'likert'">
         <div class="mt-5">
             <InputLabel for="minText" value="Valor mínimo"/>
             <TextInput class="w-full" type="text" name="minText" v-model="form.minText" placeholder="Totalmente en desacuerdo" required />
@@ -72,7 +72,7 @@ const onlyNecessaryFields = (data) => {
             <TextInput class="w-full" type="text" name="maxText" v-model="form.maxText" placeholder="Totalmente de acuerdo" required />
             <InputError class="mt-2" :message="form.errors.maxText" />
         </div>
-    </div>
+    </template>
 
     <div class="mt-10">
         <SecondaryButton @click="$emit('cancel')"> Cancelar </SecondaryButton>
