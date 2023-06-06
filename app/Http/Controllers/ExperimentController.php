@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Experiments\{ExperimentCreateRequest, ExperimentUpdateRequest};
 use App\Http\Requests\Experiments\Users\{UserAssociateRequest, UserDisassociateRequest};
-use App\Models\{Experiment, User};
+use App\Models\{Experiment, User, Game};
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Controllers\UserInExperiment;
@@ -39,7 +39,9 @@ class ExperimentController extends Controller
         return Inertia::render('Admin/Experiments/Management/ExperimentManagement',
         ['experiment' => $experiment,
          'users' => $experiment->users->toArray(),
-         'entrypoints' => $experiment->entrypoints->toArray()
+         'entrypoints' => $experiment->entrypoints->toArray(),
+         'games_instances' => $experiment->gameInstances->toArray(),
+         'games' => Game::all()->toArray(),
         ]);
     }
 

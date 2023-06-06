@@ -7,6 +7,7 @@ import Modal from '@/Components/Modal.vue';
 import ExperimentInformation from '@/Pages/Admin/Experiments/Management/GeneralInformation/Index.vue';
 import AssociatedUsers from '@/Pages/Admin/Experiments/Management/AssociatedUsers/Index.vue';
 import EntryPoints from '@/Pages/Admin/Experiments/Management/Entrypoints/Index.vue';
+import ExperimentInstances from '@/Pages/Admin/Experiments/Management/ExperimentInstances/Index.vue';
 
 const props = defineProps({
     experiment: {
@@ -18,6 +19,14 @@ const props = defineProps({
         required: true
     },
     entrypoints: {
+        type: Array,
+        required: true
+    },
+    games_instances: {
+        type: Array,
+        required: true
+    },
+    games: {
         type: Array,
         required: true
     }
@@ -49,6 +58,12 @@ const props = defineProps({
         <div class="row">
 
             <EntryPoints :entrypoints = "entrypoints" :experiment_id = "experiment.id"/>
+
+        </div>
+
+        <div class="row">
+
+            <ExperimentInstances :games_instances = "games_instances" :experiment_id = "experiment.id"/>
 
         </div>
 

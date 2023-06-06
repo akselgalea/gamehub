@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, GameController, ParameterController, ExperimentController, EntryPointController};
+use App\Http\Controllers\{ProfileController, GameController, ParameterController, ExperimentController, EntryPointController, GameInstanceController};
 use App\Models\{AdministratorPanel, Experiment};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // Entrypoints asociados al experimento //
+
         Route::prefix('entrypoints')->group(function () {
             Route::get('{id}/show', [EntryPointController::class, 'show'])->name('entrypoints.show');
             Route::get('{id}/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
@@ -84,6 +85,17 @@ Route::middleware('auth')->group(function () {
             Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
             Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
             Route::delete('/{id}', [EntryPointController::class, 'destroy'])->name('entrypoints.destroy');  
+        });
+
+        // Instancias de juego asociados al experimento // 
+
+        Route::prefix('game_instances')->group(function () {
+            Route::get('{id}/show', [GameInstanceController::class, 'show'])->name('game_instances.show');
+            Route::get('{id}/new', [GameInstanceController::class, 'create'])->name('game_instances.create');
+            Route::post('/new', [GameInstanceController::class, 'store'])->name('game_instances.store');
+            Route::get('{id}/edit', [GameInstanceController::class, 'edit'])->name('game_instances.edit');
+            Route::patch('{id}/update', [GameInstanceController::class, 'update'])->name('game_instances.update');
+            Route::delete('/{id}', [GameInstanceController::class, 'destroy'])->name('game_instances.destroy');  
         });
     });
 

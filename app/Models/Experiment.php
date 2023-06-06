@@ -42,6 +42,10 @@ class Experiment extends Model
         return $this->hasMany(EntryPoint::class);
     }
 
+    public function gameInstances(): HasMany {
+        return $this->hasMany(GameInstance::class);
+    }
+
     public function store($req) {
         
         $validated = $req->validated();
