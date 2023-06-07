@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
         Route::get('/{id}/surveys/new', [SurveyController::class, 'create'])->name('surveys.create');
         Route::post('/{id}/surveys/new', [SurveyController::class, 'store'])->name('surveys.store');
+        Route::get('/{id}/surveys/tests/new', [SurveyController::class, 'testCreate'])->name('surveys.tests.create');
+        Route::post('/{id}/surveys/tests/new', [SurveyController::class, 'store'])->name('surveys.tests.store');
     });
 
     Route::prefix('entrypoints')->group(function () {

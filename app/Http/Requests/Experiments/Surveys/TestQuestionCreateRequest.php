@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Experiments\Surveys;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class SurveyCreateTestQuestion extends FormRequest
+class TestQuestionCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +24,10 @@ class SurveyCreateTestQuestion extends FormRequest
     {
         return [
             'question' => ['required', 'string', 'max:255'],
-            'type' => ['required', Rule::in(['likert', 'open'])],
+            'type' => ['required', Rule::in(['multi', 'open'])],
+            'options' => 'nullable|required_if:type,multi|array',
+            'options.*' => 'nullable|required_unless:options,null|string',
+            'answer' => ['required', 'string', 'max:255']
         ];
     }
 
@@ -40,8 +44,9 @@ class SurveyCreateTestQuestion extends FormRequest
     public function attributes(): array
     {
         return [
-            'question' => 'encabezado',
+            'question' => 'enunciado',
             'type' => 'tipo',
+            'answer' => 'respuesta'
         ];
     }
 }

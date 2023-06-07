@@ -80,7 +80,7 @@ const closeModal = () => {
                 </div>
     
                 <div class="mt-5">
-                    <InputLabel for="question" value="Encabezado de la pregunta" />
+                    <InputLabel for="question" value="Enunciado de la pregunta" />
                     <TextInput class="w-full" type="text" name="question" v-model="form.question" />
                     <InputError class="mt-2" :message="form.errors.question" />
                 </div>

@@ -4,11 +4,13 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import DangerButton from '@/Components/DangerButton.vue';
 import Modal from '@/Components/Modal.vue';
-import CreateSurveyQuestion from './CreateSurveyQuestion.vue';
+import CreateTestQuestion from './CreateTestQuestion.vue';
 import { useForm } from '@inertiajs/vue3';
 import { formDate } from '@/Helpers/date';
 import { ref } from 'vue';
+import { noti } from '@/Helpers/notifications';
 
 const props = defineProps({
     experimentId: {
@@ -16,47 +18,37 @@ const props = defineProps({
     }
 });
 
-const typesWithOptions = [
-    'checkbox',
-    'radio',
-    'select'
-];
-
 const showingModal = ref(false);
 const surveyBody = ref([]);
 
 const form = useForm({
     name: '',
     description: '',
-    type: '',
-    body: surveyBody.value,
+    type: 'survey',
+    body: null,
     init_date: formDate(new Date()),
     end_date: formDate(new Date()),
     experiment_id: props.experimentId,
 });
 
 const sendForm = () => {
+    form.body = JSON.stringify(surveyBody.value);
+
     form.post(
         route('surveys.store', {id: props.experimentId}), {
             onSuccess: () => {
                 form.reset();
                 surveyBody.value = [];
+            },
+            onError: (e) => {
+                console.log(e);
             }
         }
     )
 }
 
-/*
-    question: {
-        question: String, //Texto enriquecido
-        type: String,
-        options?: Array, //Texto enriquecido, preguntas radio
-        answer?: [String, Array]
-    }
-*/
 const addQuestion = (question) => {
     surveyBody.value.push(question);
-    console.log(surveyBody.value);
 }
 
 const showModal = () => {
@@ -67,18 +59,28 @@ const closeModal = () => {
     showingModal.value = false;
 };
 
+const updateQuestion = (question, index) => {
+    surveyBody.value[index] = question;
+    noti('success', 'Pregunta actualizada con éxito!', 'top-center');
+}
+
+const deleteQuestion = (index) => {
+    if(confirm('¿Estás seguro que deseas eliminar esta pregunta?')) {
+        surveyBody.value = surveyBody.value.filter((item, idx) => idx != index);
+        noti('success', 'Pregunta eliminada con éxito!', 'top-center');
+    }
+}
 </script>
 
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Crear una encuesta</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Crear una prueba</h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Puedes realizar encuestas a los estudiantes que participen del experimento.
-                A continuación puedes ingresar las preguntas y el formato que va a tener esta encuesta,
-                al momento de crear una encuesta de tipo prueba se le añadirá también el campo de respuesta correcta
-                a cada pregunta.
+                Puedes realizar encuestas de tipo prueba a los estudiantes que participen del experimento.
+                A continuación puedes ingresar las preguntas y el formato que va a tener esta encuesta.
+                Al ser una prueba, todas las preguntas tendrán también una respuesta correcta.
             </p>
         </header>
 
@@ -144,7 +146,7 @@ const closeModal = () => {
                             Agregar pregunta
                         </h2>
     
-                        <CreateSurveyQuestion @cancel="closeModal" @addQuestion="addQuestion($event)" />
+                        <CreateTestQuestion @cancel="closeModal" @addQuestion="addQuestion($event)" />
                     </div>
                 </Modal>
             </div>

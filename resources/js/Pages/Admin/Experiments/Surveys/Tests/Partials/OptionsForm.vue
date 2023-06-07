@@ -2,10 +2,6 @@
     import TextInput from '@/Components/TextInput.vue';
     import InputError from '@/Components/InputError.vue';
     import InputLabel from '@/Components/InputLabel.vue';
-
-    const errors = ref({});
-
-    const options = ref([]);
 </script>
 
 <template>
@@ -62,7 +58,7 @@
     </div>
 
     <div class="mt-5">
-        <InputLabel for="name" value="Opción 4" />
+        <InputLabel for="name" value="Opción 5" />
         
         <TextInput 
             id="name"

@@ -5,7 +5,6 @@ import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { noti } from '@/Helpers/notifications';
-import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 
 const emit = defineEmits(['addQuestion', 'cancel']);
@@ -55,7 +54,7 @@ const onlyNecessaryFields = (data) => {
     </div>
 
     <div class="mt-5">
-        <InputLabel for="question" value="Encabezado de la pregunta" />
+        <InputLabel for="question" value="Enunciado de la pregunta" />
         <TextInput class="w-full" type="text" name="question" v-model="form.question" />
         <InputError class="mt-2" :message="form.errors.question" />
     </div>

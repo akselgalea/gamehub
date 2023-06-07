@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Experiments\Surveys\{SurveyCreateRequest, SurveyUpdateRequest, SurveyDeleteRequest};
-use App\Http\Requests\Experiments\Surveys\{SurveyQuestionCreateRequest};
+use App\Http\Requests\Experiments\Surveys\{SurveyQuestionCreateRequest, TestQuestionCreateRequest};
 use Illuminate\Http\Request;
 use App\Models\Survey;
 use Inertia\Inertia;
@@ -26,6 +26,14 @@ class SurveyController extends Controller
     }
 
     public function questionCreate(SurveyQuestionCreateRequest $request) {
+        return redirect()->back();
+    }
+
+    public function testCreate($id) {
+        return Inertia::render('Admin/Experiments/Surveys/Tests/Create', ['experimentId' => $id]);
+    }
+
+    public function testQuestionCreate(TestQuestionCreateRequest $request) {
         return redirect()->back();
     }
 

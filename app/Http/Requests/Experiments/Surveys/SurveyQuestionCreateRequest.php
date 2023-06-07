@@ -43,7 +43,7 @@ class SurveyQuestionCreateRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'question' => 'encabezado',
+            'question' => 'enunciado',
             'type' => 'tipo',
             'minText' => 'Valor mínimo',
             'maxText' => 'Valor máximo'

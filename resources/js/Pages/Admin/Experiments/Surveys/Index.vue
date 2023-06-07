@@ -31,9 +31,15 @@ const types = {
         </header>
 
         <div class="mt-5 w-full">
-            <Link :href="route('surveys.create', {id: experimentId})">
-                <PrimaryButton class="mb-5">Nueva encuesta</PrimaryButton>
-            </Link>
+            <div class="mb-5 flex gap-2">
+                <Link :href="route('surveys.create', {id: experimentId})">
+                    <PrimaryButton>Nueva encuesta</PrimaryButton>
+                </Link>
+    
+                <Link :href="route('surveys.tests.create', {id: experimentId})">
+                    <PrimaryButton>Nueva prueba</PrimaryButton>
+                </Link>
+            </div>
 
             <p class="text-sm text-gray-600 dark:text-white" v-if="surveys.length == 0">
                 Este experimento aun no posee encuestas.

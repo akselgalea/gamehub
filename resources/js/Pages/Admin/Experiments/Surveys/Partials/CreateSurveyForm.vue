@@ -48,14 +48,6 @@ const sendForm = () => {
     )
 }
 
-/*
-    question: {
-        question: String, //Texto enriquecido
-        type: String,
-        options?: Array, //Texto enriquecido, preguntas radio
-        answer?: [String, Array]
-    }
-*/
 const addQuestion = (question) => {
     surveyBody.value.push(question);
 }
@@ -79,7 +71,6 @@ const deleteQuestion = (index) => {
         noti('success', 'Pregunta eliminada con éxito!', 'top-center');
     }
 }
-
 </script>
 
 <template>
@@ -169,7 +160,7 @@ const deleteQuestion = (index) => {
                 <template v-else>
                     <table class="rounded-sm shadow table-fixed w-full border-collapse text-gray-900 dark:text-white">
                         <thead class="border">
-                            <th>Encabezado</th>
+                            <th>Enunciado</th>
                             <th>Tipo</th>
                             <th>Acciones</th>
                         </thead>

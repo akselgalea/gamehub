@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('surveys')->group(function () {
             Route::post('questions/create', [SurveyController::class, 'questionCreate'])->name('api.surveys.survey_question.create');
+            Route::post('tests/questions/create', [SurveyController::class, 'testQuestionCreate'])->name('api.surveys.test_question.create');
         });
     });
 });
