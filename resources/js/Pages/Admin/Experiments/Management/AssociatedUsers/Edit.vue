@@ -70,7 +70,57 @@ const disasocciateForm = (user_id) => {
                             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                                 <div class="flex flex-wrap gap-10 w-full">
 
-                                    <section class="mt-5"> Usuarios asociados :
+                                    <section class="mt-5 w-full md:w-1/2"> Usuarios asociados :
+                                            <p class="text-sm text-gray-600 dark:text-gray-400" v-if="associatedUsers.length == 0">No se encontraron usuarios asociados.</p>
+
+                                            <template v-else>
+                                                <table class="rounded-sm shadow table-fixed w-full border-collapse">
+                                                    <thead class="border">
+                                                        <th>Nombre</th>
+                                                        <th>Correo</th>
+                                                        <th>Acciones</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(user, index) in associatedUsers" :key="index" class="border">
+                                                            <td class="px-3 text-justify">{{ user.name }}</td>
+                                                            <td class="px-3 text-justify">{{ user.email }}</td>
+                                                            <td class="px-3 flex gap-1 justify-center">
+                                                                <DangerButton @click="disasocciateForm(user.id)">Desvincular</DangerButton>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </template>
+                                            
+                                    </section>
+
+                                    <section class="mt-5 w-full md:w-1/2"> Usuarios no asociados :
+                                        <p class="text-sm text-gray-600 dark:text-gray-400" v-if="noAssociatedUsers.length == 0">No se encontraron usuarios asociados.</p>
+
+                                        <template v-else>
+                                            <table class="rounded-sm shadow table-fixed w-full border-collapse">
+                                                <thead class="border">
+                                                    <th>Nombre</th>
+                                                    <th>Correo</th>
+                                                    <th>Acciones</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(user, index) in noAssociatedUsers" :key="index" class="border">
+                                                        <td class="px-3 text-justify">{{ user.name }}</td>
+                                                        <td class="px-3 text-justify">{{ user.email }}</td>
+                                                        <td class="px-3 flex gap-1 justify-center">
+                                                            <PrimaryButton @click="asocciateForm(user.id)">Vincular</PrimaryButton>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </template>
+                                    </section>
+
+                                            
+
+                                    <!-- <section class="mt-5"> Usuarios asociados :
                                             <p class="text-sm text-gray-600 dark:text-gray-400" v-if="associatedUsers.length == 0">No se encontraron usuarios asociados.</p>
 
                                             <div class="flex flex-wrap gap-10 w-full md:w-1/2">
@@ -98,12 +148,18 @@ const disasocciateForm = (user_id) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                    </section>
+                                    </section> -->
 
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <section class="mt-5 flex items-center justify-center w-full">
+                        <Link class="ml-2" :href="route('experiment.management', {id: experiment_id})">
+                            <PrimaryButton>Volver</PrimaryButton>
+                        </Link>
+                    </section>
 
                 </div>
             </div>
