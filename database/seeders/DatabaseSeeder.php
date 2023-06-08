@@ -29,14 +29,32 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'admin',
-            'role_id' => '2',
+            'type' => 'admin',
             'email' => 'admin@pucv.cl',
         ]);
         
         \App\Models\User::factory()->create([
             'name' => 'tester',
-            'role_id' => '1',
+            'type' => 'student',
             'email' => 'tester@pucv.cl',
+        ]);
+
+        \App\Models\User::factory()->create([
+            'name' => 'estudiante1',
+            'type' => 'student',
+            'email' => 'e1@pucv.cl',
+        ]);
+
+        \App\Models\User::factory()->create([
+            'name' => 'estudiante2',
+            'type' => 'student',
+            'email' => 'e2@pucv.cl',
+        ]);
+
+        \App\Models\User::factory()->create([
+            'name' => 'estudiante3',
+            'type' => 'student',
+            'email' => 'e3@pucv.cl',
         ]);
 
         /*---------- Poblado de categorias --------- */

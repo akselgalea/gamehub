@@ -5,6 +5,13 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
+import Toast, {POSITION} from 'vue-toastification';
+import "vue-toastification/dist/index.css";
+
+const toastOptions = {
+    timeout: 3000,
+    position: POSITION.TOP_RIGHT,
+};
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'GameHub';
 
@@ -15,6 +22,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .use(Toast, toastOptions)
             .mount(el);
     },
     progress: {

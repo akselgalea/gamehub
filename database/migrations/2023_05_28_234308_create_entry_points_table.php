@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('grades', function (Blueprint $table) {
+        Schema::create('entry_points', function (Blueprint $table) {
             $table->id();
+            $table->string('token');
             $table->string('name');
-            $table->foreignId('school_id')->cascadeOnDelete();
+            $table->string('description');
+            $table->boolean('obfuscated');
+            $table->foreignId('experiment_id');
+            //$table->foreignId('course_id');
             $table->timestamps();
         });
     }
@@ -24,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('grades');
+        Schema::dropIfExists('entry_points');
     }
 };

@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\{ProfileController, GameController, ParameterController, SchoolController, GradeController, Studentcontroller};
+use App\Http\Controllers\{ProfileController, GameController, ParameterController, SchoolController, GradeController, Studentcontroller, SurveyController};
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +24,11 @@ Route::middleware('auth')->group(function () {
         Route::prefix('students')->group(function () {
             Route::get('{id}/school-info', [StudentController::class, 'schoolInfo'])->name('api.students.school_info');
             Route::patch('{id}/school-info', [StudentController::class, 'gradeUpdate'])->name('api.students.school_info.update');
+        });
+
+        Route::prefix('surveys')->group(function () {
+            Route::post('questions/create', [SurveyController::class, 'questionCreate'])->name('api.surveys.survey_question.create');
+            Route::post('tests/questions/create', [SurveyController::class, 'testQuestionCreate'])->name('api.surveys.test_question.create');
         });
     });
 });

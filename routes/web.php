@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, GameController, ParameterController, SchoolController, GradeController};
-use App\Models\{AdministratorPanel};
+use App\Http\Controllers\{GameController, ParameterController, ExperimentController, EntryPointController, SurveyController};
+use App\Http\Controllers\{ProfileController, SchoolController, GradeController};
+use App\Models\{AdministratorPanel, Experiment, Game};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\File;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,8 +38,32 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('controlpanel')->group(function () {
-        Route::get('/users', [AdministratorPanel::class, 'index_users_panel'])->name('users_panel.index');
+        Route::get('/users', [AdministratorPanel::class, 'index_users_panel'])->name('users_panel.index'); // Ruta para ver el panel de administracion de los usuarios
+        Route::get('/experiments', [ExperimentController::class, 'index'])->name('experiments_panel.index'); // Ruta para ver el panel de administracion de los experimentos
+        
     });
+
+    Route::prefix('experiments')->group(function () {
+        Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
+        Route::get('{id}/edit', [ExperimentController::class, 'generalInformationEdit'])->name('experiment_information.edit');
+        Route::patch('{id}/update', [ExperimentController::class, 'generalInformationUpdate'])->name('experiment_information.update');
+
+        // CRUD
+        Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
+        Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
+        Route::get('/{id}/surveys/new', [SurveyController::class, 'create'])->name('surveys.create');
+        Route::post('/{id}/surveys/new', [SurveyController::class, 'store'])->name('surveys.store');
+        Route::get('/{id}/surveys/tests/new', [SurveyController::class, 'testCreate'])->name('surveys.tests.create');
+        Route::post('/{id}/surveys/tests/new', [SurveyController::class, 'store'])->name('surveys.tests.store');
+    });
+
+    Route::prefix('entrypoints')->group(function () {
+        Route::get('/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
+        Route::post('/new', [EntryPointController::class, 'store'])->name('entrypoints.store');
+        Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
+        Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
+    });
+
 
     Route::prefix('games')->group(function () {
         Route::get('/', [GameController::class, 'index'])->name('games.index');
@@ -54,6 +80,26 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [ParameterController::class, 'destroy'])->name('games.params.destroy');
         });
     });
+
+    // Obtener archivos juegos GameHub.
+    Route::get('/uploads/games/{slug}/{filename}', function($slug, $filename){
+        $game = Game::where('slug', $slug)->first();
+        
+        if (substr($filename, 0, strlen('html5game')) == 'html5game') {
+            $filename = substr($filename, strlen('html5game'));
+        }
+        
+        $path = base_path() . $game->file . '/'. $filename;
+        if(!File::exists($path)) {
+            return response()->json(['message' => 'File not found.', 'path' => $path, 'filename' => $filename], 404);
+        }
+
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    })->where('filename', '(.*)');
 
 
     Route::prefix('schools')->group(function () {
