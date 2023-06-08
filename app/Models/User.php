@@ -10,10 +10,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Requests\Users\{UserCreateRequest};
+use Parental\HasChildren;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasChildren;
 
     /**
      * The attributes that are mass assignable.
@@ -22,9 +23,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'role_id',
         'email',
         'password',
+        'type',
+        'grade_id'
+    ];
+
+    protected $childTypes = [
+        'admin' => Admin::class,
+        'student' => Student::class,
     ];
 
     /**
@@ -50,8 +57,14 @@ class User extends Authenticatable
         return $this->hasMany(User::class);
     }
 
-    public function experiments(): BelongsToMany {
-        return $this->belongsToMany(Experiment::class, 'experiment_user', 'experiment_id' , 'user_id');
+    
+
+    public function isAdmin() {
+        return $this->type == 'admin';
+    }
+
+    public function isStudent() {
+        return $this->type == 'student';
     }
 
     public function store(UserCreateRequest $req) {

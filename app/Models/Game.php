@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Madnest\Madzipper\Madzipper;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Support\Facades\URL;
 
 class Game extends Model implements HasMedia
 {
@@ -23,6 +24,7 @@ class Game extends Model implements HasMedia
 
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'file',
         'gm2game',
@@ -33,10 +35,6 @@ class Game extends Model implements HasMedia
 
     protected $cast = [
         'gm2game' => 'boolean',
-    ];
-
-    protected $append = [
-        'slug'
     ];
 
     public function category(): BelongsTo {
@@ -51,10 +49,6 @@ class Game extends Model implements HasMedia
         return $this->hasMany(Parameter::class);    
     }
 
-    public function getSlugAttribute() {
-        return Str::of($this->name)->slug('-');
-    }
-
     /** 
      * Guarda los archivos del juego
      * Necesita ser llamado desde una request tipo GameCreateRequest o GameUpdateRequest que contenga el campo 'file'
@@ -67,7 +61,7 @@ class Game extends Model implements HasMedia
     
             $zipper = new Madzipper;
             $link = "/uploads/games/$this->slug";
-            $path2extract = base_path() . "/public" . $link;
+            $path2extract = base_path() . $link;
 
             // Borra los archivos, si existe el directorio
             // if (Storage::exists($path2extract)) (new Filesystem)->cleanDirectory($path2extract);
@@ -95,8 +89,9 @@ class Game extends Model implements HasMedia
     }
 
     public function store($req) {
-        
         $validated = $req->validated();
+        $validated['slug'] = Str::of($req->name)->slug('-');
+        
         try {
             $game = Game::create($validated);
             $store = $game->storeGameFiles();
@@ -149,10 +144,8 @@ class Game extends Model implements HasMedia
 
     public function play($id) {
         $game = Game::find($id);
-        /* if($game->gm2game) {
-            $extra = json_decode($game->extra, true);
-            $location = $game->file . '/' . $extra['filename'] . ".js";
-        } else */
+
+        
         $location = $game->file . '/index.html';
 
         return ['game' => $game, 'location' => $location];

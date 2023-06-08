@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\{ProfileController, GameController, ParameterController, ExperimentController, EntryPointController, GameInstanceController};
-use App\Models\{AdministratorPanel, Experiment};
+use App\Models\{AdministratorPanel, Experiment, Game};
+use App\Http\Controllers\{GameController, ParameterController, ExperimentController, EntryPointController, SurveyController, GameInstanceController};
+use App\Http\Controllers\{ProfileController, SchoolController, GradeController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\File;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,28 +47,21 @@ Route::middleware('auth')->group(function () {
             Route::get('{id}/edit', [AdministratorPanel::class, 'userEdit'])->name('user.edit');
             Route::patch('{id}/update', [AdministratorPanel::class, 'userUpdate'])->name('user.update');
         });
-         
-
-
-        Route::get('/experiments', [ExperimentController::class, 'index'])->name('experiments_panel.index'); // Ruta para ver el panel de administracion de los experimentos
-
-        
-        
     });
 
     Route::prefix('experiments')->group(function () {
+        Route::get('/', [ExperimentController::class, 'index'])->name('experiments.index'); // Ruta para ver el panel de administracion de los experimentos
         Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
-        Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
-        
-    });
-
-    Route::prefix('experimentManagement')->group(function () {
         Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
-
-        // Informacion general del experimento //
-
         Route::get('{id}/edit', [ExperimentController::class, 'generalInformationEdit'])->name('experiment_information.edit');
         Route::patch('{id}/update', [ExperimentController::class, 'generalInformationUpdate'])->name('experiment_information.update');
+
+        // CRUD
+        Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
+        Route::get('/{id}/surveys/new', [SurveyController::class, 'create'])->name('surveys.create');
+        Route::post('/{id}/surveys/new', [SurveyController::class, 'store'])->name('surveys.store');
+        Route::get('/{id}/surveys/tests/new', [SurveyController::class, 'testCreate'])->name('surveys.tests.create');
+        Route::post('/{id}/surveys/tests/new', [SurveyController::class, 'store'])->name('surveys.tests.store');
 
         // Usuarios asociados al experimento //
 
@@ -79,8 +74,8 @@ Route::middleware('auth')->group(function () {
         // Entrypoints asociados al experimento //
 
         Route::prefix('entrypoints')->group(function () {
-            Route::get('{id}/show', [EntryPointController::class, 'show'])->name('entrypoints.show');
             Route::get('{id}/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
+            Route::get('{id}/show', [EntryPointController::class, 'show'])->name('entrypoints.show');
             Route::post('/new', [EntryPointController::class, 'store'])->name('entrypoints.store');
             Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
             Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
@@ -116,6 +111,45 @@ Route::middleware('auth')->group(function () {
         });
     });
 
+    // Obtener archivos juegos GameHub.
+    Route::get('/uploads/games/{slug}/{filename}', function($slug, $filename){
+        $game = Game::where('slug', $slug)->first();
+        
+        if (substr($filename, 0, strlen('html5game')) == 'html5game') {
+            $filename = substr($filename, strlen('html5game'));
+        }
+        
+        $path = base_path() . $game->file . '/'. $filename;
+        if(!File::exists($path)) {
+            return response()->json(['message' => 'File not found.', 'path' => $path, 'filename' => $filename], 404);
+        }
+
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    })->where('filename', '(.*)');
+
+
+    Route::prefix('schools')->group(function () {
+        Route::get('/', [SchoolController::class, 'index'])->name('schools.index');
+        Route::get('/new', [SchoolController::class, 'create'])->name('schools.create');
+        Route::post('/new', [SchoolController::class, 'store'])->name('schools.store');
+        Route::get('/{id}', [SchoolController::class, 'edit'])->name('schools.edit');
+        Route::patch('{id}', [SchoolController::class, 'update'])->name('schools.update');
+        Route::delete('/{id}', [SchoolController::class, 'destroy'])->name('schools.destroy');
+        
+        Route::get('/{school}/grades/{grade}', [GradeController::class, 'get'])->name('schools.grades.get');
+
+        Route::prefix('/grades')->group(function () {
+            Route::post('/new', [GradeController::class, 'store'])->name('schools.grades.store');
+            Route::patch('/{id}', [GradeController::class, 'update'])->name('schools.grades.update');
+            Route::delete('/{id}', [GradeController::class, 'destroy'])->name('schools.grades.destroy');
+        });
+    });
+    
 });
 
+require __DIR__.'/api.php';
 require __DIR__.'/auth.php';

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Exception;
+use Illuminate\Database\Eloquent\Relations\{HasMany, HasManyThrough, BelongsToMany};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,6 +28,10 @@ class EntryPoint extends Model
     protected $cast = [
         'obfuscated' => 'boolean',
     ];
+
+    public function experiment(): BelongsTo {
+        return $this->belongsTo(Experiment::class);
+    }
 
     public function store($req) {
         

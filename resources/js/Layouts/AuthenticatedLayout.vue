@@ -11,13 +11,18 @@ import { Link, usePage } from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 
 const linkClasses = (link, responsive = false) => {
-    if(responsive) return route().current().includes(link) 
+    let classes;
+
+    if(responsive) classes = route().current().includes(link) 
         ? 'block w-full pl-3 pr-4 py-2 border-l-4 border-indigo-400 dark:border-indigo-600 text-left text-base font-medium text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/50 focus:outline-none focus:text-indigo-800 dark:focus:text-indigo-200 focus:bg-indigo-100 dark:focus:bg-indigo-900 focus:border-indigo-700 dark:focus:border-indigo-300 transition duration-150 ease-in-out'
         : 'block w-full pl-3 pr-4 py-2 border-l-4 border-transparent text-left text-base font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:text-gray-800 dark:focus:text-gray-200 focus:bg-gray-50 dark:focus:bg-gray-700 focus:border-gray-300 dark:focus:border-gray-600 transition duration-150 ease-in-out'
 
-    return route().current().includes(link)
-        ? 'inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'
-        : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out';
+    else
+        classes = route().current().includes(link)
+            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'
+            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out';
+
+    return classes;
 }
 
 const notification = computed(() => usePage().props.flash.notification ? usePage().props.flash.notification : null);
@@ -41,6 +46,11 @@ const notification = computed(() => usePage().props.flash.notification ? usePage
                             </div>
 
                             <!-- Navigation Links -->
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                    Dashboard
+                                </NavLink>
+                            </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <a href="javascript:;" :class="linkClasses('experiments')">
@@ -70,19 +80,13 @@ const notification = computed(() => usePage().props.flash.notification ? usePage
                                         </template>
     
                                         <template #content>
-                                            <DropdownLink :href="route('experiments_panel.index')"> Ver experimentos </DropdownLink>
+                                            <DropdownLink :href="route('experiments.index')"> Ver experimentos </DropdownLink>
                                             <DropdownLink :href="route('experiments.create')"> Crear experimento </DropdownLink>
                                         </template>
                                     </Dropdown>
                                 </a>
                             </div>
-
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>
-                            </div>
-
+                            
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <a href="javascript:;" :class="linkClasses('games')">
                                     <Dropdown align="right" width="48">
@@ -113,6 +117,41 @@ const notification = computed(() => usePage().props.flash.notification ? usePage
                                         <template #content>
                                             <DropdownLink :href="route('games.index')"> Todos los juegos </DropdownLink>
                                             <DropdownLink :href="route('games.create')"> Nuevo juego </DropdownLink>
+                                        </template>
+                                    </Dropdown>
+                                </a>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <a href="javascript:;" :class="linkClasses('schools')">
+                                    <Dropdown align="right" width="48">
+                                        <template #trigger>
+                                            <span class="inline-flex rounded-md">
+                                                <button
+                                                    type="button"
+                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
+                                                >
+                                                    Colegios
+    
+                                                    <svg
+                                                        class="ml-2 -mr-0.5 h-4 w-4"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                            clip-rule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </template>
+    
+                                        <template #content>
+                                            <DropdownLink :href="route('schools.index')"> Todos los colegios </DropdownLink>
+                                            <DropdownLink :href="route('schools.create')"> Nuevo colegio </DropdownLink>
                                         </template>
                                     </Dropdown>
                                 </a>

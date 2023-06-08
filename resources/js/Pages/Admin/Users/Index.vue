@@ -32,7 +32,7 @@ const props = defineProps({
                     <section class="mt-5">
                         <p class="text-sm text-gray-600 dark:text-gray-400" v-if="users.length == 0">No se encontraron usuarios.</p>
                         
-                        <div class="flex flex-wrap gap-10 w-full">
+                        <div class="flex flex-wrap gap-10 w-full text-gray-600 dark:text-white">
                             <div v-for="(user, index) in users" :key="index">
                                 <div class="first-letter:uppercase">{{ user.name }}</div>
                                 <div class="first-letter:uppercase">{{ user.email }}</div>

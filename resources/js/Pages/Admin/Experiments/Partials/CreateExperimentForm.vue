@@ -22,7 +22,6 @@ const sendForm = () => {
         route('experiments.create'), {
             onSuccess: () => {
                 form.reset();
-                form.file = null;
             }
         }
     )

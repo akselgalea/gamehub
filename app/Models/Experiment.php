@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use Exception;
+use Illuminate\Database\Eloquent\Relations\{HasMany, HasManyThrough, BelongsToMany, BelongsTo};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Inertia\Inertia;
 use App\Http\Requests\Experiments\Users\{UserAssociateRequest, UserDisassociateRequest};
@@ -19,12 +17,16 @@ class Experiment extends Model
     protected $table = 'experiments';
 
     protected $fillable = [
-        'admin_id',
         'name',
         'description',
         'status', // Detenido, Activo
-        'time_limit' // In minutes
+        'time_limit', // In minutes
+        'admin_id',
     ];
+
+    public function creator(): BelongsTo {
+        return $this->belongsTo(Admin::class, 'admin_id');
+    }
 
     public function instances(): HasMany {
         return $this->hasMany(GameInstance::class);
@@ -38,12 +40,20 @@ class Experiment extends Model
         return $this->belongsToMany(User::class, 'experiment_user' , 'user_id', 'experiment_id');
     }
 
+    public function students(): BelongsToMany {
+        return $this->belongsToMany(Student::class, 'experiment_user' , 'user_id', 'experiment_id');
+    }
+
     public function entrypoints(): HasMany {
         return $this->hasMany(EntryPoint::class);
     }
 
     public function gameInstances(): HasMany {
         return $this->hasMany(GameInstance::class);
+    }
+
+    public function surveys(): HasMany {
+        return $this->hasMany(Survey::class);
     }
 
     public function store($req) {
@@ -77,21 +87,20 @@ class Experiment extends Model
         $experiment = Experiment::find($id);
         return Inertia::render('Admin/Experiments/Management/AssociatedUsers/Edit', 
         ['experiment_id'=> $id,
-         'noAssociatedUsers' => User::whereDoesntHave('experiments')->get()->toArray(),
-         'associatedUsers' => $experiment->users->toArray(),]);
+         'noAssociatedUsers' => Student::whereDoesntHave('experiments')->get()->toArray(),
+         'associatedUsers' => $experiment->students->toArray(),]);
     }
 
     public function userAssociateExperiment($req) {
 
         $validated = $req->validated();
-        $user = User::find($validated['user_id']);
-        $experiment = Experiment::find($validated['experiment_id']);
 
-        $experiment->users()->attach($user);
         try {
             
-            
-            
+            $user = Student::find($validated['user_id']);
+            $experiment = Experiment::find($validated['experiment_id']);
+
+            $experiment->students()->attach($user);
             return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
@@ -104,10 +113,10 @@ class Experiment extends Model
  
         try {
 
-            $user = User::find($validated['user_id']);
+            $user = Student::find($validated['user_id']);
             $experiment = Experiment::find($validated['experiment_id']);
 
-            $experiment->users()->detach($user);
+            $experiment->students()->detach($user);
 
             return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
         } catch (Exception $e) {
