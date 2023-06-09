@@ -23,6 +23,7 @@ const surveyBody = ref(JSON.parse(props.survey.body));
 const form = useForm({
     name: props.survey.name,
     description: props.survey.name,
+    stage: props.survey.stage,
     type: 'test',
     body: props.survey.body,
     init_date: props.survey.init_date,
@@ -94,7 +95,7 @@ const cancel = () => {
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
-            <div class="mt-5 grid grid-cols-2 gap-4">
+            <div class="mt-5 grid grid-cols-3 gap-4">
                 <div class="w-full">
                     <InputLabel for="init_date" value="Fecha de inicio" />
                     <input 
@@ -115,6 +116,20 @@ const cancel = () => {
                         class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     />
                     <InputError class="mt-2" :message="form.errors.end_date" />
+                </div>
+
+                <div class="w-full">
+                    <InputLabel for="etapa" value="Etapa" />
+                    <select 
+                        name="etapa"
+                        v-model="form.stage" 
+                        class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                    >
+                        <option :value="!form.stage ? form.stage : ''" hidden :selected="!form.stage">Elige una opción</option>
+                        <option value="pre">Pre juego</option>
+                        <option value="post">Post juego</option>
+                    </select>
+                    <InputError class="mt-2" :message="form.errors.stage" />
                 </div>
             </div>
 

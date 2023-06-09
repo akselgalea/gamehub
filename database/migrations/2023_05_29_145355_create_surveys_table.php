@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->enum('stage', ['pre', 'post']);
             $table->enum('type', ['test', 'survey']);
             $table->json('body');
             $table->date('init_date');
