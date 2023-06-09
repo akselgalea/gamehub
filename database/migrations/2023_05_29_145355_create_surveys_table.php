@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('surveys', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->enum('type', ['test', 'survey']);
             $table->json('body');
             $table->date('init_date');
             $table->date('end_date');
             $table->foreignId('experiment_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

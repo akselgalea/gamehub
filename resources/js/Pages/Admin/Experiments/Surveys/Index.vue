@@ -58,8 +58,7 @@ const types = {
                             <td class="px-3 text-justify">{{ types[survey.type] }}</td>
                             <td class="px-3 text-justify">{{ survey.description }}</td>
                             <td class="px-3 flex gap-1 justify-center">
-                                <!-- <EditSurveyForm :survey="survey" :key="survey.name" />
-                                <DeleteSurveyForm :surveyId="survey.id" :surveyName="survey.name" :key="survey.id" /> -->
+                                <Link :href="route('surveys.edit', {id: experimentId, survey: survey.id})"><PrimaryButton><i class="fas fa-edit"></i></PrimaryButton></Link>
                             </td>
                         </tr>
                     </tbody>

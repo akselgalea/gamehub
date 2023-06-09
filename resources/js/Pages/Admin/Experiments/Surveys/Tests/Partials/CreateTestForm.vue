@@ -5,8 +5,8 @@ import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import DangerButton from '@/Components/DangerButton.vue';
-import Modal from '@/Components/Modal.vue';
 import CreateTestQuestion from './CreateTestQuestion.vue';
+import UpdateTestQuestion from './UpdateTestQuestion.vue';
 import { useForm } from '@inertiajs/vue3';
 import { formDate } from '@/Helpers/date';
 import { ref } from 'vue';
@@ -18,13 +18,12 @@ const props = defineProps({
     }
 });
 
-const showingModal = ref(false);
 const surveyBody = ref([]);
 
 const form = useForm({
     name: '',
     description: '',
-    type: 'survey',
+    type: 'test',
     body: null,
     init_date: formDate(new Date()),
     end_date: formDate(new Date()),
@@ -50,14 +49,6 @@ const sendForm = () => {
 const addQuestion = (question) => {
     surveyBody.value.push(question);
 }
-
-const showModal = () => {
-    showingModal.value = true;
-};
-
-const closeModal = () => {
-    showingModal.value = false;
-};
 
 const updateQuestion = (question, index) => {
     surveyBody.value[index] = question;
@@ -138,21 +129,32 @@ const deleteQuestion = (index) => {
             </div>
 
             <div class="mt-5">
-                <PrimaryButton type="button" @click="showModal">Agregar pregunta</PrimaryButton>
-    
-                <Modal :show="showingModal" @close="closeModal">
-                    <div class="p-6">
-                        <h2 class="text-lg mb-3 font-medium text-gray-900 dark:text-gray-100">
-                            Agregar pregunta
-                        </h2>
-    
-                        <CreateTestQuestion @cancel="closeModal" @addQuestion="addQuestion($event)" />
-                    </div>
-                </Modal>
+                <CreateTestQuestion @addQuestion="addQuestion($event)" />
             </div>
 
-            <div v-for="question in surveyBody">
-                <pre>{{ question }}</pre>
+            <div class="mt-5">
+                <p class="text-sm text-gray-600 dark:text-white" v-if="surveyBody.length == 0">
+                    Esta encuesta aun no posee preguntas.
+                </p>
+                <template v-else>
+                    <table class="rounded-sm shadow table-fixed w-full border-collapse text-gray-900 dark:text-white">
+                        <thead class="border">
+                            <th>Enunciado</th>
+                            <th>Tipo</th>
+                            <th>Acciones</th>
+                        </thead>
+                        <tbody>
+                            <tr class="border" v-for="(question, index) in surveyBody" :key="index">
+                                <td class="px-3 text-justify">{{ question.question }}</td>
+                                <td class="px-3 text-justify">{{ question.type == 'open' ? 'Pregunta abierta' : 'Opción múltiple' }}</td>
+                                <td class="px-3 flex gap-1 justify-center">
+                                    <UpdateTestQuestion :question="question" @update-question="updateQuestion($event, index)" :key="index"/>
+                                    <DangerButton type="button" @click="deleteQuestion(index)"><i class="fas fa-trash-alt"></i></DangerButton>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </template>
             </div>
 
             <div class="flex items-center gap-4 mt-10">
