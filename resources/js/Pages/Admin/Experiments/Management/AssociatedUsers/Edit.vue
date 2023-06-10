@@ -70,7 +70,7 @@ const disasocciateForm = (user_id) => {
                             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                                 <div class="flex flex-wrap gap-10 w-full">
 
-                                    <section class="mt-5 w-full md:w-1/2"> Usuarios asociados :
+                                    <div class="mt-5 w-full md:w-1/2"> Usuarios asociados :
                                             <p class="text-sm text-gray-600 dark:text-gray-400" v-if="associatedUsers.length == 0">No se encontraron usuarios asociados.</p>
 
                                             <template v-else>
@@ -92,9 +92,9 @@ const disasocciateForm = (user_id) => {
                                                 </table>
                                             </template>
                                             
-                                    </section>
+                                    </div>
 
-                                    <section class="mt-5 w-full md:w-1/2"> Usuarios no asociados :
+                                    <div class="mt-5 w-full md:w-1/2"> Usuarios no asociados :
                                         <p class="text-sm text-gray-600 dark:text-gray-400" v-if="noAssociatedUsers.length == 0">No se encontraron usuarios asociados.</p>
 
                                         <template v-else>
@@ -116,7 +116,7 @@ const disasocciateForm = (user_id) => {
                                             </table>
 
                                         </template>
-                                    </section>
+                                    </div>
 
                                             
 

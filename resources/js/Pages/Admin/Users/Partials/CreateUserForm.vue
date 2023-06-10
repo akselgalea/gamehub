@@ -6,9 +6,20 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 
+const props = defineProps({
+    grades: {
+        type: Array
+    },
+    schools: {
+        type: Array
+    }
+});
+
 const form = useForm({
     name: '',
     email: '',
+    type: null,
+    grade_id: null,
     password: '',
     password_confirmation: '',
     terms: false,
@@ -51,6 +62,33 @@ const sendForm = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+
+            <div class="mt-5">
+                <InputLabel for="type" value="Tipo de usuario"/>
+
+                <select id="type" v-model="form.type" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option :value="form.type ==null ? form.type : ''" hidden :selected="!form.type">Elige una opción</option>
+                    <option value="student"> Estudiante </option>
+                    <option value="admin"> Administrador </option>
+                </select>
+
+                <!-- <InputError class="mt-2" :message="form.errors.obfuscated" /> -->
+            </div>
+            
+            <div v-if="form.type == 'student'" class="mt-5">
+                <InputLabel for="grade" value="Grado"/>
+
+                    <select v-if="grades.length == 0" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" disabled>
+                    <option selected> No hay grados registrados, dirijase a colegios si desea crear uno. </option>
+                    </select>
+
+                    <select v-else id="grade" v-model="form.grade_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                        <option :value="!form.grade_id ? form.grade_id : ''" hidden :selected="!form.grade_id">Elige una opción</option>
+                        <option v-for="grade in grades" :key="grade.id" :value="grade.id">{{ grade.name }}</option>
+                    </select>
+
+                <InputError class="mt-2" :message="form.errors.category_id" />
             </div>
 
             <div class="mt-5">

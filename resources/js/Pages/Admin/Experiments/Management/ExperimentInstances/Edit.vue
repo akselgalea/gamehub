@@ -59,11 +59,11 @@ defineProps({
                                                     <tbody>
                                                         <tr v-for="(game_instance, index) in games_instances" :key="index" class="border">
 
-                                                            <td class="px-3 text-justify">{{ game_instance.name }}</td>
-                                                            <td class="px-3 text-justify">{{ game_instance.description }}</td>
+                                                            <td class="px-3 text-center">{{ game_instance.name }}</td>
+                                                            <td class="px-3 text-center">{{ game_instance.description }}</td>
 
                                                             <template v-for="(game) in games">
-                                                                <td v-if="game_instance.game_id === game.id" class="px-3 text-justify">{{ game.name }}</td>
+                                                                <td v-if="game_instance.game_id === game.id" class="px-3 text-center">{{ game.name }}</td>
                                                             </template>
 
                                                             <td class="px-3 flex gap-1 justify-center">

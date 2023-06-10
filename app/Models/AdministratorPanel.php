@@ -19,7 +19,7 @@ class AdministratorPanel extends Model
     }
 
     public function userCreate() {
-        return Inertia::render('Admin/Users/Create');
+        return Inertia::render('Admin/Users/Create', ['grades' => Grade::all()->toArray()]);
     }
 
     public function userStore(UserCreateRequest $req) {

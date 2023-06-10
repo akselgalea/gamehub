@@ -28,6 +28,8 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'type' => 'required|string|in:admin,student',
+            'grade_id' => ['integer', 'exists:grades,id'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class, 'regex:/^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[com|cl|net]{2,}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
@@ -38,6 +40,7 @@ class UserUpdateRequest extends FormRequest
         return [
             'required' => 'El campo :attribute es obligatorio',
             'integer' => 'El campo :attribute debe tener un valor numerico',
+            'type.in' => 'El tipo de usuario ingresado no es valido',
             'password.confirmed' => 'Las contraseñas no coinciden',
             'email' => 'El :attribute debe ser un correo valido',
             'email.unique' => 'El :attribute ya esta registrado',
@@ -50,6 +53,8 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => 'nombre',
+            'type' => 'tipo',
+            'grade_id' => 'grado',
             'email' => 'correo',
             'password' => 'contraseña',
         ];

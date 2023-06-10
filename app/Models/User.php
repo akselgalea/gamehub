@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -72,6 +73,7 @@ class User extends Authenticatable
         $validated = $req->validated();
 
         try {
+            $validated['password'] = Hash::make($validated['password']);
             $user = User::create($validated);
             return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
         } catch (Exception $e) {

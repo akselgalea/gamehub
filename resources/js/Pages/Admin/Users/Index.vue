@@ -3,6 +3,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import EditUser from '@/Pages/Admin/Users/Edit.vue';
+import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue';
 
 const props = defineProps({
     users: {
@@ -28,23 +30,42 @@ const props = defineProps({
                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Usuarios registrados</h2>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">En este apartado se pueden ver usuarios registrados en la plataforma.</p>
                     </header>
-
+                    
                     <section class="mt-5">
                         <p class="text-sm text-gray-600 dark:text-gray-400" v-if="users.length == 0">No se encontraron usuarios.</p>
                         
-                        <div class="flex flex-wrap gap-10 w-full text-gray-600 dark:text-white">
+                        <template v-else>
+                            <table class="rounded-sm shadow table-fixed w-full border-collapse">
+                                <thead class="border">
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th>Acciones</th>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(user, index) in users" :key="index" class="border">
+                                        <td class="px-3 text-center">{{ user.name }}</td>
+                                        <td class="px-3 text-center">{{ user.email }}</td>
+                                        <td class="px-3 text-center">
+                                            <div>
+                                                <EditUser :user="user"/>
+                                                <!-- <DeleteUserForm :userId="user.id" class="max-w-xl" /> -->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </template>
+
+                        <!-- <div class="flex flex-wrap gap-10 w-full text-gray-600 dark:text-white">
                             <div v-for="(user, index) in users" :key="index">
                                 <div class="first-letter:uppercase">{{ user.name }}</div>
                                 <div class="first-letter:uppercase">{{ user.email }}</div>
 
-                                <div class="flex gap-2">
-                                    <Link :href="route('user.edit', {id: user.id})">
-                                        <PrimaryButton>Editar</PrimaryButton>
-                                    </Link>
-                                </div>
+                                <EditUser :user="user"/>
                             </div>
                             
-                        </div>
+                        </div> -->
+
                     </section>
  
                     <section class="mt-5 flex items-center justify-center">
