@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Requests\Users\{UserCreateRequest};
 use Parental\HasChildren;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -73,8 +74,14 @@ class User extends Authenticatable
         $validated = $req->validated();
 
         try {
-            $validated['password'] = Hash::make($validated['password']);
+            $validated['password'] = Hash::make($validated['password']); // se cifra la contrasenia
+            
             $user = User::create($validated);
+            
+            $rememberToken = Str::random(60); // se le crea un token aleatorio para recordar al usuario
+            $user->remember_token = $rememberToken;// se le asigna al usuario
+            $user->save();
+            
             return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
