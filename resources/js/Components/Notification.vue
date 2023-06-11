@@ -12,9 +12,10 @@ const props = defineProps({
 
 const statusClasses = {
     200: 'bg-green-600',
+    400: 'bg-orange-600',
+    401: 'bg-blue-400',
     404: 'bg-blue-400',
     500: 'bg-red-600',
-    400: 'bg-orange-600'
 };
 </script>
 

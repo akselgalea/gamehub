@@ -5,13 +5,12 @@ import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
-
     entrypoints: {
         type: Array,
         required: true
     },
     experiment_id: {
-        type: String,
+        type: Number,
         required: true
     }
 })
