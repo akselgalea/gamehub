@@ -86,24 +86,31 @@ Route::middleware('auth')->group(function () {
         });
 
         // Instancias de juego asociados al experimento // 
+        Route::prefix('game-instances')->group(function () {
+            
+            Route::middleware(['role:admin'])->group(function () {
+                Route::get('{id}/show', [GameInstanceController::class, 'show'])->name('game_instances.show');
+                Route::get('{id}/new', [GameInstanceController::class, 'create'])->name('game_instances.create');
+                Route::post('/new', [GameInstanceController::class, 'store'])->name('game_instances.store');
+                Route::get('{id}/edit', [GameInstanceController::class, 'edit'])->name('game_instances.edit');
+                Route::patch('{id}/update', [GameInstanceController::class, 'update'])->name('game_instances.update');
+                Route::delete('/{id}', [GameInstanceController::class, 'destroy'])->name('game_instances.destroy');  
 
-        Route::prefix('game_instances')->group(function () {
-            Route::get('{id}/show', [GameInstanceController::class, 'show'])->name('game_instances.show');
-            Route::get('{id}/new', [GameInstanceController::class, 'create'])->name('game_instances.create');
-            Route::post('/new', [GameInstanceController::class, 'store'])->name('game_instances.store');
-            Route::get('{id}/edit', [GameInstanceController::class, 'edit'])->name('game_instances.edit');
-            Route::patch('{id}/update', [GameInstanceController::class, 'update'])->name('game_instances.update');
-            Route::delete('/{id}', [GameInstanceController::class, 'destroy'])->name('game_instances.destroy');  
+                Route::prefix('{id}/parameters')->group(function () {
+                    Route::get('edit', [GameInstanceController::class, 'editParams'])->name('instances_params.edit');
+                    Route::patch('update', [GameInstanceController::class, 'updateParams'])->name('instances_params.update');
+                });
 
-            Route::prefix('parameters')->group(function () {
-                Route::get('{id}/editParameters', [GameInstanceController::class, 'editParams'])->name('instances_params.edit');
-                Route::patch('{id}/updateParameters', [GameInstanceController::class, 'updateParams'])->name('instances_params.update');
+                Route::prefix('{id}/gamification')->group(function () {
+                    Route::get('/edit', [GameInstanceController::class, 'editGamification'])->name('instances_gamification.edit');
+                    Route::patch('/update', [GameInstanceController::class, 'updateGamification'])->name('instances_gamification.update');
+                });
+                
             });
 
-            Route::prefix('gamification')->group(function () {
-                Route::get('{id}/editGamification', [GameInstanceController::class, 'editGamification'])->name('instances_gamification.edit');
-                Route::patch('{id}/updateGamification', [GameInstanceController::class, 'updateGamification'])->name('instances_gamification.update');
-            });
+            Route::get('/{game}/{instance}/play', [GameInstanceController::class, 'play'])->name('game_instances.play');
+            Route::post('/data/load', [GameInstanceController::class, 'initialParams'])->name('game_instances.load');
+            Route::post('/data/save', [GameInstanceController::class, 'saveData'])->name('game_instances.save');
         });
     });
 

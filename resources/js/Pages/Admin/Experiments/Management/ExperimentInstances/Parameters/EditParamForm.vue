@@ -26,8 +26,6 @@ const form = useForm({
    parameters: props.parameters,
 });
 
-console.log(props.parameters);
-
 const sendForm = () => {
     form.patch(
         route('instances_params.update', {id: props.instance_id}), {

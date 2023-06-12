@@ -16,11 +16,6 @@ class GameInstanceController extends Controller
         $this->game_instance = $game_instance;
     }
 
-    // public function index($id)
-    // {
-    //     return Inertia::render('Admin/Experiments/Management/Entrypoints/Index', ['entrypoints' => EntryPoint::all()->toArray(), 'experiment_id' => $id]);
-    // }
-
     public function show($id)
     {
         return Inertia::render('Admin/Experiments/Management/ExperimentInstances/Edit', ['games_instances' => GameInstance::all()->toArray(), 'games' => Game::all()->toArray(), 'experiment_id' => $id]);
@@ -49,6 +44,7 @@ class GameInstanceController extends Controller
 
     // Vista que permite modificar los valores de los parametros pertenecientes al juego de la instancia de experimento //
     public function editParams($id) {
+        // devuelve la vista con el arreglo de parametros, ademas del id de la instancia y experimento 
         $res = $this->game_instance->editParams($id);
         
         if(isset($res['status']) && $res['status'] == 500)
@@ -57,7 +53,7 @@ class GameInstanceController extends Controller
         return Inertia::render(
             'Admin/Experiments/Management/ExperimentInstances/Parameters/EditParamForm', 
             ['parameters' => $res['parameters'], 'experiment_id' => $res['experiment_id'], 'instance_id' => $id]
-        ); // devuelve la vista con el arreglo de parametros, ademas del id de la instancia y experimento 
+        );
     }
     
     public function updateParams(Request $request, $id)
@@ -69,8 +65,10 @@ class GameInstanceController extends Controller
     public function editGamification($id)
     {
         $game_instance = GameInstance::find($id);
-        return Inertia::render('Admin/Experiments/Management/ExperimentInstances/Partials/UpdateGamificationForm', 
-            ['game_instance' => $game_instance, 'experiment_id' => $game_instance->experiment_id]);
+        return Inertia::render(
+            'Admin/Experiments/Management/ExperimentInstances/Partials/UpdateGamificationForm', 
+            ['game_instance' => $game_instance, 'experiment_id' => $game_instance->experiment_id]
+        );
     }
 
     public function updateGamification(GamificationUpdateRequest $request, $id)
