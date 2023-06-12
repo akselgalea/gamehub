@@ -3,6 +3,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
@@ -120,16 +121,15 @@ const sendForm = () => {
 
                             <div class="flex items-center gap-4 mt-10">
 
-                                <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
+                                <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
+
+                                <Link :href="route('game_instances.show', {id: experiment_id})">
+                                    <SecondaryButton type="button">Cancelar</SecondaryButton>
+                                </Link>
 
                                 <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
                                     <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
                                 </Transition>
-
-                                <Link :href="route('game_instances.show', {id: experiment_id})">
-                                    <PrimaryButton>Volver</PrimaryButton>
-                                </Link>
-
                             </div>
                         </form>
                     </section>

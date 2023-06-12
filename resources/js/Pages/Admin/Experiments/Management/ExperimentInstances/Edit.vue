@@ -86,7 +86,7 @@ defineProps({
                             </Link>
                             
                             <Link class="ml-2" :href="route('experiment.management', {id: experiment_id})">
-                                <PrimaryButton>Volver</PrimaryButton>
+                                <SecondaryButton>Volver</SecondaryButton>
                             </Link>
                         </div>
                     </div>
