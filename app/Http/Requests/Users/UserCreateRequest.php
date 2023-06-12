@@ -29,7 +29,7 @@ class UserCreateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'type' => 'required|string|in:admin,student',
-            'grade_id' => ['integer', 'exists:grades,id'],
+            'grade_id' => ['required_if:type,student','integer', 'exists:grades,id'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class, 'regex:/^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[com|cl|net]{2,}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
@@ -38,6 +38,7 @@ class UserCreateRequest extends FormRequest
     public function messages(): array 
     {
         return [
+            'grade_id.required_if' => 'El grado es obligatorio cuando el tipo de usuario es estudiante',
             'required' => 'El campo :attribute es obligatorio',
             'integer' => 'El campo :attribute debe tener un valor numerico',
             'type.in' => 'El tipo de usuario ingresado no es valido',
