@@ -51,7 +51,7 @@ const closeModal = () => {
 
 <template>
 
-    <DangerButton @click="confirmGameInstanceDeletion">Eliminar</DangerButton>
+    <DangerButton @click="confirmGameInstanceDeletion" title="Eliminar"><i class="fas fa-trash"></i></DangerButton>
 
     <Modal :show="confirmingGameInstanceDeletion" @close="closeModal">
         <div class="p-6">

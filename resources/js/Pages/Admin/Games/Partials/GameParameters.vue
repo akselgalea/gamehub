@@ -38,14 +38,14 @@ const types = {
             </p>
             <template v-else>
                 <table class="rounded-sm shadow table-fixed w-full border-collapse">
-                    <thead class="border">
+                    <thead class="border dark:text-gray-100">
                         <th>Nombre</th>
                         <th>Tipo de dato</th>
                         <th>Descripción</th>
                         <th>Acciones</th>
                     </thead>
                     <tbody>
-                        <tr v-for="(param, index) in parameters" :key="index" class="border">
+                        <tr v-for="(param, index) in parameters" :key="index" class="border dark:text-gray-200">
                             <td class="px-3 text-justify">{{ param.name }}</td>
                             <td class="px-3 text-justify">{{ types[param.type] }}</td>
                             <td class="px-3 text-justify">{{ param.description }}</td>

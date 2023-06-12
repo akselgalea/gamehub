@@ -41,7 +41,7 @@ const types = {
                 </Link>
             </div>
 
-            <p class="text-sm text-gray-600 dark:text-white" v-if="surveys.length == 0">
+            <p class="text-sm text-gray-600 dark:text-gray-400" v-if="surveys.length == 0">
                 Este experimento aun no posee encuestas.
             </p>
             <template v-else>
