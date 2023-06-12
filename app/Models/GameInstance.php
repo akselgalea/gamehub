@@ -49,7 +49,6 @@ class GameInstance extends Model
         return $this->belongsToMany(Parameter::class, 'game_instance_parameters', 'game_instance_id', 'parameter_id');
     }
 
-
     public function edit($req) {
 
         $validated = $req->validated();
@@ -123,23 +122,15 @@ class GameInstance extends Model
         }
     }
 
-    // Crea un arreglo con los parametros que se encuentran en la instancia de experimento junto con los parametros que no se encuentran //
-    // su proposito es tener un arreglo con todos los parametros, esto incluye parametros con valores pertenecientes a la instancia del experimento y los que no //
-    public function combineParameters($firstsParameters, $secondsParameters) {
-        $secondsParameters = $this->setNullValuesToPivot($secondsParameters);
-        $combine_parameters = $firstsParameters->concat($secondsParameters)->values()->toArray();
-        return $combine_parameters;
-    }
-    
-    // Agrega el pivot.value a los parametros que no poseen valor en la instancia, con el fin de poder almacenar sus valores en el formulario junto con al resto //
-    public function setNullValuesToPivot($parameters)
-    {
-        foreach ($parameters as &$param) {
-            if (!isset($param['pivot'])) {
-                $param['pivot'] = (object)['value' => null];
-            }
+    public function updateGamification($req, $id) {
+        $validated = $req->validated();
+        try {
+            $game_instance = GameInstance::findOrFail($id);
+            $game_instance->update($validated);
+            
+            return ['status' => 200, 'message' => 'Gamificacion actualizada con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
         }
-
-        return $parameters;
     }
 }

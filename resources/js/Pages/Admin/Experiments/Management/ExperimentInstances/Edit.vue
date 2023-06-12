@@ -68,6 +68,9 @@ defineProps({
                                                 <Link :href="route('instances_params.edit', {id: game_instance.id})">
                                                     <PrimaryButton title="Editar parámetros"><i class="fas fa-cog"></i></PrimaryButton>
                                                 </Link>
+                                                <Link :href="route('instances_gamification.edit', {id: game_instance.id})">
+                                                    <PrimaryButton title="Editar gamificacion"><i class="fas fa-chess-queen"></i></PrimaryButton>
+                                                </Link>
 
                                                 <DeleteGameInstanceForm :game_instance_id="game_instance.id" :game_instance_name="game_instance.name" class="max-w-xl" />
                                             </td>

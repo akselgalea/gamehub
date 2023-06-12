@@ -99,6 +99,11 @@ Route::middleware('auth')->group(function () {
                 Route::get('{id}/editParameters', [GameInstanceController::class, 'editParams'])->name('instances_params.edit');
                 Route::patch('{id}/updateParameters', [GameInstanceController::class, 'updateParams'])->name('instances_params.update');
             });
+
+            Route::prefix('gamification')->group(function () {
+                Route::get('{id}/editGamification', [GameInstanceController::class, 'editGamification'])->name('instances_gamification.edit');
+                Route::patch('{id}/updateGamification', [GameInstanceController::class, 'updateGamification'])->name('instances_gamification.update');
+            });
         });
     });
 

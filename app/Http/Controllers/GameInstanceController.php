@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Experiments\GameInstances\{GameInstanceCreateRequest, GameInstanceUpdateRequest, GameInstanceDeleteRequest};
+use App\Http\Requests\Experiments\GameInstances\Gamification\{GamificationUpdateRequest};
 use App\Models\{ GameInstance, Game, GameInstanceParameter, Parameter };
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -58,10 +59,23 @@ class GameInstanceController extends Controller
             ['parameters' => $res['parameters'], 'experiment_id' => $res['experiment_id'], 'instance_id' => $id]
         ); // devuelve la vista con el arreglo de parametros, ademas del id de la instancia y experimento 
     }
-
+    
     public function updateParams(Request $request, $id)
     {
         $res = $this->game_instance->find($id)->updateParams($request, $id);
+        return redirect()->back()->with('notification', $res); 
+    }
+
+    public function editGamification($id)
+    {
+        $game_instance = GameInstance::find($id);
+        return Inertia::render('Admin/Experiments/Management/ExperimentInstances/Partials/UpdateGamificationForm', 
+            ['game_instance' => $game_instance, 'experiment_id' => $game_instance->experiment_id]);
+    }
+
+    public function updateGamification(GamificationUpdateRequest $request, $id)
+    {
+        $res = $this->game_instance->updateGamification($request, $id);
         return redirect()->back()->with('notification', $res); 
     }
 
