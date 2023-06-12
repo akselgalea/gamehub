@@ -68,6 +68,18 @@ class GameInstance extends Model
         }
     }
 
+    public function updateGamification($req, $id) {
+        $validated = $req->validated();
+        try {
+            $game_instance = GameInstance::findOrFail($id);
+            $game_instance->update($validated);
+            
+            return ['status' => 200, 'message' => 'Gamificacion actualizada con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
     public function edit($req) {
 
         $validated = $req->validated();
