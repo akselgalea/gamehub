@@ -1,17 +1,11 @@
 <script setup>
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import Checkbox from '@/Components/Checkbox.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
-
-const user = usePage().props.auth.user;
 
 const props = defineProps({
     experiment_id: {
@@ -23,25 +17,31 @@ const props = defineProps({
         required: true
     },
     instance_id:{
-        type: Number,
+        type: String,
         required: true
     }
 });
 
-const params = ref(props.parameters);
-
 const form = useForm({
-   parameters: null,
+   parameters: props.parameters,
 });
 
+console.log(props.parameters);
+
 const sendForm = () => {
-    form.parameters = params.value.map(item => {
-        return{
-        game_instance_id: props.instance_id,
-        parameter_id: item.id,
-        value: item.pivot.value
-    }});
-    form.patch(route('instances_params.update', {id: props.instance_id}));
+    form.patch(
+        route('instances_params.update', {id: props.instance_id}), {
+            onSuccess: () => {
+            }    
+        }
+    );
+}
+
+const types = {
+    'int': 'Numero entero',
+    'float': 'Numero decimal',
+    'string': 'Cadena de texto',
+    'boolean': 'Valor de verdad'
 }
 </script>
 
@@ -77,23 +77,17 @@ const sendForm = () => {
                                             <th>Valor</th>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="param in parameters" :key="param.id" class="border">
-                                                <th><InputLabel class="px-3 text-center">{{ param.name }}</InputLabel></th>
-                                                <th><InputLabel class="px-3 text-center">{{ param.description }} {{ param.value }}</InputLabel></th>
-                                                <th> 
-                                                    <InputLabel v-if="param.type == 'int'" class="px-3 text-center"> Numero entero </InputLabel>
-                                                    <InputLabel v-if="param.type == 'float'" class="px-3 text-center"> Numero decimal </InputLabel>
-                                                    <InputLabel v-if="param.type == 'string'" class="px-3 text-center"> Cadena de texto </InputLabel>
-                                                    <InputLabel v-if="param.type == 'boolean'" class="px-3 text-center"> Valor de verdad </InputLabel>
-                                                </th>
-                                                <th>
+                                            <tr v-for="(param, index) in form.parameters" :key="param.id" class="border">
+                                                <td><InputLabel class="px-3 text-center">{{ param.name }}</InputLabel></td>
+                                                <td><InputLabel class="px-3 text-center">{{ param.description }}</InputLabel></td>
+                                                <td><InputLabel class="px-3 text-center" :value="types[param.type]" /></td>
+                                                <td>
                                                     <TextInput 
                                                         v-if="param.type == 'int'"
                                                         id="value"
                                                         type="number"
-                                                        :value="param.pivot.value" 
                                                         class="mt-1 block w-full text-center"
-                                                        v-model="param.pivot.value"
+                                                        v-model="param.value"
                                                         rows="4"
                                                     />
 
@@ -102,9 +96,8 @@ const sendForm = () => {
                                                         id="value"
                                                         type="number"
                                                         step="0.01"
-                                                        :value="param.pivot.value" 
                                                         class="mt-1 block w-full text-center"
-                                                        v-model="param.pivot.value"
+                                                        v-model="param.value"
                                                         rows="4"
                                                     />
 
@@ -112,19 +105,17 @@ const sendForm = () => {
                                                         v-if="param.type == 'string'"
                                                         id="value"
                                                         type="string"
-                                                        :value="param.pivot.value"  
                                                         class="mt-1 block w-full text-center"
-                                                        v-model="param.pivot.value"
+                                                        v-model="param.value"
                                                         rows="4"
                                                     />
 
-                                                    <select v-if="param.type == 'boolean'" id="value" v-model="param.pivot.value" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-full">
-                                                        <option v-if="param.pivot.value === null" :value="null" hidden :selected="!param.pivot.value === null" class="flex text-center">Elige una opción</option>
+                                                    <select v-if="param.type == 'boolean'" id="value" v-model="param.value" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-full">
+                                                        <option v-if="param.value === null" :value="null" hidden :selected="!param.value === null" class="flex text-center">Elige una opción</option>
                                                         <option :value="1" class="text-center"> Si </option>
                                                         <option :value="0" class="text-center"> No </option>
                                                     </select>
-
-                                                </th>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>

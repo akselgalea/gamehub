@@ -18,9 +18,12 @@ class GameInstanceParameter extends Model
         'parameter_id',
         'game_instance_id'
     ];
-
-    protected $parametersTypes = [
-    ];
-
     
+    public function parameter() {
+        return $this->belongsTo(Parameter::class);
+    }
+
+    public function game_instance() {
+        return $this->belongsTo(GameInstance::class);
+    }
 }

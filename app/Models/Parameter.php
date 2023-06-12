@@ -23,7 +23,7 @@ class Parameter extends Model
         return $this->belongsTo(Game::class);
     }
 
-    public function gameInstance(): BelongsToMany {
+    public function instances(): BelongsToMany {
         return $this->belongsToMany(GameInstance::class, 'game_instance_parameters' , 'parameter_id', 'game_instance_id')
             ->withPivot('value');
     }
