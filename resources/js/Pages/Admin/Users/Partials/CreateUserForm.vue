@@ -5,15 +5,10 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { onBeforeMount, ref } from 'vue';
 
-const props = defineProps({
-    grades: {
-        type: Array
-    },
-    schools: {
-        type: Array
-    }
-});
+const schools =ref(null);
+const grades = ref(null);
 
 const form = useForm({
     name: '',
@@ -25,6 +20,20 @@ const form = useForm({
     terms: false,
 });
 
+const getSchools = () => {
+    axios.get(route('api.schools.index')).then(({data}) => {
+        schools.value = data;
+    }, error => {
+        console.log(error);
+    })
+}
+
+const setGrades = (e) => {
+    const index = e.target.value - 1;
+    grades.value = schools.value[index].grades;
+    form.grade_id = null;
+}
+
 const sendForm = () => {
     form.post(
         route('user.store'), {
@@ -34,6 +43,10 @@ const sendForm = () => {
         }
     )
 }
+
+onBeforeMount(() => {
+    getSchools();
+})
 
 </script>
 
@@ -67,7 +80,7 @@ const sendForm = () => {
             <div class="mt-5">
                 <InputLabel for="type" value="Tipo de usuario"/>
 
-                <select id="type" v-model="form.type" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                <select id="type" v-model="form.type" class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                     <option :value="form.type ==null ? form.type : ''" hidden :selected="!form.type">Elige una opción</option>
                     <option value="student"> Estudiante </option>
                     <option value="admin"> Administrador </option>
@@ -77,18 +90,42 @@ const sendForm = () => {
             </div>
             
             <div v-if="form.type == 'student'" class="mt-5">
-                <InputLabel for="grade" value="Grado"/>
+                
+            <div>
+                <InputLabel for="school" value="Colegio" />
 
-                    <select v-if="grades.length == 0" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" disabled>
-                    <option selected> No hay grados registrados, dirijase a colegios si desea crear uno. </option>
-                    </select>
+                <select
+                    id="school"
+                    v-model="selectedSchool"
+                    class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                    @change="setGrades($event)"   
+                >
+                    <option :value="!selectedSchool ? selectedSchool : ''" hidden :selected="!selectedSchool">Elige una opción</option>
+                    <option v-for="s in schools" :value="s.id" :key="s.id">{{ s.name }}</option>
+                </select>
+                <InputError v-if = "form.errors.grade_id && selectedSchool == null" 
+                    class="mt-2" message=" El colegio es obligatorio en caso de que el usuario sea estudiante" 
+                />
+            </div>
 
-                    <select v-else id="grade" v-model="form.grade_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                        <option :value="!form.grade_id ? form.grade_id : ''" hidden :selected="!form.grade_id">Elige una opción</option>
-                        <option v-for="grade in grades" :key="grade.id" :value="grade.id">{{ grade.name }}</option>
-                    </select>
+            <div v-if="grades">
+                <InputLabel for="grade" value="Curso" class="mt-5"/>
 
-                <InputError class="mt-2" :message="form.errors.category_id" />
+                <select
+                    v-if="grades.length > 0"
+                    id="grade"
+                    v-model="form.grade_id"
+                    class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                >
+                    <option :value="!form.grade_id ? form.grade_id : ''" hidden :selected="!form.grade_id">Elige una opción</option>
+                    <option v-for="g in grades" :value="g.id" :key="g.id">{{ g.name }}</option>
+                </select>
+                
+                <p v-else class="mt-1 text-sm text-gray-600 dark:text-gray-400">Este colegio aun no posee cursos.</p>
+
+                <InputError class="mt-2" :message="form.errors.grade_id" />
+            </div>
+            
             </div>
 
             <div class="mt-5">
