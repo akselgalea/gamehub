@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->foreignId('game_id');
-            $table->foreignId('experiment_id');
+            $table->foreignId('game_id')->nullable()->nullOnDelete();
+            $table->foreignId('experiment_id')->onDelete('cascade');
             $table->boolean('enable_rewards')->default(false);
             $table->boolean('enable_badges')->default(false);
             $table->boolean('enable_performance_chart')->default(false);

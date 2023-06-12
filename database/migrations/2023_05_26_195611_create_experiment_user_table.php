@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('experiment_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('experiment_id');
+            $table->foreignId('user_id')->onDelete('cascade');
+            $table->foreignId('experiment_id')->onDelete('cascade');
             $table->foreignId('game_instance_id')->nullable()->default(null);
             $table->timestamps();
         });
