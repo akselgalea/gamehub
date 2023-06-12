@@ -119,9 +119,9 @@ const sendForm = () => {
                                                     />
 
                                                     <select v-if="param.type == 'boolean'" id="value" v-model="param.pivot.value" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm w-full">
-                                                        <option v-if="param.pivot.value === null" :value="null" hidden :selected="!param.pivot.value == null" class="flex text-center">Elige una opción</option>
-                                                        <option :value="true" class="text-center"> Si </option>
-                                                        <option :value="false" class="text-center"> No </option>
+                                                        <option v-if="param.pivot.value === null" :value="null" hidden :selected="!param.pivot.value === null" class="flex text-center">Elige una opción</option>
+                                                        <option :value="1" class="text-center"> Si </option>
+                                                        <option :value="0" class="text-center"> No </option>
                                                     </select>
 
                                                 </th>
