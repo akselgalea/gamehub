@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Exception;
 
 class Survey extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'surveys';
 
@@ -46,6 +48,49 @@ class Survey extends Model
         try {
             Survey::create($validated);
             return ['status' => 200, 'message' => $this->type($req->type) . ' creada con éxito'];
+        } catch(Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Devuelve la encuesta a editar, carga diferentes vistas según el tipo de encuesta.
+     */
+    public function editView($id) {
+        try {
+            $survey = Survey::findOrFail($id);
+
+            if($survey->type == 'survey')
+                $view = 'Admin/Experiments/Surveys/Edit';
+            else
+                $view = 'Admin/Experiments/Surveys/Tests/Edit';
+            
+            return ['survey' => $survey, 'view' => $view];
+        } catch (Éxception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function edit($id, $req) {
+        $validated = $req->validated();
+
+        try {
+            $survey = Survey::findOrFail($id);
+            $survey->update($validated);
+
+            return ['status' => 200, 'message' => $this->type($survey->type) . ' actualizada con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function erase($req) {
+        try {
+            $survey = Survey::findOrFail($req->surveyId);
+            $type = $survey->type;
+            $survey->delete();
+
+            return ['status' => 200, 'message' => $this->type($type) . ' eliminada con éxito'];
         } catch(Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }

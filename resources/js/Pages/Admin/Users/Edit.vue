@@ -23,7 +23,7 @@ const closeModal = () => {
     showingModal.value = false;
 };
 </script>
-    
+
 <template>
     <PrimaryButton @click="showModal"><i class="fas fa-edit"></i></PrimaryButton>
 

@@ -25,6 +25,25 @@ class SurveyController extends Controller
         return redirect()->back()->with('notification', $res);
     }
 
+    public function edit($id, $survey) {
+        $res = $this->survey->editView($survey);
+
+        if(isset($res['status']) && $res['status'] == 500)
+            return redirect()->back()->with('notification', $res);
+
+        return Inertia::render($res['view'], ['survey' => $res['survey']]);
+    }
+    
+    public function update($experiment, $id, SurveyCreateRequest $request) {
+        $res = $this->survey->edit($id, $request);
+        return redirect()->back()->with('notification', $res);
+    }
+
+    public function destroy($experiment, $id, SurveyDeleteRequest $request) {
+        $res = $this->survey->erase($request);
+        return redirect()->route('experiment.management', $experiment)->with('notification', $res);
+    }
+
     public function questionCreate(SurveyQuestionCreateRequest $request) {
         return redirect()->back();
     }

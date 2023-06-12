@@ -54,6 +54,7 @@ const showModal = () => {
 
 const closeModal = () => {
     showingModal.value = false;
+    form.reset();
 };
 </script>
 
