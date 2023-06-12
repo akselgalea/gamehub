@@ -49,7 +49,7 @@ class GameInstance extends Model
         try {
             foreach($req->parameters as $param){
                 // se revisa si el valor es null, en caso de serlo se busca en la instancia de juego y se elimina y si no crea la instancia o la actualiza dependiendo del valor//
-                if($param['value'] == null ){
+                if($param['value'] === null){
                     GameInstanceParameter::where([
                         'game_instance_id' => $param['game_instance_id'],
                         'parameter_id' => $param['parameter_id']
