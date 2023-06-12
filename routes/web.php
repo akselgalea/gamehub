@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::prefix('controlpanel')->group(function () {
+    Route::prefix('controlpanel')->middleware('role:admin')->group(function () {
         
         // Administracion de usuarios //
         Route::prefix('users')->group(function () {
@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::prefix('experiments')->group(function () {
+    Route::prefix('experiments')->middleware('role:admin')->group(function () {
         Route::get('/', [ExperimentController::class, 'index'])->name('experiments.index'); // Ruta para ver el panel de administracion de los experimentos
         Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
         Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
@@ -60,6 +60,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
         Route::get('/{id}/surveys/new', [SurveyController::class, 'create'])->name('surveys.create');
         Route::post('/{id}/surveys/new', [SurveyController::class, 'store'])->name('surveys.store');
+        Route::get('/{id}/surveys/{survey}/edit', [SurveyController::class, 'edit'])->name('surveys.edit');
+        Route::post('/{id}/surveys/{survey}/edit', [SurveyController::class, 'update'])->name('surveys.update');
+        Route::delete('/{id}/surveys/{survey}', [SurveyController::class, 'destroy'])->name('surveys.destroy');
         Route::get('/{id}/surveys/tests/new', [SurveyController::class, 'testCreate'])->name('surveys.tests.create');
         Route::post('/{id}/surveys/tests/new', [SurveyController::class, 'store'])->name('surveys.tests.store');
 
@@ -104,15 +107,16 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-
-    Route::prefix('games')->group(function () {
-        Route::get('/', [GameController::class, 'index'])->name('games.index');
+    
+    Route::get('games/{id}/play', [GameController::class, 'play'])->name('games.play');
+    Route::get('/games', [GameController::class, 'index'])->name('games.index');
+    
+    Route::prefix('games')->middleware('role:admin')->group(function () {
         Route::get('/new', [GameController::class, 'create'])->name('games.create');
         Route::post('/new', [GameController::class, 'store'])->name('games.store');
         Route::get('/{id}', [GameController::class, 'edit'])->name('games.edit');
         Route::patch('{id}', [GameController::class, 'update'])->name('games.update');
         Route::delete('/{id}', [GameController::class, 'destroy'])->name('games.destroy');  
-        Route::get('/{id}/play', [GameController::class, 'play'])->name('games.play');
         
         Route::prefix('parameters')->group(function () {
             Route::post('/new', [ParameterController::class, 'store'])->name('games.params.store');
@@ -142,7 +146,7 @@ Route::middleware('auth')->group(function () {
     })->where('filename', '(.*)');
 
 
-    Route::prefix('schools')->group(function () {
+    Route::prefix('schools')->middleware('role:admin')->group(function () {
         Route::get('/', [SchoolController::class, 'index'])->name('schools.index');
         Route::get('/new', [SchoolController::class, 'create'])->name('schools.create');
         Route::post('/new', [SchoolController::class, 'store'])->name('schools.store');

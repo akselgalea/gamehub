@@ -8,37 +8,36 @@ import DangerButton from '@/Components/DangerButton.vue';
 import CreateSurveyQuestion from './CreateSurveyQuestion.vue';
 import UpdateSurveyQuestion from './UpdateSurveyQuestion.vue';
 import { useForm } from '@inertiajs/vue3';
-import { formDate } from '@/Helpers/date';
 import { ref } from 'vue';
 import { noti } from '@/Helpers/notifications';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 
 const props = defineProps({
-    experimentId: {
-        type: String
+    survey: {
+        type: Object
     }
 });
 
-const surveyBody = ref([]);
+const surveyBody = ref(JSON.parse(props.survey.body));
 
 const form = useForm({
-    name: '',
-    description: '',
-    stage: '',
+    name: props.survey.name,
+    description: props.survey.name,
+    stage: props.survey.stage,
     type: 'survey',
-    body: null,
-    init_date: formDate(new Date()),
-    end_date: formDate(new Date()),
-    experiment_id: props.experimentId,
+    body: props.survey.body,
+    init_date: props.survey.init_date,
+    end_date: props.survey.end_date,
+    experiment_id: props.survey.experiment_id
 });
 
 const sendForm = () => {
     form.body = JSON.stringify(surveyBody.value);
 
     form.post(
-        route('surveys.store', {id: props.experimentId}), {
+        route('surveys.update', {id: props.survey.experiment_id, survey: props.survey.id}), {
             onSuccess: () => {
-                form.reset();
-                surveyBody.value = [];
+                noti('success', 'Prueba actualizada con éxito!', 'top-center');
             },
             onError: (e) => {
                 console.log(e);
@@ -62,18 +61,20 @@ const deleteQuestion = (index) => {
         noti('success', 'Pregunta eliminada con éxito!', 'top-center');
     }
 }
+
+const cancel = () => {
+    form.reset();
+}
 </script>
 
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Crear una encuesta</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Actualizar encuesta</h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Puedes realizar encuestas a los estudiantes que participen del experimento.
-                A continuación puedes ingresar las preguntas y el formato que va a tener esta encuesta,
-                al momento de crear una encuesta de tipo prueba se le añadirá también el campo de respuesta correcta
-                a cada pregunta.
+                Puedes realizar encuestas los estudiantes que participen del experimento.
+                A continuación puedes actualizar las preguntas que va a tener esta encuesta.
             </p>
         </header>
 
@@ -162,9 +163,9 @@ const deleteQuestion = (index) => {
                         <tbody>
                             <tr class="border" v-for="(question, index) in surveyBody" :key="index">
                                 <td class="px-3 text-justify">{{ question.question }}</td>
-                                <td class="px-3 text-justify">{{ question.type == 'open' ? 'Pregunta abierta' : 'Likert' }}</td>
+                                <td class="px-3 text-justify">{{ question.type == 'open' ? 'Pregunta abierta' : 'Opción múltiple' }}</td>
                                 <td class="px-3 flex gap-1 justify-center">
-                                    <UpdateSurveyQuestion :question="question" @update-question="updateQuestion($event, index)" />
+                                    <UpdateSurveyQuestion :question="question" @update-question="updateQuestion($event, index)" :key="index"/>
                                     <DangerButton type="button" @click="deleteQuestion(index)"><i class="fas fa-trash-alt"></i></DangerButton>
                                 </td>
                             </tr>
@@ -174,6 +175,7 @@ const deleteQuestion = (index) => {
             </div>
 
             <div class="flex items-center gap-4 mt-10">
+                <SecondaryButton type="button" :disabled="form.processing" @click="cancel">Cancelar</SecondaryButton>
                 <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
 
                 <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">

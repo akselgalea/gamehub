@@ -1,7 +1,4 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import UpdateUserForm from './Partials/UpdateUserForm.vue';
 import Modal from '@/Components/Modal.vue';
 import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue';
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
@@ -26,7 +23,7 @@ const closeModal = () => {
     showingModal.value = false;
 };
 </script>
-    
+
 <template>
     <PrimaryButton @click="showModal"><i class="fas fa-edit"></i></PrimaryButton>
 

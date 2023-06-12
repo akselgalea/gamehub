@@ -36,6 +36,7 @@ class TestQuestionCreateRequest extends FormRequest
         return [
             'required' => 'El campo :attribute es obligatorio',
             'integer' => 'El campo :attribute debe tener un valor numerico',
+            'options.*.required_unless' => 'El campo opción :position es obligatorio',
             'max' => 'El campo :attribute no debe superar los :max caracteres',
             'type.in' => 'El tipo seleccionado es invalido. Los tipos validos son: likert, pregunta abierta'
         ];
@@ -46,7 +47,8 @@ class TestQuestionCreateRequest extends FormRequest
         return [
             'question' => 'enunciado',
             'type' => 'tipo',
-            'answer' => 'respuesta'
+            'answer' => 'respuesta',
+            'option' => 'opción',
         ];
     }
 }

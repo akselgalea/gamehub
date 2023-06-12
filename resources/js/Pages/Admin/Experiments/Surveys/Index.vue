@@ -41,7 +41,7 @@ const types = {
                 </Link>
             </div>
 
-            <p class="text-sm text-gray-600 dark:text-white" v-if="surveys.length == 0">
+            <p class="text-sm text-gray-600 dark:text-gray-400" v-if="surveys.length == 0">
                 Este experimento aun no posee encuestas.
             </p>
             <template v-else>
@@ -58,8 +58,7 @@ const types = {
                             <td class="px-3 text-justify">{{ types[survey.type] }}</td>
                             <td class="px-3 text-justify">{{ survey.description }}</td>
                             <td class="px-3 flex gap-1 justify-center">
-                                <!-- <EditSurveyForm :survey="survey" :key="survey.name" />
-                                <DeleteSurveyForm :surveyId="survey.id" :surveyName="survey.name" :key="survey.id" /> -->
+                                <Link :href="route('surveys.edit', {id: experimentId, survey: survey.id})"><PrimaryButton><i class="fas fa-edit"></i></PrimaryButton></Link>
                             </td>
                         </tr>
                     </tbody>

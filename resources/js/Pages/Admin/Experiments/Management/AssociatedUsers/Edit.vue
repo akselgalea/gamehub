@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
+import {noti} from '@/helpers/notifications';
 
 const props = defineProps({
     experiment_id: {
@@ -29,6 +30,7 @@ const asocciateForm = (user_id) => {
     form.post(
         route('user_experiment.link'),{
             onSuccess: () => {
+                noti('success', 'Usuario vinculado con éxito!', 'top-center');
                 form.reset();
             }
         }
@@ -40,12 +42,12 @@ const disasocciateForm = (user_id) => {
     form.post(
         route('user_experiment.unlink'),{
             onSuccess: () => {
+                noti('success', 'Usuario desvinculado con éxito!', 'top-center');
                 form.reset();
             }
         }
     )
 }
-
 </script>
 
 <template>
@@ -53,114 +55,78 @@ const disasocciateForm = (user_id) => {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Usuarios</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimentos / Usuarios</h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-
                     <header>
                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Vincular usuarios</h2>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">En este apartado se pueden modificar los usuarios asociados al experimento.</p>
                     </header>
 
-                    <div class="py-12">
-                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 text-white">
-                            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                                <div class="flex flex-wrap gap-10 w-full">
+                    <div class="grid grid-cols-2 gap-10 w-full">
+                        <div class="mt-5 w-full max-md:col-span-2">
+                            <header class="mb-2">
+                                <h3 class="text-md font-medium text-gray-800 dark:text-gray-200 leading-tight">Usuarios asociados:</h3>
+                            </header>
 
-                                    <div class="mt-5 w-full md:w-1/2"> Usuarios asociados :
-                                            <p class="text-sm text-gray-600 dark:text-gray-400" v-if="associatedUsers.length == 0">No se encontraron usuarios asociados.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400" v-if="associatedUsers.length == 0">No se encontraron usuarios asociados.</p>
 
-                                            <template v-else>
-                                                <table class="rounded-sm shadow table-fixed w-full border-collapse">
-                                                    <thead class="border">
-                                                        <th>Nombre</th>
-                                                        <th>Correo</th>
-                                                        <th>Acciones</th>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr v-for="(user, index) in associatedUsers" :key="index" class="border">
-                                                            <td class="px-3 text-justify">{{ user.name }}</td>
-                                                            <td class="px-3 text-justify">{{ user.email }}</td>
-                                                            <td class="px-3 flex gap-1 justify-center">
-                                                                <DangerButton @click="disasocciateForm(user.id)">Desvincular</DangerButton>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </template>
-                                            
-                                    </div>
+                            <template v-else>
+                                <table class="rounded-sm shadow table-fixed w-full border-collapse">
+                                    <thead class="border dark:text-white">
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                        <th>Acciones</th>
+                                    </thead>
+                                    <tbody class="dark:text-white">
+                                        <tr v-for="(user, index) in associatedUsers" :key="index" class="border">
+                                            <td class="px-3 text-center">{{ user.name }}</td>
+                                            <td class="px-3 text-center">{{ user.email }}</td>
+                                            <td class="px-3 flex gap-1 justify-center">
+                                                <DangerButton @click="disasocciateForm(user.id)" ><i class="fas fa-minus"></i></DangerButton>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </template>
+                        </div>
 
-                                    <div class="mt-5 w-full md:w-1/2"> Usuarios no asociados :
-                                        <p class="text-sm text-gray-600 dark:text-gray-400" v-if="noAssociatedUsers.length == 0">No se encontraron usuarios asociados.</p>
+                        <div class="mt-5 w-full max-md:col-span-2">
+                            <header class="mb-2">
+                                <h3 class="text-md font-medium text-gray-800 dark:text-gray-200 leading-tight">Usuarios no asociados:</h3>
+                            </header>
 
-                                        <template v-else>
-                                            <table class="rounded-sm shadow table-fixed w-full border-collapse">
-                                                <thead class="border">
-                                                    <th>Nombre</th>
-                                                    <th>Correo</th>
-                                                    <th>Acciones</th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="(user, index) in noAssociatedUsers" :key="index" class="border">
-                                                        <td class="px-3 text-justify">{{ user.name }}</td>
-                                                        <td class="px-3 text-justify">{{ user.email }}</td>
-                                                        <td class="px-3 flex gap-1 justify-center">
-                                                            <PrimaryButton @click="asocciateForm(user.id)">Vincular</PrimaryButton>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                            <p class="text-sm text-gray-600 dark:text-gray-400" v-if="noAssociatedUsers.length == 0">No se encontraron usuarios asociados.</p>
 
-                                        </template>
-                                    </div>
-
-                                            
-
-                                    <!-- <section class="mt-5"> Usuarios asociados :
-                                            <p class="text-sm text-gray-600 dark:text-gray-400" v-if="associatedUsers.length == 0">No se encontraron usuarios asociados.</p>
-
-                                            <div class="flex flex-wrap gap-10 w-full md:w-1/2">
-                                                <div v-for="(user, index) in associatedUsers" :key="index">
-                                                    <div class="w-full md:w-1/2">
-                                                    <div class="first-letter:uppercase">Nombre: {{ user.name }}</div>
-                                                    <div class="first-letter:uppercase">Correo: {{ user.email }}</div>
-                                                        <div class="flex gap-2">
-                                                            <DangerButton @click="disasocciateForm(user.id)">Desvincular</DangerButton>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-                                    </section>
-
-                                    <section class="mt-5 "> Usuarios no asociados :
-                                            <p class="text-sm text-gray-600 dark:text-gray-400" v-if="noAssociatedUsers.length == 0">No se encontraron mas usuarios.</p>
-                                            <div class="flex flex-wrap gap-10 w-full md:w-1/2">
-                                                <div v-for="(user, index) in noAssociatedUsers" :key="index">
-                                                <div class="first-letter:uppercase">Nombre: {{ user.name }}</div>
-                                                <div class="first-letter:uppercase">Correo: {{ user.email }}</div>
-                                                    <div class="flex gap-2">
-                                                        <PrimaryButton @click="asocciateForm(user.id)">Vincular</PrimaryButton>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    </section> -->
-
-                                </div>
-                            </div>
+                            <template v-else>
+                                <table class="rounded-sm shadow table-fixed w-full border-collapse">
+                                    <thead class="border dark:text-white">
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                        <th>Acciones</th>
+                                    </thead>
+                                    <tbody class="dark:text-white">
+                                        <tr v-for="(user, index) in noAssociatedUsers" :key="index" class="border">
+                                            <td class="px-3 text-center">{{ user.name }}</td>
+                                            <td class="px-3 text-center">{{ user.email }}</td>
+                                            <td class="px-3 flex gap-1 justify-center">
+                                                <PrimaryButton @click="asocciateForm(user.id)"><i class="fas fa-plus"></i></PrimaryButton>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </template>
                         </div>
                     </div>
+                </div>
 
-                    <section class="mt-5 flex items-center justify-center w-full">
-                        <Link class="ml-2" :href="route('experiment.management', {id: experiment_id})">
-                            <PrimaryButton>Volver</PrimaryButton>
-                        </Link>
-                    </section>
-
+                <div class="mt-5 flex items-center justify-center w-full">
+                    <Link class="ml-2" :href="route('experiment.management', {id: experiment_id})">
+                        <PrimaryButton>Volver</PrimaryButton>
+                    </Link>
                 </div>
             </div>
         </div>

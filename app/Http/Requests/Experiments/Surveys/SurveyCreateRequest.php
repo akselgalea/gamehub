@@ -26,6 +26,7 @@ class SurveyCreateRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'max:500'],
             'body' => ['required', 'json'],
+            'stage' => ['required', Rule::in(['pre', 'post'])],
             'type' => ['required', Rule::in(['test', 'survey'])],
             'init_date' => ['required', 'date', 'after_or_equal:today'],
             'end_date' => ['required', 'date', 'after_or_equal:init_date'],

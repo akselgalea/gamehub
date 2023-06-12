@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import UpdateSurveyForm from './Partials/UpdateSurveyForm.vue';
-import DeleteSurveyForm from './Partials/DeleteSurveyForm.vue';
+import UpdateTestForm from './Partials/UpdateTestForm.vue';
+import DeleteSurveyForm from '../Partials/DeleteSurveyForm.vue';
 import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -22,7 +22,7 @@ const props = defineProps({
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                    <UpdateSurveyForm :survey="survey" />
+                    <UpdateTestForm :survey="survey" />
                 </div>
                 
                 <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
