@@ -68,38 +68,55 @@ const sendForm = () => {
                                     </div> 
                                 </InputLabel>
 
+                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">Las recompensas asociadas al experimento.</div>
                                 <InputError class="mt-2" :message="form.errors.enable_rewards" />
                             </div>
 
-                            <InputLabel for="enable_badges">
-                                <div class="flex gap-2 items-center"> 
-                                    <Checkbox 
-                                        id="enable_badges"
-                                        v-model="form.enable_badges"
-                                        :checked="form.enable_badges"
-                                    /> Medallas
-                                </div> 
-                            </InputLabel>
+                            <div class="mt-5">
+                                <InputLabel for="enable_badges">
+                                    <div class="flex gap-2 items-center"> 
+                                        <Checkbox 
+                                            id="enable_badges"
+                                            v-model="form.enable_badges"
+                                            :checked="form.enable_badges"
+                                        /> Panel de medallas
+                                    </div> 
+                                </InputLabel>
 
-                            <InputLabel for="enable_performance_chart">
-                                <div class="flex gap-2 items-center"> 
-                                    <Checkbox 
-                                        id="enable_performance_chart"
-                                        v-model="form.enable_performance_chart"
-                                        :checked="form.enable_performance_chart"
-                                    /> Rendimiento
-                                </div> 
-                            </InputLabel>
+                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">El panel de medallas de usuario se despliega en el dashboard del experimento.</div>
 
-                            <InputLabel for="enable_leaderboard">
-                                <div class="flex gap-2 items-center"> 
-                                    <Checkbox 
-                                        id="enable_leaderboard"
-                                        v-model="form.enable_leaderboard"
-                                        :checked="form.enable_leaderboard"
-                                    /> Ranking
-                                </div> 
-                            </InputLabel>
+                                <InputError class="mt-2" :message="form.errors.enable_badges" />
+                            </div>
+
+                            <div class="mt-5">
+                                <InputLabel for="enable_performance_chart">
+                                    <div class="flex gap-2 items-center"> 
+                                        <Checkbox 
+                                            id="enable_performance_chart"
+                                            v-model="form.enable_performance_chart"
+                                            :checked="form.enable_performance_chart"
+                                        /> Gráfico de rendimiento de usuario
+                                    </div> 
+                                </InputLabel>
+
+                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">El gráfico de rendimiento de usuario presenta un gráfico con los últimos 10 puntajes en el juego.</div>
+                                <InputError class="mt-2" :message="form.errors.enable_performance_chart" />
+                            </div>
+
+                            <div class="mt-5">
+                                <InputLabel for="enable_leaderboard">
+                                    <div class="flex gap-2 items-center"> 
+                                        <Checkbox 
+                                            id="enable_leaderboard"
+                                            v-model="form.enable_leaderboard"
+                                            :checked="form.enable_leaderboard"
+                                        /> Ranking de juego
+                                    </div> 
+                                </InputLabel>
+
+                                <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">El ranking de puntajes mayores se despliega bajo el juego y registra los record de puntaje.</div>
+                                <InputError class="mt-2" :message="form.errors.enable_leaderboard" />
+                            </div>
 
                             <div class="flex items-center gap-4 mt-10">
 
