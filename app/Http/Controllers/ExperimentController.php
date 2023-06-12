@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Experiments\{ExperimentCreateRequest, ExperimentUpdateRequest};
 use App\Http\Requests\Experiments\Users\{UserAssociateRequest, UserDisassociateRequest};
-use App\Models\{Experiment, User, Game};
+use App\Models\{Experiment, User, Game, Student};
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Controllers\UserInExperiment;
@@ -58,18 +58,23 @@ class ExperimentController extends Controller
 
     // Panel referente a la administracion de usuarios asociados a un experimento //
     public function usersExperiment($id) {
-        return $this->experiment->usersExperiment($id);
+        $experiment = Experiment::find($id);
+
+        return Inertia::render('Admin/Experiments/Management/AssociatedUsers/Edit', 
+        ['experiment_id'=> $id,
+         'noAssociatedUsers' => Student::whereDoesntHave('experiments')->get()->toArray(), // Usuarios no asociados/vinculados al experimento
+         'associatedUsers' => $experiment->students->toArray(),]); // Usuarios asociados/vinculados al experimento
     }
 
+    // Permite vincular/asociar un usuario a un experimento //
     public function userAssociateExperiment(UserAssociateRequest $request){
         $this->experiment->userAssociateExperiment($request);
-        // return redirect()->route('users_experiment.edit', $id)->with('notification');
         return redirect()->back()->with('notification');
     }
 
+    //Permite desvincular/desasociar un usuario de un experimento //
     public function userDisassociateExperiment(UserDisassociateRequest $request){
         $this->experiment->userDisassociateExperiment($request);
-        // return redirect()->route('users_experiment.edit', $id)->with('notification');
         return redirect()->back()->with('notification');
     }
 

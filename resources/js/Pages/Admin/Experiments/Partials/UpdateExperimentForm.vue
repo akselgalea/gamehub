@@ -70,7 +70,7 @@ const sendForm = () => {
             </div>
 
             <div class="mt-5">
-                <InputLabel for="time_limit" value="Tiempo limite del experimento"/>
+                <InputLabel for="time_limit" value="Tiempo limite del experimento (En minutos)"/>
                 
                 <TextInput
                     id="time_limit"

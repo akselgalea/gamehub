@@ -57,8 +57,8 @@ class Experiment extends Model
     }
 
     public function store($req) {
-        
         $validated = $req->validated();
+        
         try {
             $experiment = Experiment::create($validated);
 
@@ -69,7 +69,6 @@ class Experiment extends Model
     }
 
     // Actualiza la informacion general de un experimento //
-    
     public function edit($req) {
         $validated = $req->validated();
 
@@ -81,16 +80,7 @@ class Experiment extends Model
         }
     }
 
-    // Devuelve los usuarios asociados y no asociados al experimento para permitir la vinculacion de los mismos //
-
-    public function usersExperiment($id) {
-        $experiment = Experiment::find($id);
-        return Inertia::render('Admin/Experiments/Management/AssociatedUsers/Edit', 
-        ['experiment_id'=> $id,
-         'noAssociatedUsers' => Student::whereDoesntHave('experiments')->get()->toArray(),
-         'associatedUsers' => $experiment->students->toArray(),]);
-    }
-
+    // Permite crear una asociacion entre un usuario y un experimento //
     public function userAssociateExperiment($req) {
 
         $validated = $req->validated();
@@ -107,6 +97,7 @@ class Experiment extends Model
         }
     }
 
+    // Permite la desvinculacion de un usuario y un experimento //
     public function userDisassociateExperiment($req) {
 
         $validated = $req->validated();

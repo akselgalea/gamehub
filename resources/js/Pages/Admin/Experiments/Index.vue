@@ -66,7 +66,7 @@ const closeModal = () => {
                                                         <div class="first-letter:uppercase text-grey-900 dark:text-white">Experimento: {{ experiment.name }}</div>
                                                         <div class="first-letter:uppercase text-grey-900 dark:text-white">Estado: {{ experiment.status }}</div>
                                                         <div class="first-letter:uppercase text-grey-900 dark:text-white">Descripcion: {{ experiment.description }}</div>
-                                                        <div class="first-letter:uppercase text-grey-900 dark:text-white">Tiempo limite: {{ experiment.time_limit }}</div>
+                                                        <div class="first-letter:uppercase text-grey-900 dark:text-white">Tiempo limite: {{ experiment.time_limit }} minutos</div>
                                                         <div class="flex gap-2">
                                                             <SecondaryButton @click="closeModal"> Cerrar </SecondaryButton>
                                                         </div>

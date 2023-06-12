@@ -91,6 +91,11 @@ Route::middleware('auth')->group(function () {
             Route::get('{id}/edit', [GameInstanceController::class, 'edit'])->name('game_instances.edit');
             Route::patch('{id}/update', [GameInstanceController::class, 'update'])->name('game_instances.update');
             Route::delete('/{id}', [GameInstanceController::class, 'destroy'])->name('game_instances.destroy');  
+
+            Route::prefix('parameters')->group(function () {
+                Route::get('{id}/editParameters', [GameInstanceController::class, 'editParams'])->name('instances_params.edit');
+                Route::patch('{id}/updateParameters', [GameInstanceController::class, 'updateParams'])->name('instances_params.update');
+            });
         });
     });
 

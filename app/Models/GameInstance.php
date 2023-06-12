@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\{belongsToMany, BelongsTo};
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Inertia\Inertia;
 
@@ -37,6 +37,35 @@ class GameInstance extends Model
 
     public function experiment(): BelongsTo {
         return $this->belongsTo(Experiment::class);
+    }
+
+    public function gameParameters(): BelongsToMany {
+        return $this->belongsToMany(Parameter::class, 'game_instance_parameters' , 'game_instance_id', 'parameter_id')
+            ->withPivot('value');
+    }
+
+    public function updateParams($req, $id) {
+        // $validated = $req->validated();
+        try {
+            foreach($req->parameters as $param){
+                // se revisa si el valor es null, en caso de serlo se busca en la instancia de juego y se elimina y si no crea la instancia o la actualiza dependiendo del valor//
+                if($param['value'] == null ){
+                    GameInstanceParameter::where([
+                        'game_instance_id' => $param['game_instance_id'],
+                        'parameter_id' => $param['parameter_id']
+                    ])->delete();
+                } else {
+                    GameInstanceParameter::updateOrCreate(
+                        ['game_instance_id' => $param['game_instance_id'], 'parameter_id' => $param['parameter_id']],
+                        ['value' => $param['value']]
+                    );
+                }
+            }
+            
+            return ['status' => 200, 'message' => 'Instancia de juego creado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
     }
 
     public function edit($req) {

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('game_instance_parameters', function (Blueprint $table) {
             $table->id();
+            $table->string('value');
             $table->foreignId('parameter_id');
             $table->foreignId('game_instance_id');
             $table->timestamps();
