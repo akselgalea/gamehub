@@ -51,7 +51,7 @@ const props = defineProps({
                                                 <ShowProfileInformation :user="user"/>
                                                 <EditUser :user="user"/>
                                                 <Link :href="route('user-profile.index', {id: user.id})">
-                                                    <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
+                                                    <PrimaryButton title="Ver Perfil"><i class="fas fa-user-alt"></i></PrimaryButton>
                                                 </Link>
                                                 <DeleteUserModal :userId="user.id"/>
                                             </div>

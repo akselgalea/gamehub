@@ -24,7 +24,7 @@ class AdministratorPanel extends Model
 
     public function userProfile($id) {
         $user = Student::find($id);
-        return Inertia::render('Admin/Users/Partials/ProfileUser', ['users' => $user]);
+        return Inertia::render('Admin/Users/Profile/View', ['user' => $user, 'experiments' => $user->experiments]);
     }
 
     public function userStore(UserCreateRequest $req) {
