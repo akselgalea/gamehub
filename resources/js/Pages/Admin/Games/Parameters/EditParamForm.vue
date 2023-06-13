@@ -5,7 +5,7 @@ import TextInput from '@/Components/TextInput.vue';
 import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-
+import { noti } from '@/helpers/notifications';
 import Modal from '@/Components/Modal.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
@@ -43,7 +43,10 @@ const showModal = () => {
 const createParam = () => {
     form.patch(route('games.params.update', {id: props.param.id}), {
         preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: () => {
+            noti('success', 'Parámetro modificado con éxito!', 'top-center');
+            closeModal();
+        },
     });
 };
 

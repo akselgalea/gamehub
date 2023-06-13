@@ -7,90 +7,108 @@ use App\Http\Requests\Experiments\GameInstances\Gamification\{GamificationUpdate
 use App\Models\{ GameInstance, Game, GameInstanceParameter, Parameter };
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Services\GameInstanceService;
 
 class GameInstanceController extends Controller
 {
     private $game_instance;
+    private $gis;
     
-    public function __construct(GameInstance $game_instance) {
+    public function __construct(GameInstance $game_instance, GameInstanceService $gis) {
         $this->game_instance = $game_instance;
+        $this->gis = $gis;
     }
 
     public function show($id)
     {
-        return Inertia::render('Admin/Experiments/Management/ExperimentInstances/Edit', ['games_instances' => GameInstance::all()->toArray(), 'games' => Game::all()->toArray(), 'experiment_id' => $id]);
+        return Inertia::render(
+            'Admin/Experiments/Management/ExperimentInstances/Edit',
+            ['games_instances' => GameInstance::all()->toArray(), 'games' => Game::all()->toArray(), 'experiment_id' => $id]
+        );
     }
 
     public function create($id)
     {
-        return Inertia::render('Admin/Experiments/Management/ExperimentInstances/Create', ['games' => Game::all()->toArray(), 'experiment_id' => $id]);
+        return Inertia::render(
+            'Admin/Experiments/Management/ExperimentInstances/Create',
+            ['games' => Game::all()->toArray(), 'experiment_id' => $id]
+        );
     }
 
     public function store(GameInstanceCreateRequest $request)
     {
-        $res = $this->game_instance->store($request);
+        $res = $this->gis->store($request);
         return redirect()->back()->with('notification', $res);
     }
 
-    public function edit($id)
+    public function edit($experimento, $slug)
     {
-        $game_instance = GameInstance::find($id);
+        $instance = $this->gis->get($slug);
+
+        if(!$instance)
+            return redirect()->back()->with('notification', $this->gis->notFoundText());
 
         return Inertia::render(
             'Admin/Experiments/Management/ExperimentInstances/Partials/UpdateGameInstanceForm', 
-            ['game_instance' => $game_instance, 'games' => Game::all()->toArray(), 'experiment_id' => $game_instance->experiment_id]
+            ['game_instance' => $instance, 'games' => Game::all()->toArray(), 'experiment_id' => $experimento]
         );
     }
 
+    public function update($experiment, $slug, GameInstanceUpdateRequest $request)
+    {
+        $res = $this->gis->update($slug, $request);
+        return redirect()->route('game_instances.edit', ['id' => $experiment, 'slug' => $res['slug'] ?? ''])->with('notification', $res);
+    }
+
+    public function destroy(GameInstanceDeleteRequest $request) {
+        $res = $this->gis->delete($request);
+        return redirect()->back()->with('notification', $res);
+    }
+
+
     // Vista que permite modificar los valores de los parametros pertenecientes al juego de la instancia de experimento //
-    public function editParams($id) {
+    public function editParams($experiment, $slug) {
         // devuelve la vista con el arreglo de parametros, ademas del id de la instancia y experimento 
-        $res = $this->game_instance->editParams($id);
+        $res = $this->gis->getParams($slug);
         
-        if(isset($res['status']) && $res['status'] == 500)
+        if(isset($res['status']))
             return redirect()->back()->with('notification', $res); 
 
         return Inertia::render(
             'Admin/Experiments/Management/ExperimentInstances/Parameters/EditParamForm', 
-            ['parameters' => $res['parameters'], 'experiment_id' => $res['experiment_id'], 'instance_id' => $id]
+            ['parameters' => $res['parameters'], 'experiment_id' => $experiment, 'instance_id' => $res['instance_id']]
         );
     }
     
-    public function updateParams(Request $request, $id)
+    public function updateParams($id, Request $request)
     {
-        $res = $this->game_instance->find($id)->updateParams($request, $id);
+        $res = $this->gis->updateParams($request, $id);
         return redirect()->back()->with('notification', $res); 
     }
 
-    public function editGamification($id)
+    public function editGamification($experiment, $slug)
     {
-        $game_instance = GameInstance::find($id);
+        $res = $this->gis->get($slug);
+        
+        if(isset($res['status']))
+            return redirect()->back()->with('notification', $res);
+
         return Inertia::render(
             'Admin/Experiments/Management/ExperimentInstances/Partials/UpdateGamificationForm', 
-            ['game_instance' => $game_instance, 'experiment_id' => $game_instance->experiment_id]
+            ['game_instance' => $res, 'experiment_id' => $experiment]
         );
     }
 
     public function updateGamification(GamificationUpdateRequest $request, $id)
     {
-        $res = $this->game_instance->updateGamification($request, $id);
+        $res = $this->gis->updateGamification($id, $request);
         return redirect()->back()->with('notification', $res); 
     }
 
-    public function update($id, GameInstanceUpdateRequest $request)
-    {
-        $res = $this->game_instance->find($id)->edit($request);
-        return redirect()->back()->with('notification', $res); 
-    }
-
-    public function destroy(GameInstanceDeleteRequest $request) {
-        $res = $this->game_instance->erase($request);
-        return redirect()->back()->with('notification', $res);
-    }
-
+    
     public function initialParams(Request $request)
     {
-        $gds = new GameDataService();
+        $gds = new GameInstanceService();
         return response()->json($gds->initGameData($request));
     }
 

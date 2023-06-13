@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Services;
-use EncryptService;
+use App\Services\EncryptService;
 use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise};
 
-class GameDataService
+class GameInstanceService
 {
     private $encryptService;
     private $gameInstance;
@@ -15,35 +15,104 @@ class GameDataService
     private $gameInstanceExercise;
     const DEFAULT_TIME_PER_DAY = 90000;
 
-    public function __construct() {
-        $this->encryptService = new EncryptService;
-        $this->gameInstance = new GameInstance;
-        $this->gameInstanceScore = new GameInstanceScore;
-        $this->gameInstanceTime = new GameInstanceTime;
-        $this->gameInstanceTimeCounter = new GameInstanceTimeCounter;
-        $this->gameInstanceParameter = new GameInstanceParameter;
-        $this->gameInstanceExercise = new GameInstanceExercise;
+    public function __construct(
+        EncryptService $es,
+        GameInstance $gi,
+        GameInstanceScore $gis,
+        GameInstanceTime $git,
+        GameInstanceTimeCounter $gitc,
+        GameInstanceParameter $gitp,
+        GameInstanceExercise $gie
+    ) {
+        $this->encryptService = $es;
+        $this->gameInstance = $gi;
+        $this->gameInstanceScore = $gis;
+        $this->gameInstanceTime = $git;
+        $this->gameInstanceTimeCounter = $gitc;
+        $this->gameInstanceParameter = $gitp;
+        $this->gameInstanceExercise = $gie;
     }
 
-    private function parametersToJson($parameters) {
-        $json = array();
-        
-        foreach($parameters as $param) {
-            $json[$param->name] = $this->castedTypeValue($param->type, $param->value);
+    public function get($slug) {
+       return $this->gameInstance->findBySlug($slug);
+    }
+
+    public function store($req) {
+        $validated = $req->validated();
+
+        try {
+            $this->gameInstance->create($validated);
+
+            return ['status' => 200, 'message' => 'Instancia de juego creado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
         }
-
-        return $json;
     }
 
-    private function castedTypeValue($type, $value) {
-        $types = [
-            'integer' => 'intval',
-            'float' => 'floatval',
-            'boolean' => 'boolval',
-            'string' => 'strval'
-        ];
+    public function update($slug, $req) {
+        $validated = $req->validated();
 
-        return call_user_func($types[$param->type], $value);
+        try {
+            $instance = $this->get($slug);
+            
+            if(!$instance)
+                return $this->notFoundText();
+            
+            $instance->update($validated);
+
+            return ['slug' => $instance->slug, 'status' => 200, 'message' => 'Datos de la instancia actualizado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function delete($req) {
+        try {
+            $game_instance = GameInstance::findOrFail($req->id)->delete();
+            return ['status' => 200, 'message' => 'Instancia de juego eliminado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar la instancia.'];
+        }
+    }
+
+    public function getParams($slug) {
+        try {
+            $instance = $this->get($slug); // busca los datos de la instancia
+            
+            if(!$instance)
+                return $this->notFoundText();
+
+            $gameParameters = $instance->game->parameters()->orderBy('id')->get();
+            $instanceParameters = $instance->gameInstanceParameters()->orderBy('parameter_id')->get();
+            
+            foreach($gameParameters as $param) {
+                $param['value'] =  $instanceParameters->firstWhere('parameter_id', $param['id'])->value ?? '';
+            }
+
+            return ['parameters' => $gameParameters, 'instance_id' => $instance->id];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function updateParameters($id, $req) {
+        try {
+            $game_instance = $this->gameInstance->findOrFail($id);
+        
+            foreach($req->parameters as $param){
+                if($param['value'] !== NULL)
+                    $game_instance->gameInstanceParameters()->updateOrCreate(
+                        ['parameter_id' => $param['id'], 'game_instance_id' => $id],
+                        ['value' => $param['value']]
+                    );
+                else
+                    GameInstanceParameter::where(['parameter_id' => $param['id'], 'game_instance_id' => $id])->delete();
+            }
+
+            return ['status' => 200, 'message' => 'Instancia de juego creado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
     }
 
     public function initGameData($request)
@@ -64,6 +133,7 @@ class GameDataService
         // Rescate de parámetros
         $parameters = $game_instance->gameInstanceParameters()->get();
         $parameters_json = $this->parametersToJson($parameters);
+        $time_limit = $game_instance->experiment->time_limit;
 
         # Carga de tags de tests
         /*  $tests = TestExercise::where('$user->id', '=', $user->id)
@@ -93,36 +163,8 @@ class GameDataService
         $time_counter = $this->gameInstanceTimeCounter->userInstanceTimeCounter($user->id, $game_instance->id)->time_used ?? 0;
         # Carga de total de ejercicios
         $total_exercises_count = $this->gameInstanceExercise->userTotalExercises($user->id, $game_instance->id);
-        
-        $arr = [
-            'u' => [
-                # Parámetros de juego
-                'name' => $user->name,              # Nombre de usuario
-                'fullname' => $user->name,          # Nombre completo del usuario
-                'username' => $user->name,          # Nombre de usuario
-                'max_score' => $max_score,          # Puntaje máximo (record) de juego
 
-                # Parámetros de gamificación
-                'currency' => 0, #$currencyAmount,      # Cantidad de monedas actual
-                'badges' => [],                     # Arreglo de medallas de usuario
-
-                # Parámetros de tiempo
-                'time_used' => $time_counter,      # Tiempo usado
-                'time_limit' => $game_instance->experiment->time_limit,  # Tiempo límite del día
-                'time_left' => (3600 * 24),        # (deprecated) Tiempo restante
-                'total_exercises' => $total_exercises_count,
-                # Parámetros de test
-                #'tests' => $tests->toArray(),      # Arreglo de tests realizados
-            ],
-            'p' => $parameters_json
-        ];
-        # FIX: Corrige retorno de arreglo cuando corresponde a diccionario
-        # PHP considera arreglo vació como arreglo, no hay forma de definir diccionaro (arr. asosciativo)
-        if (count($arr['p']) == 0) {
-            $arr['p'] = json_decode("{}");
-        }
-
-        return $arr;
+        return $this->setJsonData($user, $max_score, $time_counter, $game_instance, $time_limit);
     }
 
     public function saveData(Request $request) {
@@ -132,8 +174,7 @@ class GameDataService
 
         # Comprueba si hay presencia de token
         if (isset($game_data['token'])) {
-
-            $game_instance_slug = (new EncryptService())->encrypt_decrypt('decrypt', urldecode($game_data['token']));
+            $game_instance_slug = $this->encryptService->decrypt(urldecode($game_data['token']));
             $game_instance = GameInstance::findBySlug($game_instance_slug);
            
             $user_experiment = UserExperiment::where('game_instance_id', $game_instance->id)
@@ -277,5 +318,62 @@ class GameDataService
                 'message' => 'Invalid token'
             ]);
         }
+    }
+
+    private function setJsonData($user, $max_score, $time_counter, $game_instance, $time_limit) {
+        $arr = [
+            'u' => [
+                # Parámetros de juego
+                'name' => $user->name,              # Nombre de usuario
+                'fullname' => $user->name,          # Nombre completo del usuario
+                'username' => $user->name,          # Nombre de usuario
+                'max_score' => $max_score,          # Puntaje máximo (record) de juego
+
+                # Parámetros de gamificación
+                'currency' => 0, #$currencyAmount,  # Cantidad de monedas actual
+                'badges' => [],                     # Arreglo de medallas de usuario
+
+                # Parámetros de tiempo
+                'time_used' => $time_counter,      # Tiempo usado
+                'time_limit' => $time_limit,       # Tiempo límite del día
+                'time_left' => (3600 * 24),        # (deprecated) Tiempo restante
+                'total_exercises' => $total_exercises_count,
+                # Parámetros de test
+                #'tests' => $tests->toArray(),      # Arreglo de tests realizados
+            ],
+            'p' => $parameters_json
+        ];
+        # FIX: Corrige retorno de arreglo cuando corresponde a diccionario
+        # PHP considera arreglo vació como arreglo, no hay forma de definir diccionaro (arr. asosciativo)
+        if (count($arr['p']) == 0) {
+            $arr['p'] = json_decode("{}");
+        }
+
+        return $arr;
+    }
+
+    private function parametersToJson($parameters) {
+        $json = array();
+        
+        foreach($parameters as $param) {
+            $json[$param->name] = $this->castedTypeValue($param->type, $param->value);
+        }
+
+        return $json;
+    }
+
+    private function castedTypeValue($type, $value) {
+        $types = [
+            'integer' => 'intval',
+            'float' => 'floatval',
+            'boolean' => 'boolval',
+            'string' => 'strval'
+        ];
+
+        return call_user_func($types[$param->type], $value);
+    }
+
+    public function notFoundText() {
+        return ['status' => 404, 'message' => 'No se ha encontrado la instancia de juego'];
     }
 }

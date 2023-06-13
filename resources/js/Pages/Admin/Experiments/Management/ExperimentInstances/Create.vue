@@ -5,7 +5,7 @@ import { Head } from '@inertiajs/vue3';
 
 defineProps({
     experiment_id: {
-        type: Number,
+        type: String,
         required: true
     },
     games: {

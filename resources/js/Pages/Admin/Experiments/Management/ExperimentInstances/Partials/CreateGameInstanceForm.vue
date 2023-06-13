@@ -6,8 +6,6 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import Checkbox from '@/Components/Checkbox.vue';
-import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 
 const user = usePage().props.auth.user;
@@ -31,7 +29,7 @@ const form = useForm({
 
 const sendForm = () => {
     form.post(
-        route('game_instances.store'), {
+        route('game_instances.store', {id: props.experiment_id}), {
             onSuccess: () => {
                 form.reset();
             }

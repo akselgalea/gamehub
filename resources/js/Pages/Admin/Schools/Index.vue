@@ -36,7 +36,7 @@ const props = defineProps({
                                 <div class="first-letter:uppercase text-xl font-bold text-gray-600 dark:text-gray-400">{{ school.name }}</div>
                                 
                                 <div class="flex gap-2">
-                                    <Link :href="route('schools.edit', {id: school.id})">
+                                    <Link :href="route('schools.edit', {slug: school.slug})">
                                         <PrimaryButton>Gestionar</PrimaryButton>
                                     </Link>
                                 </div>

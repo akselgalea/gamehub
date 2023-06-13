@@ -4,7 +4,6 @@ import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
 import DeleteGameInstanceForm from './Partials/DeleteGameInstanceForm.vue';
 
 defineProps({
@@ -17,7 +16,7 @@ defineProps({
         required: true
     },
     experiment_id: {
-        type: Number,
+        type: String,
         required: true
     }
 });
@@ -52,27 +51,27 @@ defineProps({
                                         <th>Acciones</th>
                                     </thead>
                                     <tbody class="dark:text-gray-200">
-                                        <tr v-for="(game_instance, index) in games_instances" :key="index" class="border">
-                                            <td class="px-3 text-center">{{ game_instance.name }}</td>
-                                            <td class="px-3 text-center">{{ game_instance.description }}</td>
+                                        <tr v-for="(instance, index) in games_instances" :key="index" class="border">
+                                            <td class="px-3 text-center">{{ instance.name }}</td>
+                                            <td class="px-3 text-center">{{ instance.description }}</td>
 
                                             <template v-for="(game) in games">
-                                                <td v-if="game_instance.game_id === game.id" class="px-3 text-center">{{ game.name }}</td>
+                                                <td v-if="instance.game_id === game.id" class="px-3 text-center">{{ game.name }}</td>
                                             </template>
 
                                             <td class="px-3 flex gap-1 justify-center">
-                                                <Link :href="route('game_instances.edit', {id: game_instance.id})">
+                                                <Link :href="route('game_instances.edit', {id: experiment_id, slug: instance.slug})">
                                                     <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
                                                 </Link>
 
-                                                <Link :href="route('instances_params.edit', {id: game_instance.id})">
+                                                <Link :href="route('game_instances.params.edit', {id: experiment_id, slug: instance.slug})">
                                                     <PrimaryButton title="Editar parámetros"><i class="fas fa-cog"></i></PrimaryButton>
                                                 </Link>
-                                                <Link :href="route('instances_gamification.edit', {id: game_instance.id})">
+                                                <Link :href="route('game_instances.gamification.edit', {id: experiment_id, slug: instance.slug})">
                                                     <PrimaryButton title="Editar gamificacion"><i class="fas fa-chess-queen"></i></PrimaryButton>
                                                 </Link>
 
-                                                <DeleteGameInstanceForm :game_instance_id="game_instance.id" :game_instance_name="game_instance.name" class="max-w-xl" />
+                                                <DeleteGameInstanceForm :game_instance_id="instance.id" :game_instance_name="instance.name" class="max-w-xl" />
                                             </td>
                                         </tr>
                                     </tbody>

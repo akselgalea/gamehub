@@ -13,6 +13,10 @@ const props = defineProps({
     schoolId: {
         type: Number,
         required: true
+    },
+    schoolSlug: {
+        type: String,
+        required: true
     }
 });
 </script>
@@ -39,7 +43,7 @@ const props = defineProps({
                     <td class="text-center">{{grade.name}}</td>
                     <td>
                         <div class="flex justify-center">
-                            <Link :href="route('schools.grades.get', {school: schoolId, grade: grade.id})">
+                            <Link :href="route('schools.grades.get', {school: schoolSlug, grade: grade.slug})">
                                 <PrimaryButton><i class="fas fa-users"></i></PrimaryButton>
                             </Link>
                         </div>

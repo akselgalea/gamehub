@@ -9,21 +9,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\JoinClause;
+use Spatie\Sluggable\{HasSlug, SlugOptions};
 
 class GameInstance extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSlug;
 
     protected $table = 'game_instances';
     protected $fillable = [
         'name',
+        'slug',
         'description',
-        'game_id',
-        'experiment_id',
         'enable_rewards',
         'enable_badges',
         'enable_performance_chart',
-        'enable_leaderboard'
+        'enable_leaderboard',
+        'game_id',
+        'experiment_id',
     ];
 
     protected $cast = [
@@ -32,6 +34,13 @@ class GameInstance extends Model
         'enable_performance_chart' => 'boolean',
         'enable_leaderboard' => 'boolean'
     ];
+
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
+    }
 
     public function game(): BelongsTo {
         return $this->belongsTo(Game::class);
@@ -49,77 +58,8 @@ class GameInstance extends Model
         return $this->belongsToMany(Parameter::class, 'game_instance_parameters', 'game_instance_id', 'parameter_id');
     }
 
-    public function edit($req) {
-
-        $validated = $req->validated();
-
-        try {
-            $this->update($validated);
-            return ['status' => 200, 'message' => 'Datos de la instancia actualizado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function store($req) {
-        
-        $validated = $req->validated();
-        try {
-            $game_instance = GameInstance::create($validated);
-
-            return ['status' => 200, 'message' => 'Instancia de juego creado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function erase($req) {
-
-        try {
-            $game_instance = GameInstance::findOrFail($req->id);
-            $game_instance->delete();
-
-            return ['status' => 200, 'message' => 'Instancia de juego eliminado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar la instancia.'];
-        }
-    }
-
-    public function editParams($id) {
-        try {
-            $game_instance = GameInstance::findOrFail($id); // busca los datos de la instancia
-            $gameParameters = $game_instance->game->parameters()->orderBy('id')->get();
-            $instanceParameters = $game_instance->gameInstanceParameters()->orderBy('parameter_id')->get();
-            
-            foreach($gameParameters as $param) {
-                $param['value'] =  $instanceParameters->firstWhere('parameter_id', $param['id'])->value ?? '';
-            }
-
-            return ['parameters' => $gameParameters, 'experiment_id' => $game_instance->experiment_id, 'instance_id' => $id];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function updateParams($req, $id) {
-        // $validated = $req->validated();
-        try {
-            $game_instance = GameInstance::findOrFail($id);
-        
-            foreach($req->parameters as $param){
-                if($param['value'] !== NULL)
-                    $game_instance->gameInstanceParameters()->updateOrCreate(
-                        ['parameter_id' => $param['id'], 'game_instance_id' => $id],
-                        ['value' => $param['value']]
-                    );
-                else
-                    GameInstanceParameter::where(['parameter_id' => $param['id'], 'game_instance_id' => $id])->delete();
-            }
-
-            return ['status' => 200, 'message' => 'Instancia de juego creado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
+    public function findBySlug($slug) {
+        return GameInstance::firstWhere('slug', $slug);
     }
 
     public function updateGamification($req, $id) {

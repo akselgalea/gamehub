@@ -36,10 +36,10 @@ const props = defineProps({
                                 <div class="first-letter:uppercase text-xl font-bold text-gray-600 dark:text-gray-400">{{ game.name }}</div>
                                 
                                 <div class="flex gap-2">
-                                    <Link :href="route('games.play', {id: game.id})">
+                                    <Link :href="route('games.play', {slug: game.slug})">
                                         <PrimaryButton>Jugar</PrimaryButton>
                                     </Link>
-                                    <Link :href="route('games.edit', {id: game.id})">
+                                    <Link :href="route('games.edit', {slug: game.slug})">
                                         <PrimaryButton>Gestionar</PrimaryButton>
                                     </Link>
                                 </div>

@@ -32,8 +32,12 @@ class GameController extends Controller
         return redirect()->route('games.create')->with('notification', $res);
     }
 
-    public function edit($id) {
-        $game = $this->game->with('parameters')->find($id);
+    public function edit($slug) {
+        $game = $this->game->with('parameters')->firstWhere('slug', $slug);
+        
+        if(!$game)
+            return redirect()->back()->with('notification', ['status' => 404, 'message' => 'No se ha encontrado el juego']);
+
         return Inertia::render('Admin/Games/Edit', ['game' => $game, 'categories' => Category::all()]);
     }
 
@@ -47,8 +51,12 @@ class GameController extends Controller
         return redirect()->route('games.index')->with('notification', $res);
     }
 
-    public function play($id) {
-        $res = $this->game->play($id);
+    public function play($slug) {
+        $res = $this->game->play($slug);
+        
+        if(isset($res['status']))
+            return redirect()->back()->with('notification', $res);
+
         return Inertia::render('Games/Play', ['game' => $res['game'], 'location' => $res['location']]);
     }
 }
