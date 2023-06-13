@@ -29,7 +29,7 @@ class UserCreateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'type' => 'required|string|in:admin,student',
-            'grade_id' => ['required_if:type,student','integer', 'exists:grades,id'],
+            'grade_id' => ['nullable','required_if:type,student','integer', 'exists:grades,id'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class, 'regex:/^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[com|cl|net]{2,}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];

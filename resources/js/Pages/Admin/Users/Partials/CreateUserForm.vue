@@ -23,6 +23,7 @@ const form = useForm({
 const getSchools = () => {
     axios.get(route('api.schools.index')).then(({data}) => {
         schools.value = data;
+
     }, error => {
         console.log(error);
     })

@@ -2,6 +2,7 @@
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
@@ -119,11 +120,12 @@ const types = {
                                     </table>
 
                                     <div class="mt-5 flex gap-1 justify-center">
-                                        <Link :href="route('game_instances.show', {id: experiment_id})">
-                                            <PrimaryButton>Volver</PrimaryButton>
-                                        </Link>
 
-                                        <PrimaryButton :disabled="form.processing">Guardar</PrimaryButton>
+                                        <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
+
+                                        <Link :href="route('game_instances.show', {id: experiment_id})">
+                                            <SecondaryButton type="button">Cancelar</SecondaryButton>
+                                        </Link>
 
                                         <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
                                             <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
@@ -131,6 +133,12 @@ const types = {
                                     </div>
                                 </form>
                             </template>
+
+                            <div v-if="parameters.length == 0" class="mt-5 flex gap-1 justify-center">
+                                <Link :href="route('game_instances.show', {id: experiment_id})">
+                                    <SecondaryButton type="button">Volver</SecondaryButton>
+                                </Link>
+                            </div>
                         </section>
                     </section>
                 </div>

@@ -4,7 +4,8 @@ import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import EditUser from '@/Pages/Admin/Users/Edit.vue';
-import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue';
+import DeleteUserModal from './Partials/DeleteUserModal.vue';
+import ShowProfileInformation from '@/Pages/Profile/Partials/ShowProfileInformation.vue';
 
 const props = defineProps({
     users: {
@@ -46,9 +47,13 @@ const props = defineProps({
                                         <td class="px-3 text-center">{{ user.name }}</td>
                                         <td class="px-3 text-center">{{ user.email }}</td>
                                         <td class="px-3 text-center">
-                                            <div>
+                                            <div class="flex gap-1 justify-center">
+                                                <ShowProfileInformation :user="user"/>
                                                 <EditUser :user="user"/>
-                                                <!-- <DeleteUserForm :userId="user.id" class="max-w-xl" /> -->
+                                                <Link :href="route('user-profile.index', {id: user.id})">
+                                                    <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
+                                                </Link>
+                                                <DeleteUserModal :userId="user.id"/>
                                             </div>
                                         </td>
                                     </tr>

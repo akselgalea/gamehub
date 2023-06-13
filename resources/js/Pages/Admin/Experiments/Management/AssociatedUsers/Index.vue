@@ -1,6 +1,8 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import ShowProfileInformation from '@/Pages/Profile/Partials/ShowProfileInformation.vue';
 
 const props = defineProps({
     users: {
@@ -30,11 +32,15 @@ const props = defineProps({
                     <thead class="border">
                         <th>Nombre</th>
                         <th>Correo</th>
+                        <th>Acciones</th>
                     </thead>
                     <tbody>
                         <tr v-for="(user, index) in users" :key="index" class="border">
                             <td class="px-3 text-center">{{ user.name }}</td>
                             <td class="px-3 text-center">{{ user.email }}</td>
+                            <td class="px-3 flex gap-1 justify-center">
+                                <ShowProfileInformation :user="user"/>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -43,7 +49,7 @@ const props = defineProps({
         
         <div  class="mt-4 flex items-center justify-center">
             <Link :href="route('users_experiment.edit', {id: experimentId})">
-                <PrimaryButton>Editar</PrimaryButton>
+                <PrimaryButton>Gestionar</PrimaryButton>
             </Link>
         </div>
     </section>

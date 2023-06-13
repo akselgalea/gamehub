@@ -25,7 +25,7 @@ const closeModal = () => {
 </script>
 
 <template>
-    <PrimaryButton @click="showModal"><i class="fas fa-edit"></i></PrimaryButton>
+    <PrimaryButton @click="showModal" title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
 
     <Modal :show="showingModal" @close="closeModal">
         <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">

@@ -4,6 +4,7 @@ import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import {noti} from '@/helpers/notifications';
+import ShowProfileInformation from '@/Pages/Profile/Partials/ShowProfileInformation.vue';
 
 const props = defineProps({
     experiment_id: {
@@ -86,7 +87,9 @@ const disasocciateForm = (user_id) => {
                                             <td class="px-3 text-center">{{ user.name }}</td>
                                             <td class="px-3 text-center">{{ user.email }}</td>
                                             <td class="px-3 flex gap-1 justify-center">
-                                                <DangerButton @click="disasocciateForm(user.id)" ><i class="fas fa-minus"></i></DangerButton>
+                                                
+                                                <DangerButton @click="disasocciateForm(user.id)" ><i class="fas fa-user-minus"></i></DangerButton>
+                                                <ShowProfileInformation :user="user"/>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -113,7 +116,9 @@ const disasocciateForm = (user_id) => {
                                             <td class="px-3 text-center">{{ user.name }}</td>
                                             <td class="px-3 text-center">{{ user.email }}</td>
                                             <td class="px-3 flex gap-1 justify-center">
-                                                <PrimaryButton @click="asocciateForm(user.id)"><i class="fas fa-plus"></i></PrimaryButton>
+                                                
+                                                <PrimaryButton @click="asocciateForm(user.id)"><i class="fas fa-user-plus"></i></PrimaryButton>
+                                                <ShowProfileInformation :user="user"/>
                                             </td>
                                         </tr>
                                     </tbody>

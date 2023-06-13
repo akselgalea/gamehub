@@ -20,7 +20,7 @@ return new class extends Migration
             $table->json('body');
             $table->date('init_date');
             $table->date('end_date');
-            $table->foreignId('experiment_id');
+            $table->foreignId('experiment_id')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

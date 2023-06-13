@@ -76,7 +76,7 @@ const props = defineProps({
                     </div>
                     
                     <div class="col-span-2 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                        <ExperimentInstances :games_instances = "games_instances" :experiment_id = "experiment.id"/>
+                        <ExperimentInstances :games_instances = "games_instances" :experiment_id = "experiment.id" :games="games"/>
                     </div>
 
                     <div class="col-span-2 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
