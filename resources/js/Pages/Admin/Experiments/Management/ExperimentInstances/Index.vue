@@ -1,5 +1,4 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -47,7 +46,7 @@ const props = defineProps({
                             </template>
 
                             <td class="px-3 flex gap-1 justify-center">
-                                <Link :href="route('game_instances.edit', {id: game_instance.id})">
+                                <Link :href="route('game_instances.edit', {id: experiment_id, slug: game_instance.slug})">
                                     <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
                                 </Link>
                             </td>

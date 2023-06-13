@@ -5,19 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
+use Spatie\Sluggable\{HasSlug, SlugOptions};
 
 class Grade extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSlug;
 
     protected $table = 'grades';
 
     protected $fillable = [
         'id',
         'name',
+        'slug',
         'school_id'
     ];
 
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
+    }
 
     /**
      * Get the school that owns the Grade
@@ -39,36 +47,7 @@ class Grade extends Model
         return $this->hasMany(Student::class);
     }
 
-    public function add($req)
-    {
-        $validated = $req->validated();
-
-        try {
-            Grade::create($validated);
-            return ['status' => 200, 'message' => 'Curso añadido con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function edit($id, $req)
-    {
-        $validated = $req->validated();
-
-        try {
-            Grade::findOrFail($id)->update($validated);
-            return ['status' => 200, 'message' => 'Curso actualizado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function erase($id, $req) {
-        try {
-            Grade::findOrFail($id)->delete();
-            return ['status' => 200, 'message' => 'Colegio eliminado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
+    public function findBySlug($slug) {
+        return Grade::firstWhere('slug', $slug);
     }
 }

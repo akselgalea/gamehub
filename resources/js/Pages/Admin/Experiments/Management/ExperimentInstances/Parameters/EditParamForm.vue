@@ -4,7 +4,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Link } from '@inertiajs/vue3';
 
@@ -29,7 +29,7 @@ const form = useForm({
 
 const sendForm = () => {
     form.patch(
-        route('instances_params.update', {id: props.instance_id}), {
+        route('game_instances.params.update', {id: props.experiment_id, slug: instance_id}), {
             onSuccess: () => {
             }    
         }

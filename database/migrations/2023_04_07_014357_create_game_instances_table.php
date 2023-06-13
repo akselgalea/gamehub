@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('game_instances', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug');
             $table->string('description')->nullable();
             $table->foreignId('game_id')->nullable()->nullOnDelete();
             $table->foreignId('experiment_id')->onDelete('cascade');

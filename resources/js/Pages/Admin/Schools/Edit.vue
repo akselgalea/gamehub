@@ -32,7 +32,7 @@ const props = defineProps({
                 </div>
 
                 <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                    <GradesIndex :grades="grades" :schoolId="school.id" />
+                    <GradesIndex :grades="grades" :school-id="school.id" :school-slug="school.slug" />
                 </div>
 
                 <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">

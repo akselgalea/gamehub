@@ -5,6 +5,7 @@ import TextInput from '@/Components/TextInput.vue';
 import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import { noti } from '@/helpers/notifications';
 
 import Modal from '@/Components/Modal.vue';
 import { useForm } from '@inertiajs/vue3';
@@ -43,7 +44,10 @@ const showModal = () => {
 const createParam = () => {
     form.post(route('games.params.store'), {
         preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: () => {
+            noti('success', 'Parámetro creado con éxito!', 'top-center');
+            closeModal();
+        },
     });
 };
 

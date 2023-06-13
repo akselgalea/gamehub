@@ -5,17 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Sluggable\{HasSlug, SlugOptions};
 use Exception;
 
 class School extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSlug;
 
     protected $table = 'schools';
     
     protected $fillable = [
-        'name'
+        'name',
+        'slug'
     ];
+
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
+    }
 
     /**
      * Get all of the grades for the School

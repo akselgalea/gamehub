@@ -40,8 +40,11 @@ class SchoolController extends Controller
         return redirect()->back()->with('notification', $res);
     }
 
-    public function edit($id) {
-        $school = $this->school->find($id);
+    public function edit($slug) {
+        $school = $this->school->findBySlug($slug);
+        if(empty($school))
+            return redirect()->back()->with('notification', ['status' => 404, 'message' => 'No se encontró el colegio']);
+
         $grades = $school->grades->toArray();
         return Inertia::render('Admin/Schools/Edit', ['school' => $school, 'grades' => $grades]);
     }

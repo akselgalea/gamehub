@@ -15,10 +15,12 @@ use Madnest\Madzipper\Madzipper;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Support\Facades\URL;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Game extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory, InteractsWithMedia, HasSlug;
 
     protected $table = 'games';
 
@@ -36,6 +38,12 @@ class Game extends Model implements HasMedia
     protected $cast = [
         'gm2game' => 'boolean',
     ];
+
+    public function getSlugOptions(): SlugOptions {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
+    }
 
     public function category(): BelongsTo {
         return $this->belongsTo(Category::class, 'category_id', 'id');
@@ -90,7 +98,6 @@ class Game extends Model implements HasMedia
 
     public function store($req) {
         $validated = $req->validated();
-        $validated['slug'] = Str::of($req->name)->slug('-');
         
         try {
             $game = Game::create($validated);
@@ -142,12 +149,17 @@ class Game extends Model implements HasMedia
         }
     }
 
-    public function play($id) {
-        $game = Game::find($id);
+    public function play($slug) {
+        $game = Game::findBySlug($slug);
 
-        
+        if(empty($game)) 
+            return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
+            
         $location = $game->file . '/index.html';
-
         return ['game' => $game, 'location' => $location];
+    }
+
+    public function findBySlug($slug) {
+        return Game::firstWhere('slug', $slug);
     }
 }

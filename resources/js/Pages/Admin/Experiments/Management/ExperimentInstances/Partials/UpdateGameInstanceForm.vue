@@ -11,7 +11,7 @@ import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     experiment_id: {
-        type: Number,
+        type: String,
         required: true
     },
     games: {
@@ -19,9 +19,7 @@ const props = defineProps({
         required: true
     },
     game_instance: {
-        name: '',
-        description: '',
-        game_id: '',
+        type: Object,
         required: true
     }
 });
@@ -33,7 +31,7 @@ const form = useForm({
 });
 
 const sendForm = () => {
-    form.patch(route('game_instances.update', {id: props.game_instance.id}));
+    form.patch(route('game_instances.update', {id: props.experiment_id, slug: props.game_instance.slug}));
 }
 </script>
 

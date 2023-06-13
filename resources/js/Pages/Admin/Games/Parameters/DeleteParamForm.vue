@@ -3,6 +3,7 @@ import DangerButton from '@/Components/DangerButton.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import Modal from '@/Components/Modal.vue';
+import { noti } from '@/helpers/notifications';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
@@ -37,7 +38,10 @@ const confirmParamDeletion = () => {
 const deleteParam = () => {
     form.delete(route('games.params.destroy', props.paramId), {
         preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: () => {
+            noti('success', 'Parámetro eliminado con éxito!', 'top-center')
+            closeModal();
+        },
         onError: () => confirmingInput.value.focus(),
     });
 };

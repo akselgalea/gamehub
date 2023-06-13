@@ -1,17 +1,12 @@
 <script setup>
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import Checkbox from '@/Components/Checkbox.vue';
-
-const user = usePage().props.auth.user;
 
 const props = defineProps({
 
@@ -33,7 +28,7 @@ const form = useForm({
 });
 
 const sendForm = () => {
-    form.patch(route('instances_gamification.update', {id: props.game_instance.id}));
+    form.patch(route('game_instances.gamification.update', {id: props.game_instance.id, slug: props.game_instance.slug}));
 }
 </script>
 

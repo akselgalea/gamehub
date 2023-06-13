@@ -23,6 +23,7 @@ class GameCreateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'slug' => ['unique:game_instances'],
             'description' => ['nullable', 'max:500'],
             'file' => ['required', 'mimes:zip'],
             'gm2game' => ['required', 'boolean'],
