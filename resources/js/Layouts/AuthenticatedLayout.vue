@@ -80,7 +80,7 @@ const notification = computed(() => usePage().props.flash.notification ? usePage
                                         </template>
     
                                         <template #content>
-                                            <DropdownLink :href="route('experiments.index')"> Ver experimentos </DropdownLink>
+                                            <DropdownLink :href="route('experiments.index')"> Todos los experimentos </DropdownLink>
                                             <DropdownLink :href="route('experiments.create')"> Crear experimento </DropdownLink>
                                         </template>
                                     </Dropdown>

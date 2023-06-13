@@ -18,6 +18,11 @@ class GameInstanceParameter extends Model
         'parameter_id',
         'game_instance_id'
     ];
+
+    protected $appends = [
+        'name',
+        'type'
+    ];
     
     public function parameter() {
         return $this->belongsTo(Parameter::class);
@@ -25,5 +30,14 @@ class GameInstanceParameter extends Model
 
     public function game_instance() {
         return $this->belongsTo(GameInstance::class);
+    }
+
+
+    public function getNameAttribute() {
+        return $this->parameter->name;
+    }
+
+    public function getTypeAttribute() {
+        return $this->parameter->type;
     }
 }

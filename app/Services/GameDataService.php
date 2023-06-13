@@ -1,102 +1,132 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
+use EncryptService;
+use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise};
 
-use App\Http\Requests\Experiments\GameInstances\{GameInstanceCreateRequest, GameInstanceUpdateRequest, GameInstanceDeleteRequest};
-use App\Http\Requests\Experiments\GameInstances\Gamification\{GamificationUpdateRequest};
-use App\Models\{ GameInstance, Game, GameInstanceParameter, Parameter };
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-
-class GameInstanceController extends Controller
+class GameDataService
 {
-    private $game_instance;
-    
-    public function __construct(GameInstance $game_instance) {
-        $this->game_instance = $game_instance;
+    private $encryptService;
+    private $gameInstance;
+    private $gameInstanceScore;
+    private $gameInstanceTime;
+    private $gameInstanceTimeCounter;
+    private $gameInstanceParameter;
+    private $gameInstanceExercise;
+    const DEFAULT_TIME_PER_DAY = 90000;
+
+    public function __construct() {
+        $this->encryptService = new EncryptService;
+        $this->gameInstance = new GameInstance;
+        $this->gameInstanceScore = new GameInstanceScore;
+        $this->gameInstanceTime = new GameInstanceTime;
+        $this->gameInstanceTimeCounter = new GameInstanceTimeCounter;
+        $this->gameInstanceParameter = new GameInstanceParameter;
+        $this->gameInstanceExercise = new GameInstanceExercise;
     }
 
-    public function show($id)
-    {
-        return Inertia::render('Admin/Experiments/Management/ExperimentInstances/Edit', ['games_instances' => GameInstance::all()->toArray(), 'games' => Game::all()->toArray(), 'experiment_id' => $id]);
-    }
-
-    public function create($id)
-    {
-        return Inertia::render('Admin/Experiments/Management/ExperimentInstances/Create', ['games' => Game::all()->toArray(), 'experiment_id' => $id]);
-    }
-
-    public function store(GameInstanceCreateRequest $request)
-    {
-        $res = $this->game_instance->store($request);
-        return redirect()->back()->with('notification', $res);
-    }
-
-    public function edit($id)
-    {
-        $game_instance = GameInstance::find($id);
-
-        return Inertia::render(
-            'Admin/Experiments/Management/ExperimentInstances/Partials/UpdateGameInstanceForm', 
-            ['game_instance' => $game_instance, 'games' => Game::all()->toArray(), 'experiment_id' => $game_instance->experiment_id]
-        );
-    }
-
-    // Vista que permite modificar los valores de los parametros pertenecientes al juego de la instancia de experimento //
-    public function editParams($id) {
-        // devuelve la vista con el arreglo de parametros, ademas del id de la instancia y experimento 
-        $res = $this->game_instance->editParams($id);
+    private function parametersToJson($parameters) {
+        $json = array();
         
-        if(isset($res['status']) && $res['status'] == 500)
-            return redirect()->back()->with('notification', $res); 
+        foreach($parameters as $param) {
+            $json[$param->name] = $this->castedTypeValue($param->type, $param->value);
+        }
 
-        return Inertia::render(
-            'Admin/Experiments/Management/ExperimentInstances/Parameters/EditParamForm', 
-            ['parameters' => $res['parameters'], 'experiment_id' => $res['experiment_id'], 'instance_id' => $id]
-        );
+        return $json;
     }
-    
-    public function updateParams(Request $request, $id)
+
+    private function castedTypeValue($type, $value) {
+        $types = [
+            'integer' => 'intval',
+            'float' => 'floatval',
+            'boolean' => 'boolval',
+            'string' => 'strval'
+        ];
+
+        return call_user_func($types[$param->type], $value);
+    }
+
+    public function initGameData($request)
     {
-        $res = $this->game_instance->find($id)->updateParams($request, $id);
-        return redirect()->back()->with('notification', $res); 
-    }
-
-    public function editGamification($id)
-    {
-        $game_instance = GameInstance::find($id);
-        return Inertia::render(
-            'Admin/Experiments/Management/ExperimentInstances/Partials/UpdateGamificationForm', 
-            ['game_instance' => $game_instance, 'experiment_id' => $game_instance->experiment_id]
-        );
-    }
-
-    public function updateGamification(GamificationUpdateRequest $request, $id)
-    {
-        $res = $this->game_instance->updateGamification($request, $id);
-        return redirect()->back()->with('notification', $res); 
-    }
-
-    public function update($id, GameInstanceUpdateRequest $request)
-    {
-        $res = $this->game_instance->find($id)->edit($request);
-        return redirect()->back()->with('notification', $res); 
-    }
-
-    public function destroy(GameInstanceDeleteRequest $request) {
-        $res = $this->game_instance->erase($request);
-        return redirect()->back()->with('notification', $res);
-    }
-
-    public function initialParams(Request $request)
-    {
-        $gds = new GameDataService();
-        return response()->json($gds->initGameData($request));
-    }
-
-    public function saveData() {
         $user = Auth::user();
-        $user_id = $user->id;
+        $data = $request->all();
+
+        // Cargar instancia de juego        
+        $game_instance_slug = $this->encryptService->decrypt(urldecode($data['t']));
+        $game_instance = $this->gameInstance->findBySlug($game_instance_slug);
+
+        // Recupera puntaje máximo
+        $instance_score = $this->gameInstanceScore->userMaxScore($user->id, $game_instance->id)->max_score ?? 0;
+
+        // Recupera tiempo restante
+        $instance_time = $this->gameInstanceTime->timeLeft($user->id, $game_instance->id)->remaining_time ?? self::DEFAULT_TIME_PER_DAY;
+
+        // Rescate de parámetros
+        $parameters = $game_instance->gameInstanceParameters()->get();
+        $parameters_json = $this->parametersToJson($parameters);
+
+        # Carga de tags de tests
+        /*  $tests = TestExercise::where('$user->id', '=', $user->id)
+                ->where('event', 2)
+                ->select(DB::raw('DISTINCT(test) as test, (SELECT label FROM test_exercises WHERE $user->id = ' . $user->id . ' ORDER BY created_at DESC, time_start DESC, id DESC LIMIT 1) as last_label'))
+                ->get();
+
+        # Carga medallas adquiridas por el usuario
+        $badgeAcquired = UserGameBadge::leftjoin('game_badges', 'user_game_badges.game_badge_id', 'game_badges.id')
+            ->where('user_game_badges.$user->id', $user->id)
+            ->where('user_game_badges.game_id', $game_instance->game->id)
+            ->select(DB::raw('game_badges.code as code'))
+            ->distinct('code')
+            ->get();
+
+        $badge_list = [];
+        foreach ($badgeAcquired as $badgeAcquiredItem) {
+            $badgeItem = [];
+            $badgeItem['name'] = $badgeAcquiredItem->code;
+            $badge_list[] = $badgeItem;
+        }
+        $arr['u']['badges'] = $badge_list;
+        */
+
+        # Carga de monedas actual
+        #$currencyAmount = $currencyService->getUserAmount($user->id, $game_instance->id);
+        $time_counter = $this->gameInstanceTimeCounter->userInstanceTimeCounter($user->id, $game_instance->id)->time_used ?? 0;
+        # Carga de total de ejercicios
+        $total_exercises_count = $this->gameInstanceExercise->userTotalExercises($user->id, $game_instance->id);
+        
+        $arr = [
+            'u' => [
+                # Parámetros de juego
+                'name' => $user->name,              # Nombre de usuario
+                'fullname' => $user->name,          # Nombre completo del usuario
+                'username' => $user->name,          # Nombre de usuario
+                'max_score' => $max_score,          # Puntaje máximo (record) de juego
+
+                # Parámetros de gamificación
+                'currency' => 0, #$currencyAmount,      # Cantidad de monedas actual
+                'badges' => [],                     # Arreglo de medallas de usuario
+
+                # Parámetros de tiempo
+                'time_used' => $time_counter,      # Tiempo usado
+                'time_limit' => $game_instance->experiment->time_limit,  # Tiempo límite del día
+                'time_left' => (3600 * 24),        # (deprecated) Tiempo restante
+                'total_exercises' => $total_exercises_count,
+                # Parámetros de test
+                #'tests' => $tests->toArray(),      # Arreglo de tests realizados
+            ],
+            'p' => $parameters_json
+        ];
+        # FIX: Corrige retorno de arreglo cuando corresponde a diccionario
+        # PHP considera arreglo vació como arreglo, no hay forma de definir diccionaro (arr. asosciativo)
+        if (count($arr['p']) == 0) {
+            $arr['p'] = json_decode("{}");
+        }
+
+        return $arr;
+    }
+
+    public function saveData(Request $request) {
+        $user = Auth::user();
         $game_data = $request->input('game');
         $exercise_list = $request->input('exercises');
 
@@ -124,7 +154,7 @@ class GameInstanceController extends Controller
             if (isset($game_data['time_used'])) {
 
                 // Recupera instancia de tiempo
-                $instance_time = GameInstanceTimeCounter::where('user_id', $user_id)
+                $instance_time = GameInstanceTimeCounter::where('user_id', $user->id)
                     ->where('game_instance_id', $game_instance->id)
                     ->where('date', \Carbon\Carbon::now()->toDateString())
                     ->first();
@@ -138,14 +168,14 @@ class GameInstanceController extends Controller
                     $instance_time->date = \Carbon\Carbon::now();
                     $instance_time->time_used = $game_data['time_used'];
                     $instance_time->game_instance_id = $game_instance->id;
-                    $instance_time->user_id = $user_id;
+                    $instance_time->user_id = $user->id;
                 }
                 $instance_time->save();
             }
 
             // Agregar puntaje máximo
             if (isset($game_data['max_score'])) {
-                $instance_score = GameInstanceScore::where('user_id', $user_id)
+                $instance_score = GameInstanceScore::where('user_id', $user->id)
                     ->where('game_instance_id', $game_instance->id)
                     ->first();
 
@@ -161,7 +191,7 @@ class GameInstanceController extends Controller
                     $instance_score = new GameInstanceScore();
                     $instance_score->max_score = $game_data['max_score'];
                     $instance_score->game_instance_id = $game_instance->id;
-                    $instance_score->user_id = $user_id;
+                    $instance_score->user_id = $user->id;
                     $instance_score->save();
                 }
             }
@@ -182,7 +212,7 @@ class GameInstanceController extends Controller
                         $exercise_item = json_decode($exercise_item, true);
                     }
                     # Registra evento de ejercicio
-                    $this->record_game_exercise($game_instance, $user_id, $exercise_item, $game_data);
+                    $this->record_game_exercise($game_instance, $user->id, $exercise_item, $game_data);
                 }
             } else {
 
@@ -195,7 +225,7 @@ class GameInstanceController extends Controller
                     }
 
                     # Registra evento de test
-                    $this->record_test_exercise($game_instance, $user_id, $exercise_item, $game_data);
+                    $this->record_test_exercise($game_instance, $user->id, $exercise_item, $game_data);
                 }
             }
 
@@ -214,7 +244,7 @@ class GameInstanceController extends Controller
                     }
 
                     # Registra evento de medalla
-                    $this->record_badge($game_instance->game->id, $user_id, $badge_list);
+                    $this->record_badge($game_instance->game->id, $user->id, $badge_list);
                 }
             }
 
