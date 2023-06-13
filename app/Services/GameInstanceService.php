@@ -95,21 +95,32 @@ class GameInstanceService
         }
     }
 
-    public function updateParameters($id, $req) {
+    public function updateParams($slug, $req) {
         try {
-            $game_instance = $this->gameInstance->findOrFail($id);
-        
+            $game_instance = $this->gameInstance->findOrFail($slug);
             foreach($req->parameters as $param){
                 if($param['value'] !== NULL)
                     $game_instance->gameInstanceParameters()->updateOrCreate(
-                        ['parameter_id' => $param['id'], 'game_instance_id' => $id],
+                        ['parameter_id' => $param['id'], 'game_instance_id' => $slug],
                         ['value' => $param['value']]
                     );
                 else
-                    GameInstanceParameter::where(['parameter_id' => $param['id'], 'game_instance_id' => $id])->delete();
+                    GameInstanceParameter::where(['parameter_id' => $param['id'], 'game_instance_id' => $slug])->delete();
             }
 
             return ['status' => 200, 'message' => 'Instancia de juego creado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function updateGamification($req, $slug) {
+        $validated = $req->validated();
+        try {
+            $game_instance = GameInstance::findOrFail($slug);
+            $game_instance->update($validated);
+            
+            return ['status' => 200, 'message' => 'Gamificacion actualizada con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }

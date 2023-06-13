@@ -17,7 +17,7 @@ const props = defineProps({
         type: Array,
         required: true
     },
-    instance_id:{
+    slug:{
         type: String,
         required: true
     }
@@ -29,7 +29,7 @@ const form = useForm({
 
 const sendForm = () => {
     form.patch(
-        route('game_instances.params.update', {id: props.experiment_id, slug: instance_id}), {
+        route('game_instances.params.update', {id: props.experiment_id, slug: props.slug}), {
             onSuccess: () => {
             }    
         }
