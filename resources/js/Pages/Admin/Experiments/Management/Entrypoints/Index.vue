@@ -25,26 +25,35 @@ const props = defineProps({
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">En este apartado se pueden observar los entrypoints del experimento.</p>
         </header>
 
-        <div class="mt-5">
-            <p class="text-sm text-gray-600 dark:text-gray-400" v-if="entrypoints.length == 0">No se encontraron entrypoints asociados.</p>
-
-            <div class="flex flex-wrap gap-10 w-full">
-                <div v-for="(entrypoint, index) in entrypoints" :key="index">
-                    <div class="first-letter:uppercase">Entrypoint: {{ entrypoint.name }}</div>
-                    <div class="first-letter:uppercase">Descripcion: {{ entrypoint.description }}</div>
-                    <!-- <div class="flex gap-2">
-                        <Link :href="route('entrypoints.edit', {id: entrypoint.id})">
-                            <PrimaryButton>Editar</PrimaryButton>
-                        </Link>
-                    </div> -->
-                </div>
-            </div>
+        <div class="w-full mt-5 flex justify-center align-middle">
+            <p v-if="entrypoints.length == 0" class="text-sm text-gray-600 dark:text-gray-400 flex items-center justify-center">No se encontraron entrypoints asociados.</p>
+            <template v-else>
+                <table class="rounded-sm shadow table-fixed w-full border-collapse">
+                    <thead class="border">
+                        <th>Entrypoint</th>
+                        <th>Descripcion</th>
+                        <th>Acciones</th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(entrypoint, index) in entrypoints" :key="index" class="border">
+                            <td class="px-3 text-center">{{ entrypoint.name }}</td>
+                            <td class="px-3 text-center">{{ entrypoint.description }}</td>
+                            <td class="px-3 flex gap-1 justify-center">
+                                <Link :href="route('entrypoints.edit', {id: entrypoint.id})">
+                                    <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
+                                </Link>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </template>
         </div>
-
+        
         <div class="mt-4 flex items-center justify-center">
             <Link :href="route('entrypoints.show', {id: experiment_id})">
-                <PrimaryButton>Editar</PrimaryButton>
+                <PrimaryButton>Gestionar</PrimaryButton>
             </Link>
         </div>
+
     </section>
 </template>
