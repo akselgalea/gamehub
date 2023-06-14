@@ -45,6 +45,7 @@ class UserController extends Controller
         return redirect()->back()->with('notification', $res);
     }
 
+    // Funcion para carga masiva de usuarios en base a un excel csv o xlsx
     public function storeBatch(UploadUsersRequest $request) {
         $res = $this->userService->storeBatch($request);
         return redirect()->back()->with('notification', $res);
