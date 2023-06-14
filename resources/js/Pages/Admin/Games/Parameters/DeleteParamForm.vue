@@ -18,6 +18,10 @@ const props = defineProps({
         type: String,
         required: true
     },
+    gameSlug: {
+        type: String,
+        required: true
+    }
 });
 
 const confirmingParamDeletion = ref(false);
@@ -36,7 +40,7 @@ const confirmParamDeletion = () => {
 };
 
 const deleteParam = () => {
-    form.delete(route('games.params.destroy', props.paramId), {
+    form.delete(route('games.params.destroy', {slug: props.gameSlug, id: props.paramId}), {
         preserveScroll: true,
         onSuccess: () => {
             noti('success', 'Parámetro eliminado con éxito!', 'top-center')

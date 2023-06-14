@@ -8,10 +8,6 @@ const props = defineProps({
         type: Array,
         required: true
     },
-    games: {
-        type: Array,
-        required: true
-    },
     experiment_id: {
         type: Number,
         required: true
@@ -40,11 +36,7 @@ const props = defineProps({
                     <tbody>
                         <tr v-for="(game_instance, index) in games_instances" :key="index" class="border">
                             <td class="px-3 text-center">{{ game_instance.name }}</td>
-
-                            <template v-for="(game) in games">
-                                <td v-if="game_instance.game_id === game.id" class="px-3 text-center">{{ game.name }}</td>
-                            </template>
-
+                            <td class="px-3 text-center">{{ game_instance.game?.name ?? '' }}</td>
                             <td class="px-3 flex gap-1 justify-center">
                                 <Link :href="route('game_instances.edit', {id: experiment_id, slug: game_instance.slug})">
                                     <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>

@@ -41,9 +41,9 @@ class GameController extends Controller
         return Inertia::render('Admin/Games/Edit', ['game' => $game, 'categories' => Category::all()]);
     }
 
-    public function update($id, GameUpdateRequest $request) {
-        $res = $this->game->find($id)->edit($request);
-        return redirect()->route('games.edit', $id)->with('notification', $res);
+    public function update($slug, GameUpdateRequest $request) {
+        $res = $this->game->findBySlug($slug)->edit($request);
+        return redirect()->route('games.edit', $res['slug'])->with('notification', $res);
     }
 
     public function destroy(GameDeleteRequest $request) {

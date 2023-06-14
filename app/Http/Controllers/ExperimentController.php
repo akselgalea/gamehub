@@ -40,8 +40,7 @@ class ExperimentController extends Controller
             'experiment' => $experiment,
             'users' => $experiment->students->toArray(),
             'entrypoints' => $experiment->entrypoints->toArray(),
-            'games_instances' => $experiment->gameInstances->toArray(),
-            'games' => Game::all()->toArray(),
+            'games_instances' => $experiment->gameInstances()->with('game')->get()->toArray(),
             'surveys' => $experiment->surveys->toArray()
         ]);
     }

@@ -12,14 +12,14 @@ class ParameterController extends Controller
         $this->param = $param;
     }
 
-    public function store(ParameterCreateRequest $request) {
+    public function store($slug, ParameterCreateRequest $request) {
         $res = $this->param->store($request);
-        return redirect()->route('games.edit', $request->game_id)->with('notification', $res);
+        return redirect()->route('games.edit', $slug)->with('notification', $res);
     }
 
-    public function update($id, ParameterUpdateRequest $request) {
-        $res = $this->param->find($id)->edit($request);
-        return redirect()->route('games.edit', $request->game_id)->with('notification', $res);
+    public function update($slug, $id, ParameterUpdateRequest $request) {
+        $res = $this->param->findOrFail($id)->edit($request);
+        return redirect()->route('games.edit', $slug)->with('notification', $res);
     }
 
     public function destroy(ParameterDeleteRequest $request) {

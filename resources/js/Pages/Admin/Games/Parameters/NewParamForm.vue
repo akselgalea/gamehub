@@ -12,7 +12,11 @@ import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 
 const props = defineProps({
-    game: {
+    gameSlug: {
+        type: String,
+        required: true
+    },
+    gameId: {
         type: Number,
         required: true
     }
@@ -32,7 +36,7 @@ const form = useForm({
     name: '',
     type: '',
     description: '',
-    game_id: props.game
+    game_id: props.gameId
 });
 
 const showModal = () => {
@@ -42,7 +46,7 @@ const showModal = () => {
 };
 
 const createParam = () => {
-    form.post(route('games.params.store'), {
+    form.post(route('games.params.store', props.gameSlug), {
         preserveScroll: true,
         onSuccess: () => {
             noti('success', 'Parámetro creado con éxito!', 'top-center');

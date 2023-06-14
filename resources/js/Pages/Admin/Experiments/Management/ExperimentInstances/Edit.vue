@@ -11,10 +11,6 @@ defineProps({
         type: Array,
         required: true
     },
-    games: {
-        type: Array,
-        required: true
-    },
     experiment_id: {
         type: String,
         required: true
@@ -54,10 +50,7 @@ defineProps({
                                         <tr v-for="(instance, index) in games_instances" :key="index" class="border">
                                             <td class="px-3 text-center">{{ instance.name }}</td>
                                             <td class="px-3 text-center">{{ instance.description }}</td>
-
-                                            <template v-for="(game) in games">
-                                                <td v-if="instance.game_id === game.id" class="px-3 text-center">{{ game.name }}</td>
-                                            </template>
+                                            <td class="px-3 text-center">{{ instance.game?.name ?? '' }}</td>
 
                                             <td class="px-3 flex gap-1 justify-center">
                                                 <Link :href="route('game_instances.edit', {id: experiment_id, slug: instance.slug})">
@@ -71,7 +64,7 @@ defineProps({
                                                     <PrimaryButton title="Editar gamificacion"><i class="fas fa-chess-queen"></i></PrimaryButton>
                                                 </Link>
 
-                                                <DeleteGameInstanceForm :game_instance_id="instance.id" :game_instance_name="instance.name" class="max-w-xl" />
+                                                <DeleteGameInstanceForm :game_instance_id="instance.id" :game_instance_name="instance.name" />
                                             </td>
                                         </tr>
                                     </tbody>

@@ -15,9 +15,9 @@ const props = defineProps({
 })
 
 const setFullscreen = () => {
-    const gameIFrame = document.getElementById('game');
+    const gameCanvas = document.getElementById('canvas');
 
-    gameIFrame.requestFullscreen();
+    gameCanvas.requestFullscreen();
 }
 </script>
 
@@ -36,7 +36,9 @@ const setFullscreen = () => {
                 </header>
 
                 <div class="max-w-7xl h-full mx-auto">
-                    <iframe id="game" class="w-full" height="600" :src="location"></iframe>
+                    <canvas id="canvas" width="960" height="540" >
+                        <p>Your browser doesn't support HTML5 canvas.</p>
+                    </canvas>
                 </div>
 
                 <PrimaryButton @click="setFullscreen">Pantalla completa</PrimaryButton>
@@ -44,3 +46,64 @@ const setFullscreen = () => {
         </div>
     </AuthenticatedLayout>
 </template>
+
+<script>
+    export default {
+        mounted() {
+            if(this.$props.game.gm2game) {
+                const script = document.createElement('script');
+                script.src = this.$props.location;
+                document.body.appendChild(script);
+
+                script.onload = () => {
+                    GameMaker_Init();
+                }
+            }
+        }
+    }
+</script>
+
+<style scoped>
+canvas {
+    image-rendering: optimizeSpeed;
+    -webkit-interpolation-mode: nearest-neighbor;
+    -ms-touch-action: none;
+    touch-action: none;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+:-webkit-full-screen #canvas {
+    width: 100%;
+    height: 100%;
+}
+:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+}
+
+/* Custom Runner Styles */
+div.gm4html5_div_class {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+div.gm4html5_login {
+    padding: 20px;
+    position: absolute;
+    border: solid 2px #000000;
+    background-color: #404040;
+    color:#00ff00;
+    border-radius: 15px;
+    box-shadow: #101010 20px 20px 40px;
+}
+div.gm4html5_cancel_button {
+    float: right;
+}
+div.gm4html5_login_button {
+    float: left;
+}
+div.gm4html5_login_header {
+    text-align: center;
+}
+</style>

@@ -14,6 +14,10 @@ const props = defineProps({
     param: {
         type: Object,
         required: true
+    },
+    gameSlug: {
+        type: String,
+        required: true
     }
 });
 
@@ -41,7 +45,7 @@ const showModal = () => {
 };
 
 const createParam = () => {
-    form.patch(route('games.params.update', {id: props.param.id}), {
+    form.patch(route('games.params.update', {slug: props.gameSlug, id: props.param.id}), {
         preserveScroll: true,
         onSuccess: () => {
             noti('success', 'Parámetro modificado con éxito!', 'top-center');

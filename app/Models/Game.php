@@ -37,6 +37,7 @@ class Game extends Model implements HasMedia
 
     protected $cast = [
         'gm2game' => 'boolean',
+        'extra' => 'array'
     ];
 
     public function getSlugOptions(): SlugOptions {
@@ -78,9 +79,7 @@ class Game extends Model implements HasMedia
             if($this->gm2game) {
                 // Recupera archivo html5game para obtener nombre de archivo .js de GameMaker
                 $dothtml = $zipper->make($pathzip)->getFileContent('index.html');
-                $dothtml = Str::replaceFirst('src="html5game/', 'src="', $dothtml);
-                file_put_contents($path2extract . '/index.html', $dothtml);
-                preg_match_all('/\/([^*]*).js/', $dothtml, $matches);
+                preg_match_all('/html5game\/([^*]*).js/', $dothtml, $matches);
                 $gamedata = ["type" => 'GM2', "filename" => $matches[1][0]];
                 $this->extra = json_encode($gamedata);
             }
@@ -118,7 +117,7 @@ class Game extends Model implements HasMedia
 
         try {
             $this->update($validated);
-            return ['status' => 200, 'message' => 'Juego actualizado con éxito!'];
+            return ['status' => 200, 'message' => 'Juego actualizado con éxito!', 'slug' => $this->slug];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }

@@ -4,26 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Experiments\GameInstances\{GameInstanceCreateRequest, GameInstanceUpdateRequest, GameInstanceDeleteRequest};
 use App\Http\Requests\Experiments\GameInstances\Gamification\{GamificationUpdateRequest};
-use App\Models\{ GameInstance, Game, GameInstanceParameter, Parameter };
+use App\Models\{ GameInstance, Game, GameInstanceParameter, Parameter, Experiment };
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Services\GameInstanceService;
+use App\Services\{GameInstanceService, ExperimentService};
 
 class GameInstanceController extends Controller
 {
-    private $game_instance;
     private $gis;
+    private $exp;
     
-    public function __construct(GameInstance $game_instance, GameInstanceService $gis) {
-        $this->game_instance = $game_instance;
+    public function __construct(GameInstanceService $gis, ExperimentService $e) {
         $this->gis = $gis;
+        $this->exp = $e;
     }
 
     public function show($id)
     {
+        $experiment = $this->exp->get($id);
+        if(!$experiment)
+            return redirect()->back()->with('notication', $this->exp->notFoundText());
+        
+        $instances = $experiment->gameInstances()->with('game')->get();
         return Inertia::render(
             'Admin/Experiments/Management/ExperimentInstances/Edit',
-            ['games_instances' => GameInstance::all()->toArray(), 'games' => Game::all()->toArray(), 'experiment_id' => $id]
+            ['games_instances' => $instances, 'experiment_id' => $id]
         );
     }
 
@@ -80,7 +85,7 @@ class GameInstanceController extends Controller
         );
     }
     
-    public function updateParams($slug, Request $request)
+    public function updateParams($experiment, $slug, Request $request)
     {
         $res = $this->gis->updateParams($slug, $request);
         return redirect()->back()->with('notification', $res); 

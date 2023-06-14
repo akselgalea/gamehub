@@ -128,10 +128,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/new', [GameController::class, 'create'])->name('games.create');
         Route::post('/new', [GameController::class, 'store'])->name('games.store');
         Route::get('/{slug}', [GameController::class, 'edit'])->name('games.edit');
-        Route::patch('{id}', [GameController::class, 'update'])->name('games.update');
+        Route::patch('{slug}', [GameController::class, 'update'])->name('games.update');
         Route::delete('/{id}', [GameController::class, 'destroy'])->name('games.destroy');  
         
-        Route::prefix('parameters')->group(function () {
+        Route::prefix('{slug}/parameters')->group(function () {
             Route::post('/new', [ParameterController::class, 'store'])->name('games.params.store');
             Route::patch('{id}', [ParameterController::class, 'update'])->name('games.params.update');
             Route::delete('/{id}', [ParameterController::class, 'destroy'])->name('games.params.destroy');
@@ -139,8 +139,8 @@ Route::middleware('auth')->group(function () {
     });
 
     // Obtener archivos juegos GameHub.
-    Route::get('/uploads/games/{slug}/{filename}', function($slug, $filename){
-        $game = Game::firstWhere('slug', $slug);
+    Route::get('/game-instances/{instance}/{game}/{filename}', function($instance, $gameSlug, $filename){
+        $game = Game::firstWhere('slug', $gameSlug);
         
         if (substr($filename, 0, strlen('html5game')) == 'html5game') {
             $filename = substr($filename, strlen('html5game'));

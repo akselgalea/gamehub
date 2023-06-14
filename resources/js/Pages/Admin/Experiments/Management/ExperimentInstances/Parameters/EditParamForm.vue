@@ -6,7 +6,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     experiment_id: {
@@ -46,6 +46,8 @@ const types = {
 
 
 <template>
+    <Head title="Instancias de juego" />
+
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento</h2>
@@ -120,17 +122,16 @@ const types = {
                                     </table>
 
                                     <div class="mt-5 flex gap-1 justify-center">
-
                                         <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
 
                                         <Link :href="route('game_instances.show', {id: experiment_id})">
                                             <SecondaryButton type="button">Cancelar</SecondaryButton>
                                         </Link>
-
-                                        <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
-                                            <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
-                                        </Transition>
                                     </div>
+
+                                    <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
+                                        <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
+                                    </Transition>
                                 </form>
                             </template>
 

@@ -82,7 +82,7 @@ class GameInstanceService
     public function getParams($slug) {
         try {
             $instance = $this->get($slug); // busca los datos de la instancia
-            
+
             if(!$instance)
                 return $this->notFoundText();
 
@@ -159,7 +159,7 @@ class GameInstanceService
             # Carga de total de ejercicios
             $total_exercises_count = $this->instanceExercise->userTotalExercises($user->id, $game_instance->id);
             
-            $res = $this->setJsonData($user, $max_score, $time_counter, $game_instance, $time_limit, $total_exercises_count, $parameters_json);
+            $res = $this->setJsonData($user->name, $max_score, $time_counter, $game_instance, $time_limit, $total_exercises_count, $parameters_json);
             return response()->json($res);
         } catch(Exception $e) {
             return $e->getMessage();
@@ -313,9 +313,9 @@ class GameInstanceService
         $arr = [
             'u' => [
                 # Parámetros de juego
-                'name' => $user->name,              # Nombre de usuario
-                'fullname' => $user->name,          # Nombre completo del usuario
-                'username' => $user->name,          # Nombre de usuario
+                'name' => $user,                    # Nombre de usuario
+                'fullname' => $user,                # Nombre completo del usuario
+                'username' => $user,                # Nombre de usuario
                 'max_score' => $max_score,          # Puntaje máximo (record) de juego
 
                 # Parámetros de gamificación
@@ -353,13 +353,13 @@ class GameInstanceService
 
     private function castedTypeValue($type, $value) {
         $types = [
-            'integer' => 'intval',
+            'int' => 'intval',
             'float' => 'floatval',
             'boolean' => 'boolval',
             'string' => 'strval'
         ];
 
-        return call_user_func($types[$param->type], $value);
+        return call_user_func($types[$type], $value);
     }
 
     public function notFoundText() {
@@ -420,8 +420,8 @@ class GameInstanceService
                 return redirect()->route('dashboard')->with('notification', ['status' => 404, 'message' => 'Este experimento no tiene instancias de juego']);
 
             return redirect()->route('game_instances.play', [
-                $instance->game->slug,
                 $instance->slug,
+                $instance->game->slug,
                 't' => $this->encryptService->encrypt($instance->slug)
             ]);
         } catch(Exception $e) {
@@ -435,14 +435,16 @@ class GameInstanceService
         if(!$userInstance)
             $instance = $this->instance->getInstanceWithLeastUsers($experiment);
             
-        if(isset($instance) && $instance)
-            $userInstance = Auth()->user()->experimentUser()->updateOrCreate(['experiment_id' => $experiment], ['game_instance_id' => $instance->id]);
+        if(isset($instance) && $instance) {
+            $experimentUser = Auth()->user()->experimentUser()->updateOrCreate(['experiment_id' => $experiment], ['game_instance_id' => $instance->id]);
+            $userInstance = $experimentUser->gameInstance;
+        }
            
         return $userInstance;
     }
 
     public function play($request) {
-        $instanceSlug = $request->segment(3);
+        $instanceSlug = $request->segment(2);
         $token = $request->input('t');
 
         $instance = $this->get($instanceSlug);
@@ -450,8 +452,10 @@ class GameInstanceService
 
         if(empty($game)) 
             return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
-            
-        $location = $game->file . '/index.html';
+        
+        $extra = json_decode($game->extra);
+        
+        $location = "/game-instances/$instanceSlug/$game->slug/$extra->filename.js";
         
         return ['game' => $game, 'location' => $location];
     }

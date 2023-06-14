@@ -5,7 +5,7 @@ import DeleteParamForm from '../Parameters/DeleteParamForm.vue';
 
 const props = defineProps({
     game: {
-        type: Number,
+        type: Object,
         required: true
     },
     parameters: {
@@ -49,9 +49,11 @@ const types = {
                             <td class="px-3 text-justify">{{ param.name }}</td>
                             <td class="px-3 text-justify">{{ types[param.type] }}</td>
                             <td class="px-3 text-justify">{{ param.description }}</td>
-                            <td class="px-3 flex gap-1 justify-center">
-                                <EditParamForm :param="param" :key="param.name" />
-                                <DeleteParamForm :paramId="param.id" :paramName="param.name" :key="param.id" />
+                            <td class="px-3">
+                                <div class="flex gap-1 h-full justify-center items-center">
+                                    <EditParamForm :param="param" :game-slug="game.slug" :key="param.name" />
+                                    <DeleteParamForm :param-id="param.id" :param-name="param.name" :game-slug="game.slug" :key="param.id" />
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -60,7 +62,7 @@ const types = {
         </div>
 
         <div class="flex items-center gap-4 mt-10">
-            <NewParamForm :game="game" />
+            <NewParamForm :game-slug="game.slug" :game-id="game.id" />
         </div>
     </section>
 </template>
