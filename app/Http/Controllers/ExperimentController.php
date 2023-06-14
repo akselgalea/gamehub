@@ -34,7 +34,7 @@ class ExperimentController extends Controller
 
     // Panel para gestionar un experimento
     public function experimentManagement($id) {
-        $experiment = Experiment::find($id);
+        $experiment = Experiment::findOrFail($id);
         
         return Inertia::render('Admin/Experiments/View', [
             'experiment' => $experiment,
@@ -51,14 +51,14 @@ class ExperimentController extends Controller
     }
 
     public function generalInformationUpdate($id, ExperimentUpdateRequest $request) {
-        $res = $this->experiment->find($id)->edit($request);
+        $res = $this->experiment->findOrFail($id)->edit($request);
         // return redirect()->route('experiment_information.edit', $id)->with('notification', $res);   // Te redirecciona al formulario ya modificado
         return redirect()->route('experiment.management', $id)->with('notification', $res);  // Te redirecciona al panel de gestion de experimento
     }
 
     // Panel referente a la administracion de usuarios asociados a un experimento //
     public function usersExperiment($id) {
-        $experiment = Experiment::find($id);
+        $experiment = Experiment::findOrFail($id);
 
         return Inertia::render('Admin/Experiments/Management/AssociatedUsers/Edit', 
         ['experiment_id'=> $id,
