@@ -45,16 +45,6 @@ class UserController extends Controller
         return redirect()->back()->with('notification', $res);
     }
 
-    // public function userStore(UserCreateRequest $req) {
-
-    //     $user = new User;
-    //     $user->store($req);
-    //     return redirect()->route('users_panel.index')->with('notification');
-    // }
-
-    
-    
-
     public function storeBatch(UploadUsersRequest $request) {
         $res = $this->userService->storeBatch($request);
         return redirect()->back()->with('notification', $res);
