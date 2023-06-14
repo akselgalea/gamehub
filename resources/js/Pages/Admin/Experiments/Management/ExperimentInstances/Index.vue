@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import DeleteGameInstanceForm from './Partials/DeleteGameInstanceForm.vue';
 
 const props = defineProps({
     games_instances: {
@@ -41,6 +42,7 @@ const props = defineProps({
                                 <Link :href="route('game_instances.edit', {id: experiment_id, slug: game_instance.slug})">
                                     <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
                                 </Link>
+                                <DeleteGameInstanceForm :game_instance_id="game_instance.id" :game_instance_name="game_instance.name" class="max-w-xl" />
                             </td>
                         </tr>
                     </tbody>

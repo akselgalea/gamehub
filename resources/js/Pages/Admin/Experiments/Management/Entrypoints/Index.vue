@@ -3,6 +3,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import DeleteEntryPointForm from './Partials/DeleteEntryPointForm.vue';
+import ShowInformation from './Partials/ShowInformation.vue';
 
 const props = defineProps({
     entrypoints: {
@@ -39,9 +41,11 @@ const props = defineProps({
                             <td class="px-3 text-center">{{ entrypoint.name }}</td>
                             <td class="px-3 text-center">{{ entrypoint.description }}</td>
                             <td class="px-3 flex gap-1 justify-center">
+                                <ShowInformation :entrypoint="entrypoint"/>
                                 <Link :href="route('entrypoints.edit', {id: entrypoint.id})">
                                     <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
                                 </Link>
+                                <DeleteEntryPointForm :entrypoint_id="entrypoint.id" :entrypoint_name="entrypoint.name" class="max-w-xl" />
                             </td>
                         </tr>
                     </tbody>

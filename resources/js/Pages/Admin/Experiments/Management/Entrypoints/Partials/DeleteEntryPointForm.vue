@@ -50,8 +50,7 @@ const closeModal = () => {
 </script>
 
 <template>
-
-    <DangerButton @click="confirmEntrypointDeletion">Eliminar</DangerButton>
+    <DangerButton @click="confirmEntrypointDeletion" title="Eliminar"><i class="fas fa-trash"></i></DangerButton>
 
     <Modal :show="confirmingEntrypointDeletion" @close="closeModal">
         <div class="p-6">
