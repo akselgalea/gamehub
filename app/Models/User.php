@@ -26,6 +26,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'email_verified_at',
         'password',
         'type',
         'grade_id'
@@ -77,19 +78,5 @@ class User extends Authenticatable
 
     public function getInstanceByExperiment($experiment) {
         return $this->gameInstances()->findByExperiment($experiment)->first();
-    }
-
-    public function store(UserCreateRequest $req) {
-        
-        $validated = $req->validated();
-
-        try {
-            $validated['password'] = Hash::make($validated['password']); // se cifra la contraseña
-            $user = User::create($validated);
-            
-            return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
     }
 }

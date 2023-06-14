@@ -52,7 +52,7 @@ const getStudentSchoolInfo = () => {
 
 <template>
     <section>
-        <PrimaryButton @click="getStudentSchoolInfo" title="Ver detalles"><i class="	fas fa-eye"></i></PrimaryButton>
+        <PrimaryButton @click="getStudentSchoolInfo" title="Ver datos"><i class="fas fa-address-card"></i></PrimaryButton>
 
         <Modal :show="showingModal" @close="closeModal">
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">

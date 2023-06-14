@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\{AdministratorPanel, Experiment, Game};
-use App\Http\Controllers\{GameController, ParameterController, ExperimentController, EntryPointController, SurveyController, GameInstanceController};
+use App\Models\{Experiment, Game};
+use App\Http\Controllers\{GameController, ParameterController, ExperimentController, EntryPointController, SurveyController, GameInstanceController, UserController};
 use App\Http\Controllers\{ProfileController, SchoolController, GradeController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -44,12 +44,13 @@ Route::middleware('auth')->group(function () {
         
         // Administracion de usuarios //
         Route::prefix('users')->group(function () {
-            Route::get('/', [AdministratorPanel::class, 'indexUsersPanel'])->name('users_panel.index'); // Ruta para ver el panel de administracion de los usuarios
-            Route::get('{id}/Profile', [AdministratorPanel::class, 'userProfile'])->name('user-profile.index');
-            Route::get('/new', [AdministratorPanel::class, 'userCreate'])->name('user.create');
-            Route::post('/new', [AdministratorPanel::class, 'userStore'])->name('user.store');
-            Route::get('{id}/edit', [AdministratorPanel::class, 'userEdit'])->name('user.edit');
-            Route::patch('{id}/update', [AdministratorPanel::class, 'userUpdate'])->name('user.update');
+            Route::get('/', [UserController::class, 'indexUsersPanel'])->name('users_panel.index'); // Ruta para ver el panel de administracion de los usuarios
+            Route::get('{id}/Profile', [UserController::class, 'userProfile'])->name('user-profile.index');
+            Route::get('/new', [UserController::class, 'create'])->name('user.create');
+            Route::post('/new', [UserController::class, 'store'])->name('user.store');
+            Route::get('{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+            Route::patch('{id}/update', [UserController::class, 'update'])->name('user.update');
+            Route::post('/uploadsUser', [UserController::class, 'storeBatch'])->name('upload-users.create');
         });
     });
 

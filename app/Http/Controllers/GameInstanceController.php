@@ -76,13 +76,13 @@ class GameInstanceController extends Controller
 
         return Inertia::render(
             'Admin/Experiments/Management/ExperimentInstances/Parameters/EditParamForm', 
-            ['parameters' => $res['parameters'], 'experiment_id' => $experiment, 'instance_id' => $res['instance_id']]
+            ['parameters' => $res['parameters'], 'experiment_id' => $experiment, 'slug' => $slug]
         );
     }
     
-    public function updateParams($id, Request $request)
+    public function updateParams($slug, Request $request)
     {
-        $res = $this->gis->updateParams($request, $id);
+        $res = $this->gis->updateParams($slug, $request);
         return redirect()->back()->with('notification', $res); 
     }
 
@@ -99,9 +99,9 @@ class GameInstanceController extends Controller
         );
     }
 
-    public function updateGamification(GamificationUpdateRequest $request, $id)
+    public function updateGamification(GamificationUpdateRequest $request, $slug)
     {
-        $res = $this->gis->updateGamification($id, $request);
+        $res = $this->gis->updateGamification($request, $slug);
         return redirect()->back()->with('notification', $res); 
     }
 

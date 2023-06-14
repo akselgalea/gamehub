@@ -122,6 +122,18 @@ class GameInstanceService
         }
     }
 
+    public function updateGamification($req, $slug) {
+        $validated = $req->validated();
+        try {
+            $game_instance = GameInstance::findOrFail($slug);
+            $game_instance->update($validated);
+            
+            return ['status' => 200, 'message' => 'Gamificacion actualizada con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
     public function initGameData($request)
     {
         $user = Auth::user();
