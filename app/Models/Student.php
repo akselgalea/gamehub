@@ -21,7 +21,7 @@ class Student extends User
     }
 
     public function experiments(): BelongsToMany {
-        return $this->belongsToMany(Experiment::class, 'experiment_user', 'experiment_id' , 'user_id');
+        return $this->belongsToMany(Experiment::class, 'experiment_user', 'user_id' , 'experiment_id');
     }
 
     public function school() {
