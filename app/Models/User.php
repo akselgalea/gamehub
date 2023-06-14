@@ -67,18 +67,25 @@ class User extends Authenticatable
         return $this->type == 'student';
     }
 
+    public function experimentUser(): HasMany {
+        return $this->hasMany(ExperimentUser::class);
+    }
+
+    public function gameInstances(): BelongsToMany {
+        return $this->belongsToMany(GameInstance::class, 'experiment_user', 'game_instance_id', 'user_id');
+    }
+
+    public function getInstanceByExperiment($experiment) {
+        return $this->gameInstances()->findByExperiment($experiment)->first();
+    }
+
     public function store(UserCreateRequest $req) {
         
         $validated = $req->validated();
 
         try {
-            $validated['password'] = Hash::make($validated['password']); // se cifra la contrasenia
-            
+            $validated['password'] = Hash::make($validated['password']); // se cifra la contraseña
             $user = User::create($validated);
-            
-            $rememberToken = Str::random(60); // se le crea un token aleatorio para recordar al usuario
-            $user->remember_token = $rememberToken;// se le asigna al usuario
-            $user->save();
             
             return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
         } catch (Exception $e) {

@@ -1,18 +1,21 @@
 <?php
 
 namespace App\Services;
+
 use App\Services\EncryptService;
-use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise};
+use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise, Experiment, SurveyResponse};
+use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class GameInstanceService
 {
     private $encryptService;
-    private $gameInstance;
-    private $gameInstanceScore;
-    private $gameInstanceTime;
-    private $gameInstanceTimeCounter;
-    private $gameInstanceParameter;
-    private $gameInstanceExercise;
+    private $instance;
+    private $instanceScore;
+    private $instanceTime;
+    private $instanceTimeCounter;
+    private $instanceParameter;
+    private $instanceExercise;
     const DEFAULT_TIME_PER_DAY = 90000;
 
     public function __construct(
@@ -22,26 +25,27 @@ class GameInstanceService
         GameInstanceTime $git,
         GameInstanceTimeCounter $gitc,
         GameInstanceParameter $gitp,
-        GameInstanceExercise $gie
+        GameInstanceExercise $gie,
+
     ) {
         $this->encryptService = $es;
-        $this->gameInstance = $gi;
-        $this->gameInstanceScore = $gis;
-        $this->gameInstanceTime = $git;
-        $this->gameInstanceTimeCounter = $gitc;
-        $this->gameInstanceParameter = $gitp;
-        $this->gameInstanceExercise = $gie;
+        $this->instance = $gi;
+        $this->instanceScore = $gis;
+        $this->instanceTime = $git;
+        $this->instanceTimeCounter = $gitc;
+        $this->instanceParameter = $gitp;
+        $this->instanceExercise = $gie;
     }
 
     public function get($slug) {
-       return $this->gameInstance->findBySlug($slug);
+       return $this->instance->findBySlug($slug);
     }
 
     public function store($req) {
         $validated = $req->validated();
 
         try {
-            $this->gameInstance->create($validated);
+            $this->instance->create($validated);
 
             return ['status' => 200, 'message' => 'Instancia de juego creado con éxito!'];
         } catch (Exception $e) {
@@ -68,7 +72,7 @@ class GameInstanceService
 
     public function delete($req) {
         try {
-            $game_instance = GameInstance::findOrFail($req->id)->delete();
+            $game_instance = $this->instance->findOrFail($req->id)->delete();
             return ['status' => 200, 'message' => 'Instancia de juego eliminado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar la instancia.'];
@@ -95,21 +99,24 @@ class GameInstanceService
         }
     }
 
-    public function updateParameters($id, $req) {
+    public function updateParams($slug, $req) {
         try {
-            $game_instance = $this->gameInstance->findOrFail($id);
-        
+            $game_instance = $this->get($slug);
+
+            if(!$game_instance)
+                return $this->notFoundText();
+            
             foreach($req->parameters as $param){
                 if($param['value'] !== NULL)
                     $game_instance->gameInstanceParameters()->updateOrCreate(
-                        ['parameter_id' => $param['id'], 'game_instance_id' => $id],
+                        ['parameter_id' => $param['id'], 'game_instance_id' => $game_instance->id],
                         ['value' => $param['value']]
                     );
                 else
-                    GameInstanceParameter::where(['parameter_id' => $param['id'], 'game_instance_id' => $id])->delete();
+                    $this->instanceParameter->where(['parameter_id' => $param['id'], 'game_instance_id' => $game_instance->id])->delete();
             }
 
-            return ['status' => 200, 'message' => 'Instancia de juego creado con éxito!'];
+            return ['status' => 200, 'message' => 'Parámetros actualizados con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }
@@ -120,51 +127,31 @@ class GameInstanceService
         $user = Auth::user();
         $data = $request->all();
 
-        // Cargar instancia de juego        
-        $game_instance_slug = $this->encryptService->decrypt(urldecode($data['t']));
-        $game_instance = $this->gameInstance->findBySlug($game_instance_slug);
-
-        // Recupera puntaje máximo
-        $instance_score = $this->gameInstanceScore->userMaxScore($user->id, $game_instance->id)->max_score ?? 0;
-
-        // Recupera tiempo restante
-        $instance_time = $this->gameInstanceTime->timeLeft($user->id, $game_instance->id)->remaining_time ?? self::DEFAULT_TIME_PER_DAY;
-
-        // Rescate de parámetros
-        $parameters = $game_instance->gameInstanceParameters()->get();
-        $parameters_json = $this->parametersToJson($parameters);
-        $time_limit = $game_instance->experiment->time_limit;
-
-        # Carga de tags de tests
-        /*  $tests = TestExercise::where('$user->id', '=', $user->id)
-                ->where('event', 2)
-                ->select(DB::raw('DISTINCT(test) as test, (SELECT label FROM test_exercises WHERE $user->id = ' . $user->id . ' ORDER BY created_at DESC, time_start DESC, id DESC LIMIT 1) as last_label'))
-                ->get();
-
-        # Carga medallas adquiridas por el usuario
-        $badgeAcquired = UserGameBadge::leftjoin('game_badges', 'user_game_badges.game_badge_id', 'game_badges.id')
-            ->where('user_game_badges.$user->id', $user->id)
-            ->where('user_game_badges.game_id', $game_instance->game->id)
-            ->select(DB::raw('game_badges.code as code'))
-            ->distinct('code')
-            ->get();
-
-        $badge_list = [];
-        foreach ($badgeAcquired as $badgeAcquiredItem) {
-            $badgeItem = [];
-            $badgeItem['name'] = $badgeAcquiredItem->code;
-            $badge_list[] = $badgeItem;
+        try {
+            // Cargar instancia de juego        
+            $game_instance_slug = $this->encryptService->decrypt(urldecode($data['t']));
+            $game_instance = $this->instance->findBySlug($game_instance_slug);
+    
+            // Recupera puntaje máximo
+            $max_score = $this->instanceScore->userMaxScore($user->id, $game_instance->id)->max_score ?? 0;
+    
+            // Recupera tiempo restante
+            $instance_time = $this->instanceTime->timeLeft($user->id, $game_instance->id)->remaining_time ?? self::DEFAULT_TIME_PER_DAY;
+    
+            // Rescate de parámetros
+            $parameters = $game_instance->gameInstanceParameters()->get();
+            $parameters_json = $this->parametersToJson($parameters);
+            $time_limit = $game_instance->experiment->time_limit;
+    
+            $time_counter = $this->instanceTimeCounter->userInstanceTimeCounter($user->id, $game_instance->id)->time_used ?? 0;
+            # Carga de total de ejercicios
+            $total_exercises_count = $this->instanceExercise->userTotalExercises($user->id, $game_instance->id);
+            
+            $res = $this->setJsonData($user, $max_score, $time_counter, $game_instance, $time_limit, $total_exercises_count, $parameters_json);
+            return response()->json($res);
+        } catch(Exception $e) {
+            return $e->getMessage();
         }
-        $arr['u']['badges'] = $badge_list;
-        */
-
-        # Carga de monedas actual
-        #$currencyAmount = $currencyService->getUserAmount($user->id, $game_instance->id);
-        $time_counter = $this->gameInstanceTimeCounter->userInstanceTimeCounter($user->id, $game_instance->id)->time_used ?? 0;
-        # Carga de total de ejercicios
-        $total_exercises_count = $this->gameInstanceExercise->userTotalExercises($user->id, $game_instance->id);
-
-        return $this->setJsonData($user, $max_score, $time_counter, $game_instance, $time_limit);
     }
 
     public function saveData(Request $request) {
@@ -175,16 +162,7 @@ class GameInstanceService
         # Comprueba si hay presencia de token
         if (isset($game_data['token'])) {
             $game_instance_slug = $this->encryptService->decrypt(urldecode($game_data['token']));
-            $game_instance = GameInstance::findBySlug($game_instance_slug);
-           
-            $user_experiment = UserExperiment::where('game_instance_id', $game_instance->id)
-                ->where('user_id', $user->id)
-                ->first();
-            $expected_advance = Experiment::find($user_experiment->experiment_id)->surveys
-                ->whereBetween('type', [3, 4])     // Tipo de encuesta programada por ambos
-                ->where('responses_expected', '>=', $user_experiment->actual_responses)
-                ->sortBy('responses_expected')
-                ->first();
+            $game_instance = $this->instance->findBySlug($game_instance_slug);
 
             // Agrega experiencia al usuario
             if (isset($game_data['experience'])) {
@@ -193,7 +171,6 @@ class GameInstanceService
 
             // Agrega registro de tiempo
             if (isset($game_data['time_used'])) {
-
                 // Recupera instancia de tiempo
                 $instance_time = GameInstanceTimeCounter::where('user_id', $user->id)
                     ->where('game_instance_id', $game_instance->id)
@@ -320,7 +297,7 @@ class GameInstanceService
         }
     }
 
-    private function setJsonData($user, $max_score, $time_counter, $game_instance, $time_limit) {
+    private function setJsonData($user, $max_score, $time_counter, $game_instance, $time_limit, $total_exercises_count, $parameters_json) {
         $arr = [
             'u' => [
                 # Parámetros de juego
@@ -375,5 +352,95 @@ class GameInstanceService
 
     public function notFoundText() {
         return ['status' => 404, 'message' => 'No se ha encontrado la instancia de juego'];
+    }
+
+    public function surveyIsPending($experiment, $survey) {
+        if(!$survey)
+            return false;
+
+        $response = $survey->getUserResponse(Auth()->user()->id);
+
+        if(!$response || $response->status === 'in progress')
+            return true;
+
+        return false;
+    }
+
+    public function redirectToSurvey($experiment, $survey) {
+        return redirect()->route('surveys.run', [$experiment, $survey]);
+    }
+
+    public function hasPendingSurvey($experiment) {
+        $exp = Experiment::findOrFail($experiment);
+        // Encuestas pre experimento
+        $survey = $exp->surveys()->prePlay()->first();
+        
+        if($this->surveyIsPending($experiment, $survey))
+            return $this->redirectToSurvey($experiment, $survey->id);
+            
+        // Encuestas programadas por fecha
+        $survey = $exp->surveys()->activeByDate(now()->toDateTimeString())->first();
+
+        if($this->surveyIsPending($experiment, $survey))
+            return $this->redirectToSurvey($experiment, $survey->id);
+
+        // Encuestas post experimento
+        $survey = $exp->surveys()->postPlay()->first();
+
+        if($this->surveyIsPending($experiment, $survey))
+            return $this->redirectToSurvey($experiment, $survey->id);
+        
+        return false;
+    }
+
+    public function selectInstance($experiment) {
+        $user = Auth::user();
+
+        try {
+            // $survey = $this->hasPendingSurvey($experiment);
+
+            // if($survey)
+            //     return $survey;
+
+            $instance = $this->getUserGameInstance($experiment);
+
+            if(!$instance)
+                return redirect()->route('dashboard')->with('notification', ['status' => 404, 'message' => 'Este experimento no tiene instancias de juego']);
+
+            return redirect()->route('game_instances.play', [
+                $instance->game->slug,
+                $instance->slug,
+                't' => $this->encryptService->encrypt($instance->slug)
+            ]);
+        } catch(Exception $e) {
+            return redirect()->back()->with('notification', ['status' => 500, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function getUserGameInstance($experiment) {
+        $userInstance = Auth()->user()->getInstanceByExperiment($experiment);
+
+        if(!$userInstance)
+            $instance = $this->instance->getInstanceWithLeastUsers($experiment);
+            
+        if(isset($instance) && $instance)
+            $userInstance = Auth()->user()->experimentUser()->updateOrCreate(['experiment_id' => $experiment], ['game_instance_id' => $instance->id]);
+           
+        return $userInstance;
+    }
+
+    public function play($request) {
+        $instanceSlug = $request->segment(3);
+        $token = $request->input('t');
+
+        $instance = $this->get($instanceSlug);
+        $game = $instance->game;
+
+        if(empty($game)) 
+            return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
+            
+        $location = $game->file . '/index.html';
+        
+        return ['game' => $game, 'location' => $location];
     }
 }

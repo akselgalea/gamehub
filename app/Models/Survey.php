@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
+use App\Models\SurveyResponse;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Exception;
@@ -40,6 +42,28 @@ class Survey extends Model
 
     public function experiment(): BelongsTo {
         return $this->belongsTo(Experiment::class);
+    }
+
+    public function responses(): HasMany {
+        return $this->hasMany(SurveyResponse::class);
+    }
+
+    public function scopePrePlay(Builder $query): void
+    {
+        $query->where('stage', 'pre');
+    }
+
+    public function scopePostPlay(Builder $query): void
+    {
+        $query->where('stage', 'post');
+    }
+
+    public function scopeActiveByDate(Builder $query, $date): void {
+        $query->where([['init_date', '>=', $date], ['end_date', '<=', $date]])->orderBy('init_date');
+    }
+
+    public function getUserResponse($user) {
+        return $this->responses()->firstWhere('user_id', $user);
     }
 
     public function store($req) {

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('game_instance_excercises', function (Blueprint $table) {
+        Schema::create('game_instance_exercises', function (Blueprint $table) {
             $table->id();
             $table->integer('event');
             $table->integer('round')->nullable();

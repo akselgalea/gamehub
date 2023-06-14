@@ -10,7 +10,7 @@ import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     experiment_id: {
-        type: Number,
+        type: String,
         required: true
     },
     parameters: {
@@ -18,7 +18,7 @@ const props = defineProps({
         required: true
     },
     instance_id:{
-        type: String,
+        type: Number,
         required: true
     }
 });

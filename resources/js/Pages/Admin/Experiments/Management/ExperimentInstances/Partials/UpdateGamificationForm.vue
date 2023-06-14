@@ -9,9 +9,8 @@ import { Link } from '@inertiajs/vue3';
 import Checkbox from '@/Components/Checkbox.vue';
 
 const props = defineProps({
-
     experiment_id: {
-        type: Number,
+        type: String,
         required: true
     },
     game_instance: {

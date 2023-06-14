@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\{belongsToMany, BelongsTo, HasMany};
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
 
@@ -56,6 +57,26 @@ class GameInstance extends Model
 
     public function parameters(): BelongsToMany {
         return $this->belongsToMany(Parameter::class, 'game_instance_parameters', 'game_instance_id', 'parameter_id');
+    }
+
+    public function users(): BelongsToMany {
+        return $this->belongsToMany(User::class, 'experiment_user' , 'user_id', 'game_instance_id');
+    }
+
+    public function scopeFindByExperiment(Builder $query, $experiment): void {
+        $query->where('game_instances.experiment_id', $experiment)->orderByDesc('created_at');
+    }
+
+    public function scopeOrderByUserCount(Builder $query, $dir): void {
+        $query->withCount('users')->orderBy('users_count', $dir);
+    }
+
+    public function getInstanceWithLeastUsers($experiment) {
+        return GameInstance::findByExperiment($experiment)->orderByUserCount('asc')->first();
+    }
+
+    public function getInstanceWithMostUsers($experiment) {
+        return GameInstance::findByExperiment($experiment)->orderByUserCount('desc')->first();
     }
 
     public function findBySlug($slug) {

@@ -28,6 +28,9 @@ Route::get('/', function () {
     ]);
 });
 
+Route::post('game-instances/data/load', [GameInstanceController::class, 'initialParams'])->name('game_instances.game.load');
+Route::post('game-instances/data/save', [GameInstanceController::class, 'saveData'])->name('game_instances.game.save');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -50,47 +53,48 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::prefix('experiments')->middleware('role:admin')->group(function () {
-        Route::get('/', [ExperimentController::class, 'index'])->name('experiments.index'); // Ruta para ver el panel de administracion de los experimentos
-        Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
-        Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
-        Route::get('{id}/edit', [ExperimentController::class, 'generalInformationEdit'])->name('experiment_information.edit');
-        Route::patch('{id}/update', [ExperimentController::class, 'generalInformationUpdate'])->name('experiment_information.update');
-
-        // CRUD
-        Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
-        Route::get('/{id}/surveys/new', [SurveyController::class, 'create'])->name('surveys.create');
-        Route::post('/{id}/surveys/new', [SurveyController::class, 'store'])->name('surveys.store');
-        Route::get('/{id}/surveys/{survey}/edit', [SurveyController::class, 'edit'])->name('surveys.edit');
-        Route::post('/{id}/surveys/{survey}/edit', [SurveyController::class, 'update'])->name('surveys.update');
-        Route::delete('/{id}/surveys/{survey}', [SurveyController::class, 'destroy'])->name('surveys.destroy');
-        Route::get('/{id}/surveys/tests/new', [SurveyController::class, 'testCreate'])->name('surveys.tests.create');
-        Route::post('/{id}/surveys/tests/new', [SurveyController::class, 'store'])->name('surveys.tests.store');
-
-        // Usuarios asociados al experimento //
-
-        Route::prefix('users')->group(function () {
-            Route::get('{id}/new', [ExperimentController::class, 'usersExperiment'])->name('users_experiment.edit');
-            Route::post('/link', [ExperimentController::class, 'userAssociateExperiment'])->name('user_experiment.link');
-            Route::post('/unlink', [ExperimentController::class, 'userDisassociateExperiment'])->name('user_experiment.unlink');
-        });
-
-        // Entrypoints asociados al experimento //
-
-        Route::prefix('entrypoints')->group(function () {
-            Route::get('{id}/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
-            Route::get('{id}/show', [EntryPointController::class, 'show'])->name('entrypoints.show');
-            Route::post('/new', [EntryPointController::class, 'store'])->name('entrypoints.store');
-            Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
-            Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
-            Route::delete('/{id}', [EntryPointController::class, 'destroy'])->name('entrypoints.destroy');  
+    Route::prefix('experiments')->group(function () {
+        Route::middleware(['role:admin'])->group(function () {
+            Route::get('/', [ExperimentController::class, 'index'])->name('experiments.index'); // Ruta para ver el panel de administracion de los experimentos
+            Route::get('/new', [ExperimentController::class, 'create'])->name('experiments.create');
+            Route::post('/new', [ExperimentController::class, 'store'])->name('experiments.store');
+            Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
+            Route::get('{id}/edit', [ExperimentController::class, 'generalInformationEdit'])->name('experiment_information.edit');
+            Route::patch('{id}/update', [ExperimentController::class, 'generalInformationUpdate'])->name('experiment_information.update');
+            
+            Route::prefix('{id}/surveys')->group(function () {
+                // CRUD
+                Route::get('new', [SurveyController::class, 'create'])->name('surveys.create');
+                Route::post('new', [SurveyController::class, 'store'])->name('surveys.store');
+                Route::get('{survey}/edit', [SurveyController::class, 'edit'])->name('surveys.edit');
+                Route::post('{survey}/edit', [SurveyController::class, 'update'])->name('surveys.update');
+                Route::delete('{survey}', [SurveyController::class, 'destroy'])->name('surveys.destroy');
+                Route::get('surveys/tests/new', [SurveyController::class, 'testCreate'])->name('surveys.tests.create');
+                Route::post('surveys/tests/new', [SurveyController::class, 'store'])->name('surveys.tests.store');
+            });
+            
+            // Usuarios asociados al experimento //
+            Route::prefix('users')->group(function () {
+                Route::get('{id}/new', [ExperimentController::class, 'usersExperiment'])->name('users_experiment.edit');
+                Route::post('/link', [ExperimentController::class, 'userAssociateExperiment'])->name('user_experiment.link');
+                Route::post('/unlink', [ExperimentController::class, 'userDisassociateExperiment'])->name('user_experiment.unlink');
+            });
+            
+            // Entrypoints asociados al experimento //
+            Route::prefix('entrypoints')->group(function () {
+                Route::get('{id}/new', [EntryPointController::class, 'create'])->name('entrypoints.create');
+                Route::get('{id}/show', [EntryPointController::class, 'show'])->name('entrypoints.show');
+                Route::post('/new', [EntryPointController::class, 'store'])->name('entrypoints.store');
+                Route::get('{id}/edit', [EntryPointController::class, 'edit'])->name('entrypoints.edit');
+                Route::patch('{id}/update', [EntryPointController::class, 'update'])->name('entrypoints.update');
+                Route::delete('/{id}', [EntryPointController::class, 'destroy'])->name('entrypoints.destroy');  
+            });
         });
 
         // Instancias de juego asociados al experimento // 
         Route::prefix('{id}/game-instances')->group(function () {
-            
             Route::middleware(['role:admin'])->group(function () {
-                Route::get('/show', [GameInstanceController::class, 'show'])->name('game_instances.show');
+                Route::get('/', [GameInstanceController::class, 'show'])->name('game_instances.show');
                 Route::get('/new', [GameInstanceController::class, 'create'])->name('game_instances.create');
                 Route::post('/new', [GameInstanceController::class, 'store'])->name('game_instances.store');
                 Route::get('{slug}/edit', [GameInstanceController::class, 'edit'])->name('game_instances.edit');
@@ -106,15 +110,15 @@ Route::middleware('auth')->group(function () {
                     Route::get('/edit', [GameInstanceController::class, 'editGamification'])->name('game_instances.gamification.edit');
                     Route::patch('/update', [GameInstanceController::class, 'updateGamification'])->name('game_instances.gamification.update');
                 });
-                
             });
-
-            Route::get('/{game}/{instance}/play', [GameInstanceController::class, 'play'])->name('game_instances.game.play');
-            Route::post('/data/load', [GameInstanceController::class, 'initialParams'])->name('game_instances.game.load');
-            Route::post('/data/save', [GameInstanceController::class, 'saveData'])->name('game_instances.game.save');
+            
         });
+        
+        Route::get('{id}/survey/{survey}', [SurveyController::class, 'run'])->name('surveys.run');
+        Route::get('{id}/play', [GameInstanceController::class, 'selectInstance'])->name('game_instances.select_instance');
     });
-
+    
+    Route::get('game-instances/{game}/{instance}/play', [GameInstanceController::class, 'play'])->name('game_instances.play');
     
     Route::get('games/{slug}/play', [GameController::class, 'play'])->name('games.play');
     Route::get('/games', [GameController::class, 'index'])->name('games.index');

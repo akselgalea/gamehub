@@ -16,6 +16,10 @@ class SurveyController extends Controller
         $this->survey = $survey;
     }
 
+    public function run($experiment, $survey) {
+        return Inertia::render('Surveys/Run', ['experimentId' => $experiment, 'survey' => $this->survey->find($survey)]);
+    }
+
     public function create($id) {
         return Inertia::render('Admin/Experiments/Surveys/Create', ['experimentId' => $id]);
     }

@@ -9,9 +9,11 @@ class GameInstanceTime extends Model
 {
     use HasFactory;
 
+    public $table = 'game_instance_times';
+
     // Recupera tiempo restante
     public function timeLeft($user, $instance) {
-        return GameInstanceTime::where('$user->id', $user)
+        return GameInstanceTime::where('user_id', $user)
             ->where('game_instance_id',  $instance)
             ->where('date', \Carbon\Carbon::now()->toDateString())
             ->first();
