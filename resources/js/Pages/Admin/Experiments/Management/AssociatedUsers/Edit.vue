@@ -88,7 +88,7 @@ const disasocciateForm = (user_id) => {
                                             <td class="px-3 text-center">{{ user.email }}</td>
                                             <td class="px-3 flex gap-1 justify-center">
                                                 
-                                                <DangerButton @click="disasocciateForm(user.id)" ><i class="fas fa-user-minus"></i></DangerButton>
+                                                <DangerButton @click="disasocciateForm(user.id)" title="Desvincular"><i class="fas fa-user-minus"></i></DangerButton>
                                                 <ShowProfileInformation :user="user"/>
                                             </td>
                                         </tr>
@@ -117,7 +117,7 @@ const disasocciateForm = (user_id) => {
                                             <td class="px-3 text-center">{{ user.email }}</td>
                                             <td class="px-3 flex gap-1 justify-center">
                                                 
-                                                <PrimaryButton @click="asocciateForm(user.id)"><i class="fas fa-user-plus"></i></PrimaryButton>
+                                                <PrimaryButton @click="asocciateForm(user.id)" title="Vincular"><i class="fas fa-user-plus"></i></PrimaryButton>
                                                 <ShowProfileInformation :user="user"/>
                                             </td>
                                         </tr>

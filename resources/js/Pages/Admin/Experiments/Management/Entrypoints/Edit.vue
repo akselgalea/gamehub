@@ -4,9 +4,8 @@ import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import UpdateEntryPointForm from './Partials/UpdateEntryPointForm.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
 import DeleteEntryPointForm from './Partials/DeleteEntryPointForm.vue';
+import ShowInformation from './Partials/ShowInformation.vue';
 
 defineProps({
     entrypoints: {
@@ -51,6 +50,7 @@ defineProps({
                                             <td class="px-3 text-center">{{ entrypoint.description }}</td>
                                             <td class="px-3">
                                                 <div class="flex justify-center gap-2">
+                                                    <ShowInformation :entrypoint="entrypoint"/>
                                                     <Link :href="route('entrypoints.edit', {id: entrypoint.id})">
                                                         <PrimaryButton><i class="fas fa-edit"></i></PrimaryButton>
                                                     </Link>
