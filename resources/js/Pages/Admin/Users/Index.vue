@@ -6,6 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import EditUser from '@/Pages/Admin/Users/Edit.vue';
 import DeleteUserModal from './Partials/DeleteUserModal.vue';
 import ShowProfileInformation from '@/Pages/Profile/Partials/ShowProfileInformation.vue';
+import UsersImport from './Partials/UsersImport.vue';
 
 const props = defineProps({
     users: {
@@ -60,23 +61,13 @@ const props = defineProps({
                                 </tbody>
                             </table>
                         </template>
-
-                        <!-- <div class="flex flex-wrap gap-10 w-full text-gray-600 dark:text-white">
-                            <div v-for="(user, index) in users" :key="index">
-                                <div class="first-letter:uppercase">{{ user.name }}</div>
-                                <div class="first-letter:uppercase">{{ user.email }}</div>
-
-                                <EditUser :user="user"/>
-                            </div>
-                            
-                        </div> -->
-
                     </section>
  
                     <section class="mt-5 flex items-center justify-center">
                         <Link :href="route('user.create')">
-                                <PrimaryButton>Crear nuevo usuario</PrimaryButton>
-                            </Link>
+                            <PrimaryButton>Crear nuevo usuario</PrimaryButton>
+                        </Link>
+                        <UsersImport/>
                     </section>
 
                 </div>

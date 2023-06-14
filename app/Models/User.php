@@ -26,6 +26,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'email_verified_at',
         'password',
         'type',
         'grade_id'
@@ -65,24 +66,5 @@ class User extends Authenticatable
 
     public function isStudent() {
         return $this->type == 'student';
-    }
-
-    public function store(UserCreateRequest $req) {
-        
-        $validated = $req->validated();
-
-        try {
-            $validated['password'] = Hash::make($validated['password']); // se cifra la contrasenia
-            
-            $user = User::create($validated);
-            
-            $rememberToken = Str::random(60); // se le crea un token aleatorio para recordar al usuario
-            $user->remember_token = $rememberToken;// se le asigna al usuario
-            $user->save();
-            
-            return ['status' => 200, 'message' => 'Experimento creado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
     }
 }
