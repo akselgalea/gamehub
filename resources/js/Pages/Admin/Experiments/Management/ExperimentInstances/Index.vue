@@ -42,7 +42,7 @@ const props = defineProps({
                                 <Link :href="route('game_instances.edit', {id: experiment_id, slug: game_instance.slug})">
                                     <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
                                 </Link>
-                                <DeleteGameInstanceForm :game_instance_id="game_instance.id" :game_instance_name="game_instance.name" class="max-w-xl" />
+                                <DeleteGameInstanceForm :game_instance_id="game_instance.id" :game_instance_name="game_instance.name" />
                             </td>
                         </tr>
                     </tbody>
