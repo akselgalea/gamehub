@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Experiments\{ExperimentCreateRequest, ExperimentUpdateRequest};
 use App\Http\Requests\Experiments\Users\{UserAssociateRequest, UserDisassociateRequest};
 use App\Models\{Experiment, User, Game, Student};
+use App\Services\ExperimentService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Controllers\UserInExperiment;
@@ -14,7 +15,7 @@ class ExperimentController extends Controller
 {
     private $experiment;
     
-    public function __construct(Experiment $experiment) {
+    public function __construct(ExperimentService $experiment) {
         $this->experiment = $experiment;
     }
 
