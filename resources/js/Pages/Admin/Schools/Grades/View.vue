@@ -62,6 +62,9 @@ const props = defineProps({
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="mt-5 flex items-center justify-center">
+                            <PrimaryButton type="button" onclick="history.back()">Volver</PrimaryButton>
+                        </div>
                     </div>
             
                 </div>
