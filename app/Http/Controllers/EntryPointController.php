@@ -21,8 +21,12 @@ class EntryPointController extends Controller
     public function register($token) {
         //Mover al service
         $entry = $this->entrypoint->firstWhere('slug', $token);
+        
         if(!$entry)
             return redirect()->route('register');
+
+        if(Auth()->check())
+            return redirect()->route('game_instances.select_instance', $entry->experiment_id);
 
         return Inertia::render('Auth/Register', ['entrypoint' => $entry]);
     }
