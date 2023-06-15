@@ -30,13 +30,13 @@ const props = defineProps({
                 <table class="rounded-sm shadow table-fixed w-full border-collapse">
                     <thead class="border">
                         <th>Entrypoint</th>
-                        <th>Descripcion</th>
+                        <th>Token</th>
                         <th>Acciones</th>
                     </thead>
                     <tbody>
                         <tr v-for="(entrypoint, index) in entrypoints" :key="index" class="border">
                             <td class="px-3 text-center">{{ entrypoint.name }}</td>
-                            <td class="px-3 text-center">{{ entrypoint.description }}</td>
+                            <td class="px-3 text-center">{{ entrypoint.token }}</td>
                             <td class="px-3 flex gap-1 justify-center">
                                 <ShowInformation :entrypoint="entrypoint"/>
                                 <Link :href="route('entrypoints.edit', {id: entrypoint.id})">
