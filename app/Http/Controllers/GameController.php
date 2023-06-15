@@ -25,16 +25,13 @@ class GameController extends Controller
     public function myGames() {
         return Inertia::render('Games/MyGames', ['games' => Auth()->user()->getGamesICanPlay()]);
     }
-    public function get($id) {
-        return Inertia::render('Admin/Games/Index', ['games' => Game::find($id)]);
-    }
 
     public function create() {
         return Inertia::render('Admin/Games/Create', ['categories' => Category::all()]);
     }
 
     public function store(GameCreateRequest $request) {
-        $res = $this->game->store($request);
+        $res = $this->gs->store($request);
         return redirect()->route('games.create')->with('notification', $res);
     }
 

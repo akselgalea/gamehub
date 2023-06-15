@@ -7,7 +7,7 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import Notification from '@/Components/Notification.vue';
 import { Link, usePage } from '@inertiajs/vue3';
-import { activeLinkClasses, linkClasses as normalLinkClasses, responsiveActiveLinkClasses, responsiveLinkClasses } from '@/helpers/style';
+import { activeLinkClasses, linkClasses as normalLinkClasses, responsiveActiveLinkClasses, responsiveLinkClasses } from '@/Helpers/style';
 
 const showingNavigationDropdown = ref(false);
 

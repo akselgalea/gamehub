@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
-import {noti} from '@/helpers/notifications';
+import {noti} from '@/Helpers/notifications';
 import ShowProfileInformation from '@/Pages/Profile/Partials/ShowProfileInformation.vue';
 
 const props = defineProps({

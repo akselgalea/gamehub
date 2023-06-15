@@ -6,7 +6,7 @@ import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import {noti} from '@/helpers/notifications';
+import {noti} from '@/Helpers/notifications';
 
 const props = defineProps({
     experiment_id: {

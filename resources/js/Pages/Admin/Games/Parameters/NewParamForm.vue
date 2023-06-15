@@ -5,7 +5,7 @@ import TextInput from '@/Components/TextInput.vue';
 import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import { noti } from '@/helpers/notifications';
+import { noti } from '@/Helpers/notifications';
 
 import Modal from '@/Components/Modal.vue';
 import { useForm } from '@inertiajs/vue3';
