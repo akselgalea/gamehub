@@ -41,41 +41,4 @@ class EntryPoint extends Model
     public function experiment(): BelongsTo {
         return $this->belongsTo(Experiment::class);
     }
-
-    public function store($req) {
-        
-        $validated = $req->validated();
-        try {
-            $entrypoint = EntryPoint::create($validated);
-
-            return ['status' => 200, 'message' => 'Entrypoint creado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function edit($req) {
-
-        $validated = $req->validated();
-
-        try {
-            $this->update($validated);
-            return ['status' => 200, 'message' => 'Datos del entrypoint actualizado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function erase($req) {
-
-        try {
-
-            $entrypoint = EntryPoint::findOrFail($req->id);
-            $entrypoint->delete();
-
-            return ['status' => 200, 'message' => 'Entrypoint eliminado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar el entrypoint.'];
-        }
-    }
 }

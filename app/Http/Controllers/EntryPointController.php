@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Experiments\EntryPoints\{EntryPointCreateRequest, EntryPointUpdateRequest, EntryPointDeleteRequest};
-use App\Services\{ExperimentService};
+use App\Services\{ExperimentService, EntryPointService, EncryptService};
 use App\Models\EntryPoint;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,7 +13,7 @@ class EntryPointController extends Controller
     private $entrypoint;
     private $exp;
     
-    public function __construct(EntryPoint $entrypoint, ExperimentService $e) {
+    public function __construct(EntryPointService $entrypoint, ExperimentService $e) {
         $this->entrypoint = $entrypoint;
         $this->exp = $e;
     }
@@ -58,7 +58,6 @@ class EntryPointController extends Controller
             return redirect()->back()->with('notication', $this->exp->notFoundText());
         
         $entrypoints = $experiment->entrypoints()->get();
-
         return Inertia::render('Admin/Experiments/Management/Entrypoints/Edit', ['entrypoints' => $entrypoints, 'experiment_id' => $id]);
     }
 
@@ -70,7 +69,7 @@ class EntryPointController extends Controller
 
     public function update($id, EntryPointUpdateRequest $request)
     {
-        $res = $this->entrypoint->find($id)->edit($request);
+        $res = $this->entrypoint->update($id, $request);
         return redirect()->back()->with('notification', $res);  // Te redirecciona al panel de gestion de experimento
     }
 
