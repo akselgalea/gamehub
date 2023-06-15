@@ -47,7 +47,10 @@ const props = defineProps({
                     <div class="col-span-3 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                         <StatisticsUser :user_id="user.id"/>
                     </div>
+                </div>
 
+                <div class="mt-5 flex items-center justify-center">
+                    <PrimaryButton type="button" onclick="history.back()">Volver</PrimaryButton>
                 </div>
             </div>
         </div>

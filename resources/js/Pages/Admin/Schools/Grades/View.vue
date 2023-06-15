@@ -1,7 +1,9 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import AdminUserEdit from '@/Pages/Admin/Users/Edit.vue';
-import { Head } from '@inertiajs/vue3';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import { Head, Link } from '@inertiajs/vue3';
+import ShowProfileInformation from '@/Pages/Profile/Partials/ShowProfileInformation.vue';
 
 const props = defineProps({
     grade: {
@@ -50,6 +52,10 @@ const props = defineProps({
                                     <td class="text-center">{{student.name}}</td>
                                     <td>
                                         <div class="flex justify-center gap-1">
+                                            <ShowProfileInformation :user="student"/>
+                                            <Link :href="route('user-profile.index', {id: student.id})">
+                                                <PrimaryButton title="Ver Perfil"><i class="fas fa-user-alt"></i></PrimaryButton>
+                                            </Link>
                                             <AdminUserEdit :user="student" :key="index" />
                                         </div>
                                     </td>

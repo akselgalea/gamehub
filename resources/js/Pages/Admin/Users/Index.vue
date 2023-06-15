@@ -33,7 +33,7 @@ const props = defineProps({
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">En este apartado se pueden ver usuarios registrados en la plataforma.</p>
                     </header>
                     
-                    <section class="mt-5">
+                    <div class="mt-5">
                         <p class="text-sm text-gray-600 dark:text-gray-400" v-if="users.length == 0">No se encontraron usuarios.</p>
                         
                         <template v-else>
@@ -61,14 +61,14 @@ const props = defineProps({
                                 </tbody>
                             </table>
                         </template>
-                    </section>
+                    </div>
  
-                    <section class="mt-5 flex items-center justify-center">
+                    <div class="mt-5 flex items-center justify-center">
                         <Link :href="route('user.create')">
                             <PrimaryButton>Crear nuevo usuario</PrimaryButton>
                         </Link>
                         <UsersImport/>
-                    </section>
+                    </div>
 
                 </div>
             </div>

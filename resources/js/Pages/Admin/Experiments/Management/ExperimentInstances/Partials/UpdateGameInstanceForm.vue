@@ -103,9 +103,7 @@ const sendForm = () => {
 
                                 <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
 
-                                <Link :href="route('game_instances.show', {id: experiment_id})">
-                                    <SecondaryButton type="button">Cancelar</SecondaryButton>
-                                </Link>
+                                <SecondaryButton type="button" onclick="history.back()">Cancelar</SecondaryButton>
                                 
                                 <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
                                     <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
