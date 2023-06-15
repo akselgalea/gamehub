@@ -45,14 +45,14 @@ onBeforeMount(() => {
     <section class="mt-5">
         <p class="text-sm text-gray-600 dark:text-gray-400" v-if="user == null">No se encontro el usuario.</p>
 
-        <div v-else class="flex flex-wrap gap-10 w-full text-gray-900 dark:text-gray-200">
-            <div class="first-letter:uppercase">Nombre: {{ user.name }}</div>
-            <div class="first-letter:uppercase">Correo: {{ user.email }}</div>
+        <div v-else class="flex flex-col gap-10 w-full text-gray-900 dark:text-gray-200">
+            <div class="font-semibold text-sm first-letter:uppercase">Nombre: {{ user.name }}</div>
+            <div class="font-semibold text-sm first-letter:uppercase">Correo: {{ user.email }}</div>
             <template v-if="user.type == 'student'">
-                <div class="first-letter:uppercase">Tipo de usuario: Estudiante</div>
+                <div class="font-semibold text-sm first-letter:uppercase">Tipo de usuario: Estudiante</div>
                 <template v-if="studentGrade">
-                    <div class="first-letter:uppercase">Colegio: {{ studentSchool.name }}</div>
-                    <div class="first-letter:uppercase">Grado: {{ studentGrade.name }}</div>
+                    <div class="font-semibold text-sm first-letter:uppercase">Colegio: {{ studentSchool.name }}</div>
+                    <div class="font-semibold text-sm first-letter:uppercase">Grado: {{ studentGrade.name }}</div>
                 </template>
             </template>
         </div>

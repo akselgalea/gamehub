@@ -4,6 +4,8 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import GeneralInformation from './Partials/Index.vue';
 import ExperimentsUser from './Partials/Experiment.vue';
+import StatisticsUser from './Partials/Statistics.vue';
+import GamesUser from './Partials/Games.vue';
 
 const props = defineProps({
     user: {
@@ -12,6 +14,9 @@ const props = defineProps({
     experiments: {
         type: Array
     },
+    games: {
+        type: Array
+    }
 })
 </script>
 
@@ -25,14 +30,22 @@ const props = defineProps({
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 text-white">
-                <div class="grid grid-cols-3 grid-rows-2 gap-4">
+                <div class="grid grid-cols-6 grid-rows-1 gap-4">
                     
-                    <div class="col-span-1 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                    <div class="col-span-2 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                         <GeneralInformation :user="user"/>
                     </div>
 
-                    <div class="col-span-2 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                    <div class="col-span-4 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                        <GamesUser :user_id="user.id" :games="games"/>
+                    </div>
+
+                    <div class="col-span-3 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                         <ExperimentsUser :user_id="user.id" :experiments="experiments"/>
+                    </div>
+
+                    <div class="col-span-3 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                        <StatisticsUser :user_id="user.id"/>
                     </div>
 
                 </div>

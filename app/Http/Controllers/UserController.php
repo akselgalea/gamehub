@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function userProfile($id) {
         $user = Student::find($id);
-        return Inertia::render('Admin/Users/Profile/View', ['user' => $user, 'experiments' => $user->experiments]);
+        return Inertia::render('Admin/Users/Profile/View', ['user' => $user, 'experiments' => $user->experiments, 'games' => $user->getGamesICanPlay()]);
     }
 
     public function edit($id) {
