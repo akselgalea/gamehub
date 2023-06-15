@@ -45,7 +45,7 @@ defineProps({
                                         <th>Acciones</th>
                                     </thead>
                                     <tbody class="border first-letter:uppercase text-gray-900 dark:text-gray-200">
-                                        <tr v-for="(entrypoint, index) in entrypoints" :key="index">
+                                        <tr v-for="(entrypoint, index) in entrypoints" :key="index" class="border">
                                             <td class="px-3 text-center">{{ entrypoint.name }}</td>
                                             <td class="px-3 text-center">{{ entrypoint.description }}</td>
                                             <td class="px-3">

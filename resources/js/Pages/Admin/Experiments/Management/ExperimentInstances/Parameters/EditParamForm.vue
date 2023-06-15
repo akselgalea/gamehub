@@ -138,9 +138,7 @@ const sendForm = () => {
                             </template>
 
                             <div v-if="parameters.length == 0" class="mt-5 flex gap-1 justify-center">
-                                <Link :href="route('game_instances.show', {id: experiment_id})">
-                                    <SecondaryButton type="button">Volver</SecondaryButton>
-                                </Link>
+                                <SecondaryButton type="button" onclick="history.back()">Cancelar</SecondaryButton>
                             </div>
                         </section>
                     </section>

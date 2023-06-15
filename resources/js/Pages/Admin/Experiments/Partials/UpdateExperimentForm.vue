@@ -4,6 +4,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
@@ -104,9 +105,7 @@ const sendForm = () => {
                     <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
                 </Transition>
 
-                <Link :href="route('experiment.management', {id: experiment.id})">
-                    <PrimaryButton>Volver</PrimaryButton>
-                </Link>
+                <SecondaryButton type="button" onclick="history.back()">Cancelar</SecondaryButton>
 
             </div>
 

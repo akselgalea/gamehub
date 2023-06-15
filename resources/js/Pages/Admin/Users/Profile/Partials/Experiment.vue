@@ -1,5 +1,4 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -28,7 +27,7 @@ const props = defineProps({
             <template v-else>
                 <table class="rounded-sm shadow table-fixed w-full border-collapse">
                     <thead class="border">
-                        <th>Entrypoint</th>
+                        <th>Nombre</th>
                         <th>Descripcion</th>
                         <th>Estado</th>
                     </thead>
