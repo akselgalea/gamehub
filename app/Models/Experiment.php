@@ -37,11 +37,11 @@ class Experiment extends Model
     }
 
     public function users(): BelongsToMany {
-        return $this->belongsToMany(User::class, 'experiment_user' , 'user_id', 'experiment_id');
+        return $this->belongsToMany(User::class, 'experiment_user' , '', 'user_id');
     }
 
     public function students(): BelongsToMany {
-        return $this->belongsToMany(Student::class, 'experiment_user' , 'user_id', 'experiment_id');
+        return $this->belongsToMany(Student::class, 'experiment_user' , 'experiment_id', 'user_id');
     }
 
     public function entrypoints(): HasMany {

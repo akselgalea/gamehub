@@ -29,4 +29,8 @@ class ExperimentUser extends Model
     public function gameInstance(): BelongsTo {
         return $this->belongsTo(GameInstance::class);
     }
+
+    public function games() {
+        return $this->hasManyThrough(Game::class, GameInstance::class);
+    }
 }

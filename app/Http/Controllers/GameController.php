@@ -3,22 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Games\{GameCreateRequest, GameUpdateRequest, GameDeleteRequest};
+use App\Services\GameService;
 use App\Models\Category;
-use App\Models\Game;
+use App\Models\{Game, User};
 use Inertia\Inertia;
 
 class GameController extends Controller
 {
     private $game;
+    private $gs;
 
-    public function __construct(Game $game) {
+    public function __construct(Game $game, GameService $gs) {
         $this->game = $game;
+        $this->gs = $gs;
     }
 
     public function index() {
         return Inertia::render('Admin/Games/Index', ['games' => Game::all()]);
     }
 
+    public function myGames() {
+        return Inertia::render('Games/MyGames', ['games' => Auth()->user()->getGamesICanPlay()]);
+    }
     public function get($id) {
         return Inertia::render('Admin/Games/Index', ['games' => Game::find($id)]);
     }
@@ -52,11 +58,6 @@ class GameController extends Controller
     }
 
     public function play($slug) {
-        $res = $this->game->play($slug);
-        
-        if(isset($res['status']))
-            return redirect()->back()->with('notification', $res);
-
-        return Inertia::render('Games/Play', ['game' => $res['game'], 'location' => $res['location']]);
+        return $this->gs->play($slug);
     }
 }

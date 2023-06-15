@@ -17,6 +17,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Support\Facades\URL;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Illuminate\Database\Eloquent\Builder;
 
 class Game extends Model implements HasMedia
 {
@@ -58,6 +59,22 @@ class Game extends Model implements HasMedia
         return $this->hasMany(Parameter::class);    
     }
 
+    public function instances(): HasMany {
+        return $this->hasMany(GameInstance::class);
+    }
+
+    public function scopeAllAccessGames(Builder $query): void {
+        $query->where('gm2game', false);
+    }
+
+    public function scopeGm2Games(Builder $query): void {
+        $query->where('gm2game', true);
+    }
+
+    public function getAllAccessGames() {
+        return Game::allAccessGames()->get();
+    }
+
     /** 
      * Guarda los archivos del juego
      * Necesita ser llamado desde una request tipo GameCreateRequest o GameUpdateRequest que contenga el campo 'file'
@@ -70,6 +87,10 @@ class Game extends Model implements HasMedia
     
             $zipper = new Madzipper;
             $link = "/uploads/games/$this->slug";
+
+            if(!$this->gm2game)
+                return $this->extractToPublic($zipper, $pathzip, $link);
+            
             $path2extract = base_path() . $link;
 
             // Borra los archivos, si existe el directorio
@@ -91,6 +112,20 @@ class Game extends Model implements HasMedia
             return ['status' => 200, 'message' => 'Archivos subidos con éxito!'];
         } catch (Exception $e) {
             if(!$isUpdate) $this->delete();
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    private function extractToPublic($zipper, $pathzip, $link) {
+        try {
+            $path2extract = public_path() . $link;
+            $zipper->make($pathzip)->extractTo($path2extract);
+            $this->file = $link;
+            $this->save();
+
+            return ['status' => 200, 'message' => 'Archivos subidos con éxito!'];
+        } catch (Exception $e) {
+            $this->delete();
             return ['status' => 500, 'message' => $e->getMessage()];
         }
     }
@@ -121,41 +156,6 @@ class Game extends Model implements HasMedia
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }
-    }
-
-    public function erase($req) {
-        try {
-            $game = Game::findOrFail($req->id);
-            $gameFolder = public_path($game->file);
-
-            if ($game->deleteFolder($gameFolder))
-                $game->delete();
-            else
-                throw new Exception('Error al eliminar los archivos del juego.');
-
-            return ['status' => 200, 'message' => 'Juego eliminado con éxito!'];
-        } catch(Exception $e) {
-            return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar el juego.'];
-        }
-    }
-
-    public function deleteFolder($link) {
-        try {
-            File::deleteDirectory($link);
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public function play($slug) {
-        $game = Game::findBySlug($slug);
-
-        if(empty($game)) 
-            return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
-            
-        $location = $game->file . '/index.html';
-        return ['game' => $game, 'location' => $location];
     }
 
     public function findBySlug($slug) {

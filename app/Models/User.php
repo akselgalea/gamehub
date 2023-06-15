@@ -60,20 +60,34 @@ class User extends Authenticatable
         return $this->hasMany(User::class);
     }
 
+    public function experimentUser(): HasMany {
+        return $this->hasMany(ExperimentUser::class);
+    }
+
+    public function gameInstances(): BelongsToMany {
+        return $this->belongsToMany(GameInstance::class, 'experiment_user', 'user_id', 'game_instance_id');
+    }
+
+    public function instancesGames() {
+        return $this->gameInstances()->with('game')->get()->map(function ($instance) {
+            $game = $instance->game;
+            $game->instance_slug = $instance->slug;
+            return $game;
+        });
+    }
+
+    public function getGamesICanPlay() {
+        $allAccessGames = Game::allAccessGames()->get();
+        $instanceGames = $this->instancesGames();
+        return $allAccessGames->concat($instanceGames);
+    }
+
     public function isAdmin() {
         return $this->type == 'admin';
     }
 
     public function isStudent() {
         return $this->type == 'student';
-    }
-
-    public function experimentUser(): HasMany {
-        return $this->hasMany(ExperimentUser::class);
-    }
-
-    public function gameInstances(): BelongsToMany {
-        return $this->belongsToMany(GameInstance::class, 'experiment_user', 'game_instance_id', 'user_id');
     }
 
     public function getInstanceByExperiment($experiment) {

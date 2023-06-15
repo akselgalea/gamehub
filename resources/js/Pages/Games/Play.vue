@@ -44,16 +44,3 @@ const setFullscreen = () => {
         </div>
     </AuthenticatedLayout>
 </template>
-
-<script>
-    export default {
-        mounted() {
-            if(this.$props.game.gm2game) {
-                const script = document.createElement('script');
-                script.src = this.$props.location;
-                script.async = true;
-                document.body.appendChild(script);
-            }
-        }
-    }
-</script>
