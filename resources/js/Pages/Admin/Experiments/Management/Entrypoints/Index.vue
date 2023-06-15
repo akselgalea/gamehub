@@ -42,7 +42,7 @@ const props = defineProps({
                                 <Link :href="route('entrypoints.edit', {id: entrypoint.id})">
                                     <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
                                 </Link>
-                                <DeleteEntryPointForm :entrypoint_id="entrypoint.id" :entrypoint_name="entrypoint.name" class="max-w-xl" />
+                                <DeleteEntryPointForm :entrypoint_id="entrypoint.id" :entrypoint_name="entrypoint.name" :key="index" class="max-w-xl" />
                             </td>
                         </tr>
                     </tbody>

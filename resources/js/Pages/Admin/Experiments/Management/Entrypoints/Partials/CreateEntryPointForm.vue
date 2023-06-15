@@ -2,6 +2,7 @@
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextArea from '@/Components/TextArea.vue';
+import Checkbox from '@/Components/Checkbox.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
@@ -19,7 +20,7 @@ const form = useForm({
     token: '',
     name: '',
     description: '',
-    obfuscated: null,
+    obfuscated: false,
     experiment_id: props.experiment_id,
 });
 
@@ -90,30 +91,30 @@ const sendForm = () => {
             </div>
 
             <div class="mt-5">
-                <InputLabel for="obfuscated" value="Obfuscado"/>
+                <InputLabel for="obfuscated">
+                    <div class="flex gap-2 items-center"> 
+                        <Checkbox 
+                            id="obfuscated"
+                            v-model="form.obfuscated"
+                            :checked="form.obfuscated"
+                        /> Obfuscado
+                    </div> 
+                </InputLabel>
 
-                <select id="obfuscated" v-model="form.obfuscated" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                    <option :value="form.obfuscated ==null ? form.obfuscated : ''" hidden :selected="!form.obfuscated">Elige una opción</option>
-                    <option :value="true"> Si </option>
-                    <option :value="false"> No </option>
-                </select>
-
+                <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">Encripta el token de la URL</div>
                 <InputError class="mt-2" :message="form.errors.obfuscated" />
             </div>
 
             <div class="flex items-center gap-4 mt-10">
-
                 <PrimaryButton :disabled="form.processing">Crear</PrimaryButton>
-
-                <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
-                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Creado.</p>
-                </Transition>
 
                 <Link :href="route('entrypoints.show', {id: experiment_id})">
                     <PrimaryButton>Volver</PrimaryButton>
                 </Link>
-                
             </div>
+            <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="mt-2 transition ease-in-out">
+                <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Creado.</p>
+            </Transition>
         </form>
     </section>
 </template>

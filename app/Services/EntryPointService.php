@@ -20,6 +20,10 @@ class EntryPointService
         return $this->entry->find($id);
     }
 
+    public function findByLink($link) {
+        return $this->entry->firstWhere('link', $link);
+    }
+
     public function notFoundText() {
         return ['status' => 404, 'message' => 'Entrypoint no encontrado'];
     }
@@ -29,7 +33,7 @@ class EntryPointService
         $validated = $req->validated();
         try {
             $entrypoint = EntryPoint::create($validated);
-
+            $this->setLink($entrypoint);            
             return ['status' => 200, 'message' => 'Entrypoint creado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
@@ -37,11 +41,13 @@ class EntryPointService
     }
 
     public function update($id, $req) {
-
         $validated = $req->validated();
 
         try {
-            $this->entry->findOrFail($id)->update($validated);
+            $entry = $this->entry->findOrFail($id);
+            $entry->update($validated);
+            $this->setLink($entry);
+
             return ['status' => 200, 'message' => 'Datos del entrypoint actualizado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
@@ -49,7 +55,6 @@ class EntryPointService
     }
 
     public function erase($req) {
-
         try {
 
             $entrypoint = EntryPoint::findOrFail($req->id);
@@ -59,5 +64,10 @@ class EntryPointService
         } catch (Exception $e) {
             return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar el entrypoint.'];
         }
+    }
+
+    public function setLink($entry): void {
+        $entry->link = $entry->obfuscated ? $this->encrypt->encrypt($entry->slug) : $entry->slug;
+        $entry->save();
     }
 }

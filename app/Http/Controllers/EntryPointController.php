@@ -20,7 +20,7 @@ class EntryPointController extends Controller
 
     public function register($token) {
         //Mover al service
-        $entry = $this->entrypoint->firstWhere('slug', $token);
+        $entry = $this->entrypoint->findByLink($token);
         
         if(!$entry)
             return redirect()->route('register');

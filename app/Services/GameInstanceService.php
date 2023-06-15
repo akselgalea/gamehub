@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Services\EncryptService;
-use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise, Experiment, SurveyResponse, User};
+use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise, Experiment, SurveyResponse, User, Game};
 use Illuminate\Support\Facades\Auth;
 use Exception;
 
@@ -457,9 +457,9 @@ class GameInstanceService
         if(empty($game)) 
             return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
         
-        $extra = json_decode($game->extra);
+        $filename = $game->extra['filename'];
         
-        $location = "/game-instances/$instanceSlug/$game->slug/$extra->filename.js";
+        $location = "/game-instances/$instanceSlug/$game->slug/$filename.js";
         
         return ['game' => $game, 'location' => $location];
     }

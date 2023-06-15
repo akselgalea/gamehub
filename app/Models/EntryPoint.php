@@ -24,12 +24,10 @@ class EntryPoint extends Model
         'description',
         'obfuscated',
         'experiment_id'
-        //'course_id'
-        //'college_id'
     ];
 
-    protected $cast = [
-        'obfuscated' => 'boolean',
+    protected $casts = [
+        'obfuscated' => 'boolean'
     ];
 
     public function getSlugOptions(): SlugOptions {

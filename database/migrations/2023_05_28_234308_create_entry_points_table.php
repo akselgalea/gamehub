@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('slug');
             $table->string('description');
             $table->boolean('obfuscated');
+            $table->string('link')->nullable();
             $table->foreignId('experiment_id')->onDelete('cascade');;
             //$table->foreignId('course_id');
             $table->timestamps();

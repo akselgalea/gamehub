@@ -21,6 +21,10 @@ class GameService
         return $this->game->findBySlug($slug);
     }
 
+    public function getGm2Games() {
+        return $this->game->getGm2Games();
+    }
+
     public function store($req) {
         $validated = $req->validated();
         
@@ -143,8 +147,7 @@ class GameService
     }
 
     public function playGameMakerGame($game) {
-        $extra = json_decode($game->extra);
-        $location = "$game->file/$extra->filename.js";
+        $location = $game->file . '/' .$game->extra['filename'] . '.js';
 
         return Inertia::render('Games/PlayGM2Game', ['game' => $game, 'location' => $location]);
     }

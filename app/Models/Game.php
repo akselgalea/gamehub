@@ -31,7 +31,7 @@ class Game extends Model implements HasMedia
         'user_id'
     ];
 
-    protected $cast = [
+    protected $casts = [
         'gm2game' => 'boolean',
         'extra' => 'array'
     ];
@@ -68,5 +68,9 @@ class Game extends Model implements HasMedia
 
     public function getAllAccessGames() {
         return Game::allAccessGames()->get();
+    }
+
+    public function getGm2Games() {
+        return Game::Gm2Games()->get();
     }
 }
