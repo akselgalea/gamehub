@@ -53,6 +53,10 @@ defineProps({
                                             <td class="px-3 text-center">{{ instance.game?.name ?? '' }}</td>
 
                                             <td class="px-3 flex gap-1 justify-center">
+                                                <Link :href="instance.game.gm2game ? route('game_instances.play', { game: instance.game.slug, instance: instance.slug }) : route('games.play', {slug: instance.game.slug})">
+                                                    <PrimaryButton title="Jugar"><i class="fas fa-play"></i></PrimaryButton>
+                                                </Link>
+
                                                 <Link :href="route('game_instances.edit', {id: experiment_id, slug: instance.slug})">
                                                     <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
                                                 </Link>

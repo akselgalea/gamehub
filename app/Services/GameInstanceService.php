@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Services\EncryptService;
-use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise, Experiment, SurveyResponse};
+use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise, Experiment, SurveyResponse, User};
 use Illuminate\Support\Facades\Auth;
 use Exception;
 
@@ -434,14 +434,13 @@ class GameInstanceService
             $user = User::findOrFail($userId);
         else
             $user = Auth()->user();
-
         $userInstance = $user->getInstanceByExperiment($experiment);
 
         if(!$userInstance)
             $instance = $this->instance->getInstanceWithLeastUsers($experiment);
             
         if(isset($instance) && $instance) {
-            $experimentUser = Auth()->user()->experimentUser()->updateOrCreate(['experiment_id' => $experiment], ['game_instance_id' => $instance->id]);
+            $experimentUser = $user->experimentUser()->updateOrCreate(['experiment_id' => $experiment], ['game_instance_id' => $instance->id]);
             $userInstance = $experimentUser->gameInstance;
         }
            
