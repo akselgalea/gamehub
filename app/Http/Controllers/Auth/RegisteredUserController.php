@@ -47,6 +47,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        if($request->experiment_id)
+            return redirect()->route('game_instances.select_instance', $request->experiment_id);
+
         return redirect(RouteServiceProvider::HOME);
     }
 }

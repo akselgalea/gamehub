@@ -69,19 +69,4 @@ class Game extends Model implements HasMedia
     public function getAllAccessGames() {
         return Game::allAccessGames()->get();
     }
-
-    public function edit($req) {
-        $validated = $req->validated();
-
-        try {
-            $this->update($validated);
-            return ['status' => 200, 'message' => 'Juego actualizado con éxito!', 'slug' => $this->slug];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function findBySlug($slug) {
-        return Game::firstWhere('slug', $slug);
-    }
 }

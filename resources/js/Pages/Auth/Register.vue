@@ -4,17 +4,26 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
+
+const props = defineProps({
+    entrypoint: {
+        type: Object
+    }
+});
 
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
-    terms: false,
+    terms: false
 });
 
 const submit = () => {
+    if(props.entrypoint)
+        form.experiment_id = props.entrypoint.experiment_id;
+
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });

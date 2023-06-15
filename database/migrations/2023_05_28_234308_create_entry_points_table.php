@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('token');
             $table->string('name');
+            $table->string('slug');
             $table->string('description');
             $table->boolean('obfuscated');
             $table->foreignId('experiment_id')->onDelete('cascade');;

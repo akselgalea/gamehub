@@ -38,6 +38,39 @@ class GameService
         }
     }
 
+    public function updateGame($slug, $req) {
+        $game = $this->get($slug);
+
+        if(!$game)
+            return $this->notFoundText();
+
+        $validated = $req->validated();
+
+        try {
+            $game->update($validated);
+            return ['status' => 200, 'message' => 'Juego actualizado con éxito!', 'slug' => $game->slug];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function deleteGame($id) {
+        try {
+            $game = Game::findOrFail($id);
+
+            $gameFolder = $game->gm2game ? base_path() . $game->file : public_path($game->file);
+
+            if ($this->fs->deleteFolder($gameFolder))
+                $game->delete();
+            else
+                throw new Exception('Error al eliminar los archivos del juego.');
+
+            return ['status' => 200, 'message' => 'Juego eliminado con éxito!'];
+        } catch(Exception $e) {
+            return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar el juego.'];
+        }
+    }
+
     /** 
      * Guarda los archivos del juego
      * Necesita ser llamado desde una request tipo GameCreateRequest o GameUpdateRequest que contenga el campo 'file'
@@ -114,22 +147,5 @@ class GameService
         $location = "$game->file/$extra->filename.js";
 
         return Inertia::render('Games/PlayGM2Game', ['game' => $game, 'location' => $location]);
-    }
-
-    public function deleteGame($id) {
-        try {
-            $game = Game::findOrFail($id);
-
-            $gameFolder = $game->gm2game ? base_path() . $game->file : public_path($game->file);
-
-            if ($this->fs->deleteFolder($gameFolder))
-                $game->delete();
-            else
-                throw new Exception('Error al eliminar los archivos del juego.');
-
-            return ['status' => 200, 'message' => 'Juego eliminado con éxito!'];
-        } catch(Exception $e) {
-            return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar el juego.'];
-        }
     }
 }

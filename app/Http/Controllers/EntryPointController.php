@@ -18,6 +18,15 @@ class EntryPointController extends Controller
         $this->exp = $e;
     }
 
+    public function register($token) {
+        //Mover al service
+        $entry = $this->entrypoint->firstWhere('slug', $token);
+        if(!$entry)
+            return redirect()->route('register');
+
+        return Inertia::render('Auth/Register', ['entrypoint' => $entry]);
+    }
+
     public function index($id)
     {
         $experiment = $this->exp->get($id);

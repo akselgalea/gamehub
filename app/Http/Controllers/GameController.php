@@ -45,12 +45,12 @@ class GameController extends Controller
     }
 
     public function update($slug, GameUpdateRequest $request) {
-        $res = $this->game->findBySlug($slug)->edit($request);
+        $res = $this->gs->updateGame($slug, $request);
         return redirect()->route('games.edit', $res['slug'])->with('notification', $res);
     }
 
     public function destroy(GameDeleteRequest $request) {
-        $res = $this->game->erase($request);
+        $res = $this->gs->deleteGame($request);
         return redirect()->route('games.index')->with('notification', $res);
     }
 

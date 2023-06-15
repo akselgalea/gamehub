@@ -119,6 +119,7 @@ Route::middleware('auth')->group(function () {
         Route::get('{id}/play', [GameInstanceController::class, 'selectInstance'])->name('game_instances.select_instance');
     });
     
+    Route::get('register/{token}', [EntryPointController::class, 'register'])->name('entrypoints.register');
     Route::get('game-instances/{game}/{instance}/play', [GameInstanceController::class, 'play'])->name('game_instances.play');
     
     Route::get('games/{slug}/play', [GameController::class, 'play'])->name('games.play');
