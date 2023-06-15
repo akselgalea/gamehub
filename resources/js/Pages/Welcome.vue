@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { bgClouds, logo } from '@/Helpers/assets';
+import { bgClouds, logo, icon } from '@/Helpers/assets';
 
 defineProps({
     canLogin: {
@@ -44,16 +44,41 @@ defineProps({
         </div>
 
         <div class="w-10/12 mx-auto my-auto p-6 lg:p-8">
-            <img class="w-full" :src="logo" />
+            <img class="logo w-[0px] slide" :src="logo" />
         </div>
     </div>
 </template>
 
-<style>
+<style scoped>
+.icon, .logo {
+    overflow: hidden;
+}
 
-@media (prefers-color-scheme: dark) {
-    .dark\:bg-dots-lighter {
-        background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
-    }
+.slide {
+	-webkit-animation: slide 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s both;
+	        animation: slide 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s both;
+}
+
+@-webkit-keyframes slide {
+  0% {
+    -webkit-transform: translateX(100);
+            transform: translateX(100);
+  }
+  100% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+            width: 100%;
+  }
+}
+@keyframes slide {
+  0% {
+    -webkit-transform: translateX(100px);
+            transform: translateX(100px);
+  }
+  100% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+            width: 100%;
+  }
 }
 </style>
