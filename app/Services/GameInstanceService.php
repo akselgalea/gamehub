@@ -429,8 +429,13 @@ class GameInstanceService
         }
     }
 
-    public function getUserGameInstance($experiment) {
-        $userInstance = Auth()->user()->getInstanceByExperiment($experiment);
+    public function getUserGameInstance($experiment, $userId = null) {
+        if($userId)
+            $user = User::findOrFail($userId);
+        else
+            $user = Auth()->user();
+
+        $userInstance = $user->getInstanceByExperiment($experiment);
 
         if(!$userInstance)
             $instance = $this->instance->getInstanceWithLeastUsers($experiment);
