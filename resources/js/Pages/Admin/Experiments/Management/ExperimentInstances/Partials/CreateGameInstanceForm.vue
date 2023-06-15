@@ -27,6 +27,7 @@ const form = useForm({
     experiment_id: props.experiment_id,
 });
 
+// Funciones //
 const sendForm = () => {
     form.post(
         route('game_instances.store', {id: props.experiment_id}), {

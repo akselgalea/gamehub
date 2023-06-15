@@ -5,7 +5,6 @@ import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import Checkbox from '@/Components/Checkbox.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
@@ -34,6 +33,7 @@ const form = useForm({
     obfuscated: props.entrypoint.obfuscated
 });
 
+// Funciones //
 const sendForm = () => {
     form.patch(route('entrypoints.update', {id: props.entrypoint.id}));
 }
@@ -42,6 +42,7 @@ const sendForm = () => {
 
 <template>
     <AuthenticatedLayout>
+        <Head title="Editar entrypoint" />
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento</h2>
         </template>
@@ -108,8 +109,8 @@ const sendForm = () => {
 
                                 <select id="obfuscated" v-model="form.obfuscated" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                                     <option :value="!form.obfuscated ? form.obfuscated : ''" hidden :selected="!form.obfuscated">Elige una opción</option>
-                                    <option :value="true"> Si </option>
-                                    <option :value="false"> No </option>
+                                    <option :value="1"> Si </option>
+                                    <option :value="0"> No </option>
                                 </select>
 
                                 <InputError class="mt-2" :message="form.errors.obfuscated" />

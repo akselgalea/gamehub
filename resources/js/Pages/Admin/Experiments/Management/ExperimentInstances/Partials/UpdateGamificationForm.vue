@@ -3,10 +3,11 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Link } from '@inertiajs/vue3';
 import Checkbox from '@/Components/Checkbox.vue';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
     experiment_id: {
@@ -26,6 +27,7 @@ const form = useForm({
     enable_leaderboard: props.game_instance.enable_leaderboard ? true : false
 });
 
+// Funciones //
 const sendForm = () => {
     form.patch(route('game_instances.gamification.update', {id: props.game_instance.id, slug: props.game_instance.slug}));
 }
@@ -34,8 +36,9 @@ const sendForm = () => {
 
 <template>
     <AuthenticatedLayout>
+        <Head title="Modificar gamificacion de instancia" />
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento / Instancia</h2>
         </template>
         
         <div class="py-12">

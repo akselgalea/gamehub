@@ -6,6 +6,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Modal from '@/Components/Modal.vue';
 import { ref } from 'vue';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
     entrypoint: {
@@ -15,6 +16,7 @@ const props = defineProps({
 
 const showingModal = ref(null);
 
+//Funciones //
 const showModal = () => {
     showingModal.value = true;
 }
@@ -30,6 +32,7 @@ const closeModal = () => {
         <PrimaryButton @click="showModal()" title="Ver datos"><i class="far fa-eye"></i></PrimaryButton>
 
         <Modal :show="showingModal" @close="closeModal">
+            <Head title="Datos entrypoint" />
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
             <header>
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Información del entrypoint</h2>

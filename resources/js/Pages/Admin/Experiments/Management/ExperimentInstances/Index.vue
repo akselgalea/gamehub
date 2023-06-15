@@ -1,5 +1,4 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DeleteGameInstanceForm from './Partials/DeleteGameInstanceForm.vue';
@@ -18,7 +17,6 @@ const props = defineProps({
 </script>
 
 <template>
-    <Head title="Instancias de juego" />
     <section>
         <header>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Instancias de juego</h2>

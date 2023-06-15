@@ -8,6 +8,7 @@ import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
     experiment_id: {
@@ -30,16 +31,20 @@ const form = useForm({
     game_id: props.game_instance.game_id,
 });
 
+// Funciones //
 const sendForm = () => {
     form.patch(route('game_instances.update', {id: props.experiment_id, slug: props.game_instance.slug}));
 }
+
 </script>
 
 
 <template>
     <AuthenticatedLayout>
+        <Head title="Editar informacion de instancia" />
+
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento / Instancia</h2>
         </template>
         
         <div class="py-12">

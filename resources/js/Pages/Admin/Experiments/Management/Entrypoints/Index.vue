@@ -1,6 +1,4 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DeleteEntryPointForm from './Partials/DeleteEntryPointForm.vue';
@@ -20,7 +18,6 @@ const props = defineProps({
 </script>
 
 <template>
-    <Head title="Entrypoint" />
     <section>
         <header>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Entrypoint</h2>

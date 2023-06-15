@@ -7,6 +7,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
     game_instance_id: {
@@ -27,7 +28,7 @@ const form = useForm({
     name: '',
 });
 
-// Funciones
+// Funciones //
 const confirmGameInstanceDeletion = () => {
     confirmingGameInstanceDeletion.value = true;
 
@@ -54,6 +55,8 @@ const closeModal = () => {
     <DangerButton @click="confirmGameInstanceDeletion" title="Eliminar"><i class="fas fa-trash"></i></DangerButton>
 
     <Modal :show="confirmingGameInstanceDeletion" @close="closeModal">
+        <Head title="Eliminar instancia" />
+
         <div class="p-6">
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                 ¿Estás seguro de que quieres eliminar esta instancia del experimento?

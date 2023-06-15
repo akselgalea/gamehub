@@ -2,7 +2,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
-import UpdateEntryPointForm from './Partials/UpdateEntryPointForm.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DeleteEntryPointForm from './Partials/DeleteEntryPointForm.vue';
 import ShowInformation from './Partials/ShowInformation.vue';
@@ -17,14 +16,15 @@ defineProps({
         required: true
     }
 });
+
 </script>
 
 <template>
-    <Head title="Editar entrypoint" />
+    <Head title="Gestionar entrypoints" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento / Entrypoints</h2>
         </template>
         
         <section class="py-12">

@@ -17,7 +17,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Crear experimento" />
+    <Head title="Crear instancia" />
 
     <AuthenticatedLayout>
         <template #header>

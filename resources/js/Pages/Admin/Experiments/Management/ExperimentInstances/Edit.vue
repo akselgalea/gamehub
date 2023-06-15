@@ -20,11 +20,11 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Editar instancias" />
+    <Head title="Gestionar instancias" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento / Instancias</h2>
         </template>
         
         <section class="py-12">

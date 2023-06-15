@@ -1,5 +1,4 @@
 <script setup>
-import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -7,6 +6,7 @@ import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import {noti} from '@/helpers/notifications';
 
 const props = defineProps({
     experiment_id: {
@@ -23,10 +23,18 @@ const props = defineProps({
     }
 });
 
+const types = {
+    'int': 'Numero entero',
+    'float': 'Numero decimal',
+    'string': 'Cadena de texto',
+    'boolean': 'Valor de verdad'
+}
+
 const form = useForm({
    parameters: props.parameters,
 });
 
+// Funciones //
 const sendForm = () => {
     form.patch(
         route('game_instances.params.update', {id: props.experiment_id, slug: props.slug}), {
@@ -36,21 +44,15 @@ const sendForm = () => {
     );
 }
 
-const types = {
-    'int': 'Numero entero',
-    'float': 'Numero decimal',
-    'string': 'Cadena de texto',
-    'boolean': 'Valor de verdad'
-}
 </script>
 
 
 <template>
-    <Head title="Instancias de juego" />
+    <Head title="Editar parametros de instancia" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento / Instancia</h2>
         </template>
         
         <div class="py-12">

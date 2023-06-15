@@ -13,11 +13,11 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Crear experimento" />
+    <Head title="Crear entrypoint" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">EntryPoints</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento / Entrypoint</h2>
         </template>
         
         <div class="py-12">

@@ -5,8 +5,6 @@ import TextArea from '@/Components/TextArea.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import Checkbox from '@/Components/Checkbox.vue';
-import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 
 const user = usePage().props.auth.user;

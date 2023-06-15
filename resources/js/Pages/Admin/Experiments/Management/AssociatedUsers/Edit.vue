@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import {noti} from '@/helpers/notifications';
@@ -52,7 +52,7 @@ const disasocciateForm = (user_id) => {
 </script>
 
 <template>
-    <Head title="Usuarios del experiment" />
+    <Head title="Usuarios del experimento" />
 
     <AuthenticatedLayout>
         <template #header>
