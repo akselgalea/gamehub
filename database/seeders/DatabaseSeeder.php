@@ -60,19 +60,23 @@ class DatabaseSeeder extends Seeder
         /*---------- Poblado de categorias --------- */
 
         DB::table('categories')->insert([
-            'name' => 'matematicas'
+            'name' => 'matematicas',
+            'slug' => 'matematicas'
         ]);
 
         DB::table('categories')->insert([
-            'name' => 'lenguaje'
+            'name' => 'lenguaje',
+            'slug' => 'lenguaje'
         ]);
 
         DB::table('categories')->insert([
-            'name' => 'ingles'
+            'name' => 'ingles',
+            'slug' => 'ingles'
         ]);
 
         DB::table('categories')->insert([
-            'name' => 'otros'
+            'name' => 'otros',
+            'slug' => 'otros'
         ]);
 
     }

@@ -46,9 +46,9 @@ const types = {
                     </thead>
                     <tbody>
                         <tr v-for="(param, index) in parameters" :key="index" class="border dark:text-gray-200">
-                            <td class="px-3 text-justify">{{ param.name }}</td>
-                            <td class="px-3 text-justify">{{ types[param.type] }}</td>
-                            <td class="px-3 text-justify">{{ param.description }}</td>
+                            <td class="px-3 text-center">{{ param.name }}</td>
+                            <td class="px-3 text-center">{{ types[param.type] }}</td>
+                            <td class="px-3 text-center">{{ param.description }}</td>
                             <td class="px-3">
                                 <div class="flex gap-1 h-full justify-center items-center">
                                     <EditParamForm :param="param" :game-slug="game.slug" :key="param.name" />

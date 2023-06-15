@@ -18,10 +18,7 @@ const props = defineProps({
         required: true
     },
     entrypoint: {
-        token: '',
-        name: '',
-        description: '',
-        obfuscated: null,
+        type: Object,
         required: true
     }
 });
@@ -30,7 +27,7 @@ const form = useForm({
     token: props.entrypoint.token,
     name: props.entrypoint.name,
     description: props.entrypoint.description,
-    obfuscated: props.entrypoint.obfuscated
+    obfuscated: props.entrypoint.obfuscated,
 });
 
 // Funciones //
@@ -114,6 +111,17 @@ const sendForm = () => {
                                 </select>
 
                                 <InputError class="mt-2" :message="form.errors.obfuscated" />
+                            </div>
+
+                            <div v-if="entrypoint.slug" class="mt-5">
+                                <InputLabel for="entrylink" value="URL:"/>
+                                <TextInput 
+                                    id="name"
+                                    type="url"
+                                    class="mt-1 block w-full"
+                                    :value="route('entrypoints.register', {token: entrypoint.slug})"
+                                    disabled
+                                    />
                             </div>
 
                             <div class="flex items-center gap-4 mt-10">

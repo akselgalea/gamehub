@@ -62,19 +62,23 @@ const closeModal = () => {
                                             </Link>
                                             
                                             <Modal :show="showingModal" @close="closeModal">
-                                                <div class="py-12">
+                                                <div class="py-6">
+                                                    
                                                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                                                         <div class="p-4 sm:p-8 dark:bg-gray-800 shadow sm:rounded-lg">
-                                                            <section class="mt-5">
+                                                            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">Informacion General</h2>
+                                                            <div class="mt-5">
                                                                     <div class="first-letter:uppercase text-grey-900 dark:text-white">Experimento: {{ experiment.name }}</div>
                                                                     <div class="first-letter:uppercase text-grey-900 dark:text-white">Estado: {{ experiment.status }}</div>
                                                                     <div class="first-letter:uppercase text-grey-900 dark:text-white">Descripcion: {{ experiment.description }}</div>
                                                                     <div class="first-letter:uppercase text-grey-900 dark:text-white">Tiempo limite: {{ experiment.time_limit }} minutos</div>
-                                                                    <div class="flex gap-2">
-                                                                        <SecondaryButton @click="closeModal"> Cerrar </SecondaryButton>
-                                                                    </div>
-                                                            </section>
+                                                                    
+                                                                </div>
                                                         </div>
+                                                    </div>
+
+                                                    <div class="mt-5 flex justify-center">
+                                                        <SecondaryButton @click="closeModal"> Cerrar </SecondaryButton>
                                                     </div>
                                                 </div>
                                             </Modal>
