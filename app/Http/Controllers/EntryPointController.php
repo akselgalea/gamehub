@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Experiments\EntryPoints\{EntryPointCreateRequest, EntryPointUpdateRequest, EntryPointDeleteRequest};
+use App\Services\{ExperimentService};
 use App\Models\EntryPoint;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,14 +11,21 @@ use Inertia\Inertia;
 class EntryPointController extends Controller
 {
     private $entrypoint;
+    private $exp;
     
-    public function __construct(EntryPoint $entrypoint) {
+    public function __construct(EntryPoint $entrypoint, ExperimentService $e) {
         $this->entrypoint = $entrypoint;
+        $this->exp = $e;
     }
 
     public function index($id)
     {
-        return Inertia::render('Admin/Experiments/Management/Entrypoints/Index', ['entrypoints' => EntryPoint::all()->toArray(), 'experiment_id' => $id]);
+        $experiment = $this->exp->get($id);
+        if(!$experiment)
+            return redirect()->back()->with('notication', $this->exp->notFoundText());
+
+        $entrypoints = $experiment->entrypoints()->get();
+        return Inertia::render('Admin/Experiments/Management/Entrypoints/Index', ['entrypoints' => $entrypoints, 'experiment_id' => $id]);
     }
 
     public function create($id)
@@ -32,7 +40,13 @@ class EntryPointController extends Controller
 
     public function show($id)
     {
-        return Inertia::render('Admin/Experiments/Management/Entrypoints/Edit', ['entrypoints' => EntryPoint::all()->toArray(), 'experiment_id' => $id]);
+        $experiment = $this->exp->get($id);
+        if(!$experiment)
+            return redirect()->back()->with('notication', $this->exp->notFoundText());
+        
+        $entrypoints = $experiment->entrypoints()->get();
+
+        return Inertia::render('Admin/Experiments/Management/Entrypoints/Edit', ['entrypoints' => $entrypoints, 'experiment_id' => $id]);
     }
 
     public function edit($id)
