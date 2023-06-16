@@ -316,10 +316,10 @@ class GameInstanceService
                 'name' => $user,                    # Nombre de usuario
                 'fullname' => $user,                # Nombre completo del usuario
                 'username' => $user,                # Nombre de usuario
-                'max_score' => $max_score,          # Puntaje máximo (record) de juego
+                'highScore' => 100, #$max_score,          # Puntaje máximo (record) de juego
 
                 # Parámetros de gamificación
-                'currency' => 0, #$currencyAmount,  # Cantidad de monedas actual
+                'currency' => 10, #$currencyAmount,  # Cantidad de monedas actual
                 'badges' => [],                     # Arreglo de medallas de usuario
 
                 # Parámetros de tiempo
@@ -452,12 +452,16 @@ class GameInstanceService
         $token = $request->input('t');
 
         $instance = $this->get($instanceSlug);
+        
+        if(empty($instance))
+            return $this->notFoundText();
+
         $game = $instance->game;
 
         if(empty($game)) 
             return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
         
-        $filename = $game->extra['filename'];
+        $filename = json_decode($game->extra)->filename;
         
         $location = "/game-instances/$instanceSlug/$game->slug/$filename.js";
         

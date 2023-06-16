@@ -53,7 +53,6 @@ const closeModal = () => {
     <DangerButton @click="confirmEntrypointDeletion" title="Eliminar"><i class="fas fa-trash"></i></DangerButton>
 
     <Modal :show="confirmingEntrypointDeletion" @close="closeModal">
-        <Head title="Eliminar entrypoint" />
         <div class="p-6">
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                 ¿Estás seguro de que quieres eliminar este entrypoint?

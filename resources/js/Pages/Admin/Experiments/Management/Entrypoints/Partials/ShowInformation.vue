@@ -1,13 +1,10 @@
 <script setup>
-
+import { copyText } from '@/Helpers/clipboard';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import Modal from '@/Components/Modal.vue';
 import { ref } from 'vue';
-import { Head } from '@inertiajs/vue3';
-
 const props = defineProps({
     entrypoint: {
         type: Object
@@ -25,6 +22,7 @@ const closeModal = () => {
     showingModal.value = false;
 };
 
+const entryLink = route('entrypoints.register', props.entrypoint.link);
 </script>
 
 <template>
@@ -32,7 +30,6 @@ const closeModal = () => {
         <PrimaryButton @click="showModal()" title="Ver datos"><i class="far fa-eye"></i></PrimaryButton>
 
         <Modal :show="showingModal" @close="closeModal">
-            <Head title="Datos entrypoint" />
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
             <header>
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Información del entrypoint</h2>
@@ -46,12 +43,11 @@ const closeModal = () => {
                 <div>
                     <InputLabel for="token" value="Token" />
 
-                    <TextInput
+                    <input
                         id="token"
                         type="text"
-                        class="mt-1 block w-full"
-                        v-model="entrypoint.token"
-                        required
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        :value="entrypoint.token"
                         disabled
                     />
 
@@ -60,60 +56,57 @@ const closeModal = () => {
                 <div>
                     <InputLabel for="name" value="Nombre" />
 
-                    <TextInput
+                    <input
                         id="name"
                         type="text"
-                        class="mt-1 block w-full"
-                        v-model="entrypoint.name"
-                        required
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        :value="entrypoint.name"
                         disabled
                     />
 
                 </div>
 
                 <div>
-                    <InputLabel for="description" value="Descripcion" />
+                    <InputLabel for="description" value="Descripción" />
 
-                    <TextInput
+                    <input
                         id="description"
                         type="text"
-                        class="mt-1 block w-full"
-                        v-model="entrypoint.description"
-                        required
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        :value="entrypoint.description"
                         disabled
                     />
 
                 </div>
 
-                <div v-if="entrypoint.obfuscated == 1">
+                <div>
                     <InputLabel for="obfuscated" value="Obfuscado" />
 
-                    <TextInput
+                    <input
                         id="obfuscated"
                         type="text"
-                        class="mt-1 block w-full"
-                        value="si"
-                        required
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        :value="entrypoint.obfuscated ? 'Sí' : 'No'"
                         disabled
                     />
 
                 </div>
 
-                <div v-else>
-                    <InputLabel for="obfuscated" value="Obfuscado" />
+                <div>
+                    <InputLabel for="link" value="URL" />
 
-                    <TextInput
-                        id="obfuscated"
+                    <input
+                        id="link"
                         type="text"
-                        class="mt-1 block w-full"
-                        value="no"
-                        required
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        :value="entryLink"
                         disabled
                     />
 
                 </div>
 
-                <div class="flex items-center gap-4">
+                <div class="flex justify-center items-center gap-4">
+                    <PrimaryButton @click="copyText(entryLink)">Copiar URL</PrimaryButton>
                     <SecondaryButton @click="closeModal">Cerrar</SecondaryButton>
                 </div>
             </div>
