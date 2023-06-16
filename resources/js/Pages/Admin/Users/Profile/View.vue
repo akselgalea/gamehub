@@ -16,12 +16,15 @@ const props = defineProps({
     },
     games: {
         type: Array
+    },
+    categoryes: {
+        type: Array
     }
 })
 </script>
 
 <template>
-    <Head title="Experimentos" />
+    <Head title="Profile" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -37,7 +40,7 @@ const props = defineProps({
                     </div>
 
                     <div class="col-span-4 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                        <GamesUser :user_id="user.id" :games="games"/>
+                        <GamesUser :user_id="user.id" :games="games" :experiments = "experiments" :categoryes = "categoryes"/>
                     </div>
 
                     <div class="col-span-3 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">

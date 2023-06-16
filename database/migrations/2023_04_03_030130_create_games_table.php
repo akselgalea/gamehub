@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('file');
             $table->boolean('gm2game')->default(false);
             $table->bigInteger('category_id')->unsigned();

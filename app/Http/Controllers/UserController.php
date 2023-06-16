@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Http\Requests\Users\{UserCreateRequest, UserUpdateRequest};
 use App\Http\Requests\Uploads\UploadUsersRequest;
-use App\Models\{User, Student};
+use App\Models\{User, Student, Category};
 use Auth;
 use Inertia\Inertia;
 
@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function userProfile($id) {
         $user = Student::find($id);
-        return Inertia::render('Admin/Users/Profile/View', ['user' => $user, 'experiments' => $user->experiments, 'games' => $user->getGamesICanPlay()]);
+        return Inertia::render('Admin/Users/Profile/View', ['user' => $user, 'experiments' => $user->experiments, 'games' => $user->getGamesICanPlay(), 'categoryes' => Category::all()->toArray()]);
     }
 
     public function edit($id) {
