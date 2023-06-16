@@ -127,10 +127,6 @@ class GameService
             return ['status' => 500, 'message' => $e->getMessage()];
         }
     }
-
-    public function notFoundText() {
-        return ['status' => 404, 'message' => 'Juego no encontrado'];
-    }
     
     public function play($slug) {
         $game = $this->get($slug);
@@ -174,5 +170,9 @@ class GameService
         $response->header("Content-Type", $type);
 
         return $response;
+    }
+
+    public function notFoundText() {
+        return ['status' => 404, 'message' => 'Juego no encontrado'];
     }
 }

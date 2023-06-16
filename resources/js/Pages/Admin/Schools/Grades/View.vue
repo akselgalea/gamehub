@@ -52,10 +52,12 @@ const props = defineProps({
                                     <td class="text-center">{{student.name}}</td>
                                     <td>
                                         <div class="flex justify-center gap-1">
-                                            <ShowProfileInformation :user="student"/>
+                                            <ShowProfileInformation :user="student" :school="school.name" :grade="grade.name" /> 
+
                                             <Link :href="route('user-profile.index', {id: student.id})">
                                                 <PrimaryButton title="Ver Perfil"><i class="fas fa-user-alt"></i></PrimaryButton>
                                             </Link>
+                                            
                                             <AdminUserEdit :user="student" :key="index" />
                                         </div>
                                     </td>

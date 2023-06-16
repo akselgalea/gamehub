@@ -19,7 +19,7 @@ class UserController extends Controller
     }
 
     public function indexUsersPanel() {
-        return Inertia::render('Admin/Users/Index', ['users' => (User::all()->except(Auth::id()))->toArray()]); //obtiene todos los usuarios registrados en un arreglo, excepto el usuario logueado 
+        return Inertia::render('Admin/Users/Index', ['users' => $this->userService->allButMe()]); //obtiene todos los usuarios registrados en un arreglo, excepto el usuario logueado 
     }
 
     public function create() {

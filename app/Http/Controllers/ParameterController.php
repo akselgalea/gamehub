@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Games\Parameters\{ParameterCreateRequest, ParameterUpdateRequest, ParameterDeleteRequest};
-use App\Models\Parameter;
+use App\Services\ParameterService;
 class ParameterController extends Controller
 {
     private $param;
 
-    public function __construct(Parameter $param) {
+    public function __construct(ParameterService $param) {
         $this->param = $param;
     }
 
@@ -18,7 +18,7 @@ class ParameterController extends Controller
     }
 
     public function update($slug, $id, ParameterUpdateRequest $request) {
-        $res = $this->param->findOrFail($id)->edit($request);
+        $res = $this->param->update($request);
         return redirect()->route('games.edit', $slug)->with('notification', $res);
     }
 

@@ -30,6 +30,10 @@ class UserService
         return ['user' => $user];
     }
 
+    function allButMe() {
+        return User::notUser(Auth()->user()->id)->get();
+    }
+
     public function store($req) {
 
         $validated = $req->validated();

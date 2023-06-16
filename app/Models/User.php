@@ -13,6 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Http\Requests\Users\{UserCreateRequest};
 use Parental\HasChildren;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -97,5 +98,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isStudent() {
         return $this->type == 'student';
+    }
+
+    public function scopeNotUser(Builder $query, $id): void {
+        $query->where('id', '<>', $id);
     }
 }

@@ -34,12 +34,15 @@ const updateGrade = () => {
 
 const getStudentSchoolInfo = () => {
     axios.get(route('api.students.school_info', {id: studentId})).then(({data}) => {
-        const {school, grade} = data;
+        const {grade} = data;
+        
+        if(grade) {
+            studentSchool.value = grade.school;
+            studentGrade.value = grade;
+            selectedSchool.value = grade.school.id;
+            form.gradeId = grade.id;
+        }
 
-        studentSchool.value = school;
-        studentGrade.value = grade;
-        selectedSchool.value = school.id;
-        form.gradeId = grade.id;
     }, error => {
         console.log(error);
     })
@@ -50,19 +53,20 @@ const setSchools = () => {
 
     axios.get(route('api.schools.index')).then(({data}) => {
         schools.value = data;
-
         if (studentSchool.value) {
-           let s = schools.value.find(item => item.id == studentSchool.value.id);
-           grades.value = s.grades;
+            let s = schools.value.find(item => item.id == studentSchool.value.id);
+            grades.value = s ? s.grades : null;
         }
     }, error => {
         console.log(error);
     })
 }
 
-const setGrades = (e) => {
-    const index = e.target.value - 1;
-    grades.value = schools.value[index].grades;
+const setGrades = () => {
+    const school = schools.value.find(item => item.id == selectedSchool.value);
+    
+    grades.value = school.grades ?? [];
+    
     form.gradeId = null;
 }
 
@@ -89,7 +93,7 @@ onBeforeMount(() => {
                     id="school"
                     v-model="selectedSchool"
                     class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                    @change="setGrades($event)"   
+                    @change="setGrades()"   
                 >
                     <option :value="!selectedSchool ? selectedSchool : ''" hidden :selected="!selectedSchool">Elige una opción</option>
                     <option v-for="s in schools" :value="s.id" :key="s.id">{{ s.name }}</option>

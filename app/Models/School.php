@@ -46,41 +46,7 @@ class School extends Model
         return $this->hasManyThrough(Student::class, Grade::class);
     }
 
-    public function add($req)
-    {
-        $validated = $req->validated();
-
-        try {
-            School::create($validated);
-            return ['status' => 200, 'message' => 'Colegio añadido con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function edit($id, $req)
-    {
-        $validated = $req->validated();
-
-        try {
-            School::findOrFail($id)->update($validated);
-            return ['status' => 200, 'message' => 'Colegio añadido con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
-    }
-
-    public function erase($req) {
-        try {
-            $school = School::findOrFail($req->id);
-
-            if($req->name == $school->name)
-                $school->delete();
-            else throw new Exception('El nombre no coincide'); 
-
-            return ['status' => 200, 'message' => 'Colegio eliminado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
+    public function findBySlug($slug) {
+        return School::firstWhere('slug', $slug);
     }
 }

@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Students\{StudentUpdateGradeRequest};
 use Illuminate\Http\Request;
-use App\Models\Student;
+use App\Services\StudentService;
 
 class StudentController extends Controller
 {
     private $student;
 
-    public function __construct(Student $student) {
+    public function __construct(StudentService $student) {
         $this->student = $student;
     }
 

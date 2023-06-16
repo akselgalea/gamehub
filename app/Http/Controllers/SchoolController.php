@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Schools\{SchoolCreateRequest, SchoolUpdateRequest, SchoolDeleteRequest};
 use Illuminate\Http\Request;
-use App\Models\School;
+use App\Services\SchoolService;
 use Inertia\Inertia;
 
 class SchoolController extends Controller
 {
     private $school;
 
-    public function __construct(School $school) {
+    public function __construct(SchoolService $school) {
         $this->school = $school;
     }
 
@@ -20,15 +20,11 @@ class SchoolController extends Controller
     }
 
     public function getAll() {
-        return $this->school->with('grades')->get();
+        return $this->school->getWithGrades();
     }
 
     public function grades($id) {
-        return $this->school->find($id)->grades();
-    }
-
-    public function get($id) {
-        return null;
+        return $this->school->get($id)->grades() ?? [];
     }
 
     public function create() {
@@ -36,12 +32,13 @@ class SchoolController extends Controller
     }
 
     public function store(SchoolCreateRequest $request) {
-        $res = $this->school->add($request);
+        $res = $this->school->store($request);
         return redirect()->back()->with('notification', $res);
     }
 
     public function edit($slug) {
         $school = $this->school->findBySlug($slug);
+
         if(empty($school))
             return redirect()->back()->with('notification', ['status' => 404, 'message' => 'No se encontró el colegio']);
 
@@ -50,12 +47,12 @@ class SchoolController extends Controller
     }
 
     public function update($id, SchoolUpdateRequest $request) {
-        $res = $this->school->edit($id, $request);
+        $res = $this->school->update($id, $request);
         return redirect()->route('schools.edit', $id)->with('notification', $res);
     }
 
     public function destroy(SchoolDeleteRequest $request) {
-        $res = $this->school->erase($request);
+        $res = $this->school->destroy($request);
         return redirect()->route('schools.index')->with('notification', $res);
     }
 }

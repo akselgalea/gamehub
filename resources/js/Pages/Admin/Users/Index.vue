@@ -63,10 +63,11 @@ const props = defineProps({
                         </template>
                     </div>
  
-                    <div class="mt-5 flex items-center justify-center">
+                    <div class="mt-5 flex items-center justify-center gap-2">
                         <Link :href="route('user.create')">
                             <PrimaryButton>Crear nuevo usuario</PrimaryButton>
                         </Link>
+
                         <UsersImport/>
                     </div>
 

@@ -3,23 +3,41 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm, usePage } from '@inertiajs/vue3';
-import { onBeforeMount, ref } from 'vue';
 import Modal from '@/Components/Modal.vue';
+import { ref } from 'vue';
+import { onMounted } from 'vue';
 
 const axios = window.axios;
 
 const props = defineProps({
     user: {
         type: Object
-    }
+    },
 });
 
-const selectedSchool = ref(null);
-const studentSchool = ref(null);
-const studentGrade = ref(null);
-const schools = ref(null);
-const grades = ref(null);
+const types = {
+    student: 'Estudiante',
+    admin: 'Administrador'
+}
+
+const studentSchool = ref('');
+const studentGrade = ref('');
+const tipo = types[props.user.type];
+
+onMounted(() => {
+    if(props.user.grade_id)
+        axios.get(route('api.students.school_info', {id: props.user.id})).then(({data}) => {
+            const {grade} = data;
+
+            if(grade) {
+                studentSchool.value = grade.school;
+                studentGrade.value = grade;
+            }
+
+        }, error => {
+            console.log(error);
+        })
+});
 
 const showingModal = ref(null);
 
@@ -31,28 +49,11 @@ const closeModal = () => {
     showingModal.value = false;
 };
 
-const getStudentSchoolInfo = () => {
-    if(props.user.grade_id != null) {
-        axios.get(route('api.students.school_info', {id: props.user.id})).then(({data}) => {
-            const {school, grade} = data;
-
-            studentSchool.value = school;
-            studentGrade.value = grade;
-            selectedSchool.value = school.id;
-            showModal();
-        }, error => {
-            console.log(error);
-        })
-    } else {
-        showModal();
-    }
-}
-
 </script>
 
 <template>
     <section>
-        <PrimaryButton @click="getStudentSchoolInfo" title="Ver datos"><i class="fas fa-address-card"></i></PrimaryButton>
+        <PrimaryButton @click="showModal" title="Ver datos"><i class="fas fa-address-card"></i></PrimaryButton>
 
         <Modal :show="showingModal" @close="closeModal">
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
@@ -86,7 +87,7 @@ const getStudentSchoolInfo = () => {
                         id="type"
                         type="text"
                         class="mt-1 block w-full"
-                        v-model="user.type"
+                        v-model="tipo"
                         required
                         disabled
                     />
@@ -105,34 +106,34 @@ const getStudentSchoolInfo = () => {
                     />
                 </div>
 
-                <div v-if="studentSchool != null">
-                    <InputLabel for="school" value="Colegio" />
-
-                    <TextInput
-                        id="school"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="studentSchool.name"
-                        required
-                        disabled
-                    />
-                </div>
-
-                <div v-if="studentSchool">
-                    <InputLabel for="grade" value="Curso" />
-
-                    <TextInput
-                        v-if="studentGrade != null"
-                        id="grade"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="studentGrade.name"
-                        required
-                        disabled
-                    />
-                    
-                    <p v-else>Este colegio aun no posee cursos.</p>
-                </div>
+                <template v-if="user.grade_id">
+                    <div>
+                        <InputLabel for="school" value="Colegio" />
+    
+                        <TextInput
+                            id="school"
+                            type="text"
+                            class="mt-1 block w-full"
+                            v-model="studentSchool.name"
+                            required
+                            disabled
+                        />
+                    </div>
+    
+                    <div>
+                        <InputLabel for="grade" value="Curso" />
+    
+                        <TextInput 
+                            id="grade"
+                            type="text"
+                            class="mt-1 block w-full"
+                            v-model="studentGrade.name"
+                            required
+                            disabled
+                        />
+                        
+                    </div>
+                </template>
 
                 <div class="flex items-center gap-4">
                     <SecondaryButton @click="closeModal">Cerrar</SecondaryButton>

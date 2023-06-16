@@ -28,28 +28,8 @@ class Student extends User
         $grade = $this->grade;
 
         if($grade)
-            return $grade->school();
+            return $grade->school;
         
         return null;
-    }
-
-    public function schoolInfo($id) {
-        try {
-            $student = Student::findOrFail($id);
-            return response()->json(['school' => $student->school, 'grade' => $student->grade]);
-        } catch (Exception $e) {
-            return response()->json($e->getMessage(), 500);
-        }
-    }
-
-    public function gradeUpdate($id, $req) {
-        $validated = $req->validated();
-
-        try {
-            Student::findOrFail($id)->grade()->associate($validated['gradeId'])->save();
-            return ['status' => 200, 'message' => 'Curso actualizado con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
     }
 }
