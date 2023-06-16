@@ -51,7 +51,7 @@ class ExperimentController extends Controller
     }
 
     public function generalInformationUpdate($id, ExperimentUpdateRequest $request) {
-        $res = $this->experiment->findOrFail($id)->edit($request);
+        $res = $this->experiment->update($id, $request);
         // return redirect()->route('experiment_information.edit', $id)->with('notification', $res);   // Te redirecciona al formulario ya modificado
         return redirect()->route('experiment.management', $id)->with('notification', $res);  // Te redirecciona al panel de gestion de experimento
     }

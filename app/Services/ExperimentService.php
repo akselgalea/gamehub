@@ -37,11 +37,15 @@ class ExperimentService
     }
 
     // Actualiza la informacion general de un experimento //
-    public function edit($req) {
-        $validated = $req->validated();
-
+    public function update($id, $req) {
+        $experiment = $this->get($id);
+        
+        if(!$experiment)
+            $this->notFoundText();
+  
         try {
-            $this->update($validated);
+            $validated = $req->validated();
+            $experiment->update($validated);
             return ['status' => 200, 'message' => 'Datos del experimento actualizado con éxito!'];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];

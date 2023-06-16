@@ -27,7 +27,7 @@ class Survey extends Model
         'experiment_id'
     ];
 
-    protected $cast = [
+    protected $casts = [
         'body' => 'array',
     ];
 

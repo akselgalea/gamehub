@@ -138,10 +138,10 @@ class GameInstanceService
         $user = Auth::user();
 
         try {
-            // $survey = $this->hasPendingSurvey($experiment);
+            $survey = $this->hasPendingSurvey($experiment);
 
-            // if($survey)
-            //     return $survey;
+            if($survey)
+                return $survey;
 
             $instance = $this->getUserGameInstance($experiment);
 
