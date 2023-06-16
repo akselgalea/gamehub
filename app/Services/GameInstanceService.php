@@ -461,8 +461,7 @@ class GameInstanceService
         if(empty($game)) 
             return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
         
-        $filename = $game->extra['filename'];
-        
+        $filename = json_decode($game->extra)->filename;
         $location = "/game-instances/$instanceSlug/$game->slug/$filename.js";
         
         return ['game' => $game, 'location' => $location];
