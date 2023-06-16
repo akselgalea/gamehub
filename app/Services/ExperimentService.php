@@ -52,6 +52,15 @@ class ExperimentService
         }
     }
 
+    public function delete($req) {
+        try {
+            $experiment = $this->exp->findOrFail($req->id)->delete();
+            return ['status' => 200, 'message' => 'Experimento eliminado con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar el experimento.'];
+        }
+    }
+
     // Permite crear una asociacion entre un usuario y un experimento //
     public function userAssociateExperiment($req) {
 

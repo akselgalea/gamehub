@@ -9,13 +9,18 @@ const props = defineProps({
     user_id: {
         type: Number,
         required: true
+    },
+    categoryes: {
+        type: Array,
+    },
+    experiments: {
+        type: Array,
     }
 })
 
 </script>
 
 <template>
-    <Head title="Entrypoint" />
     <section>
         <header>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Juegos</h2>
@@ -30,18 +35,20 @@ const props = defineProps({
                     <thead class="border">
                         <th>Nombre</th>
                         <th>Descripcion</th>
-                        <th>Instancia</th>
+                        <th>Categoria</th>
+                        <th>Experimento</th>
                     </thead>
                     <tbody>
                         <tr v-for="(game, index) in games" :key="index" class="border">
                             <td class="px-3 text-center">{{ game.name }}</td>
                             <td class="px-3 text-center">{{ game.description }}</td>
-                            <template v-if="game.instance_slug">
-                                <td class="px-3 text-center">{{ game.instance_slug }}</td>
+                            <template v-for="(category, index) in categoryes">
+                                <td v-if="category.id == game.category_id" class="px-3 text-center"> {{ category.name }} </td>
                             </template>
-                            <template v-else>
-                                <td class="px-3 text-center"> NA</td>
+                            <template v-for="(experiment, index) in experiments">
+                                <td v-if="experiment.id == game.experiment_id" class="px-3 text-center">{{ experiment.name }}</td>
                             </template>
+                                <td v-if="!game.experiment_id" class="px-3 text-center"> NA</td>
                         </tr>
                     </tbody>
                 </table>

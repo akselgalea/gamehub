@@ -163,8 +163,8 @@ const cancel = () => {
                         </thead>
                         <tbody>
                             <tr class="border" v-for="(question, index) in surveyBody" :key="index">
-                                <td class="px-3 text-justify">{{ question.question }}</td>
-                                <td class="px-3 text-justify">{{ question.type == 'open' ? 'Pregunta abierta' : 'Opción múltiple' }}</td>
+                                <td class="px-3 text-center">{{ question.question }}</td>
+                                <td class="px-3 text-center">{{ question.type == 'open' ? 'Pregunta abierta' : 'Opción múltiple' }}</td>
                                 <td class="px-3 flex gap-1 justify-center">
                                     <UpdateSurveyQuestion :question="question" @update-question="updateQuestion($event, index)" :key="index"/>
                                     <DangerButton type="button" @click="deleteQuestion(index)"><i class="fas fa-trash-alt"></i></DangerButton>

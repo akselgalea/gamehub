@@ -9,6 +9,8 @@ import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Link } from '@inertiajs/vue3';
 import { Head } from '@inertiajs/vue3';
+import UpdateGamification from './UpdateGamificationForm.vue';
+import EditParam from '@/Pages/Admin/Experiments/Management/ExperimentInstances/Parameters/EditParamForm.vue';
 
 const props = defineProps({
     experiment_id: {
@@ -22,6 +24,9 @@ const props = defineProps({
     game_instance: {
         type: Object,
         required: true
+    },
+    parameters: {
+        type: Object
     }
 });
 
@@ -46,73 +51,74 @@ const sendForm = () => {
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento / Instancia</h2>
         </template>
-        
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                    <section>
-                        <header>
-                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Editar informacion de la instancia de juego</h2>
+            <div class="py-6 col-span-3 row-span-1">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+                    <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                        <section>
+                            <header>
+                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Editar informacion de la instancia de juego</h2>
 
-                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                En este apartado puedes modificar los datos asociados a la instancia de juego.
-                            </p>
-                        </header>
+                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                    En este apartado puedes modificar los datos asociados a la instancia de juego.
+                                </p>
+                            </header>
 
-                        <form @submit.prevent="sendForm()" class="mt-7">
-                            <div>
-                                <InputLabel for="game" value="Juego"/>
+                            <form @submit.prevent="sendForm()" class="mt-7">
+                                <div>
+                                    <InputLabel for="game" value="Juego"/>
 
-                                <select id="game" v-model="form.game_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                                    <option :value="!form.game_id ? form.game_id : ''" hidden :selected="!form.game_id">Elige una opción</option>
-                                    <option v-for="(game, index) in games" :key="index" :value="game.id">{{ game.name }}</option>
-                                </select>
+                                    <select id="game" v-model="form.game_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                        <option :value="!form.game_id ? form.game_id : ''" hidden :selected="!form.game_id">Elige una opción</option>
+                                        <option v-for="(game, index) in games" :key="index" :value="game.id">{{ game.name }}</option>
+                                    </select>
 
-                                <InputError class="mt-2" :message="form.errors.game_id" />
-                            </div>
+                                    <InputError class="mt-2" :message="form.errors.game_id" />
+                                </div>
 
-                            <div class="mt-5">
-                                <InputLabel for="name" value="Nombre"/>
-                                
-                                <TextInput 
-                                    id="name"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                    v-model="form.name"
-                                    required
-                                    autofocus
-                                />
+                                <div class="mt-5">
+                                    <InputLabel for="name" value="Nombre"/>
+                                    
+                                    <TextInput 
+                                        id="name"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.name"
+                                        required
+                                        autofocus
+                                    />
 
-                                <InputError class="mt-2" :message="form.errors.name" />
-                            </div>
+                                    <InputError class="mt-2" :message="form.errors.name" />
+                                </div>
 
-                            <div class="mt-5">
-                                <InputLabel for="description" value="Descripcion"/>
-                                
-                                <TextArea
-                                    id="description"
-                                    class="mt-1 block w-full"
-                                    v-model="form.description"
-                                    rows="4"
-                                />
+                                <div class="mt-5">
+                                    <InputLabel for="description" value="Descripcion"/>
+                                    
+                                    <TextArea
+                                        id="description"
+                                        class="mt-1 block w-full"
+                                        v-model="form.description"
+                                        rows="4"
+                                    />
 
-                                <InputError class="mt-2" :message="form.errors.description" />
-                            </div>
+                                    <InputError class="mt-2" :message="form.errors.description" />
+                                </div>
 
-                            <div class="flex items-center gap-4 mt-10">
+                                <div class="flex items-center gap-1 mt-10">
 
-                                <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
+                                    <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
 
-                                <SecondaryButton type="button" onclick="history.back()">Cancelar</SecondaryButton>
-                                
-                                <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
-                                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
-                                </Transition>
-                            </div>
-                        </form>
-                    </section>
+                                    <SecondaryButton type="button" onclick="history.back()">Cancelar</SecondaryButton>
+                                    
+                                    <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
+                                        <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
+                                    </Transition>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
                 </div>
             </div>
-        </div>
+            <EditParam :experiment_id = "experiment_id" :parameters="parameters" :slug = "game_instance.slug"/>
+            <UpdateGamification class="mt-7" :game_instance = "game_instance" :experiment_id = "experiment_id" />
     </AuthenticatedLayout>
 </template>

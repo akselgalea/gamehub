@@ -35,7 +35,6 @@ onBeforeMount(() => {
 
 </script>
 <template>
-    <Head title="Informacion general del usuario" />
 
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Informacion General</h2>

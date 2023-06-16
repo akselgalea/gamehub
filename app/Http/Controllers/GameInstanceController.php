@@ -50,13 +50,14 @@ class GameInstanceController extends Controller
     public function edit($experimento, $slug)
     {
         $instance = $this->gis->get($slug);
-
+        
         if(!$instance)
             return redirect()->back()->with('notification', $this->gis->notFoundText());
-
+        
+        $req = $this->gis->getParams($instance->slug);
         return Inertia::render(
             'Admin/Experiments/Management/ExperimentInstances/Partials/UpdateGameInstanceForm', 
-            ['game_instance' => $instance, 'games' => $this->gs->getGm2Games(), 'experiment_id' => $experimento]
+            ['game_instance' => $instance, 'games' => $this->gs->getGm2Games(), 'parameters' => $req['parameters'], 'experiment_id' => $experimento]
         );
     }
 
