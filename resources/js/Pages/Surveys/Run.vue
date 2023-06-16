@@ -30,7 +30,7 @@ const answers = body.map((question) => {
 const user = usePage().props.auth.user;
 
 const form = useForm({
-    stats: 'finished',
+    status: 'finished',
     body: answers,
     survey_id: props.survey.id,
     user_id: user.id,
