@@ -20,7 +20,7 @@ class SurveyResponse extends Model
         'survey_id'
     ];
 
-    protected $cast = [
+    protected $casts = [
         'body' => 'array',
     ];
 

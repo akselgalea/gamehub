@@ -18,7 +18,8 @@ const props = defineProps({
     }
 });
 
-const surveyBody = ref(JSON.parse(props.survey.body));
+const body = JSON.parse(props.survey.body);
+const surveyBody = ref(body);
 
 const form = useForm({
     name: props.survey.name,
