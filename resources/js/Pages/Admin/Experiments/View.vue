@@ -78,9 +78,6 @@ const props = defineProps({
                     <div class="col-span-3 row-span-1 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                         <EntryPoints :entrypoints = "entrypoints" :experiment_id = "experiment.id"/>
                     </div>
-
-                    
-
                 </div>
             </div>
         </div>

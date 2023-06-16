@@ -7,6 +7,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import Modal from '@/Components/Modal.vue';
 import { ref } from 'vue';
+import DeleteExperimentForm from './Partials/DeleteExperimentForm.vue';
 
 const props = defineProps({
     experiments: {
@@ -52,7 +53,7 @@ const showAll = ref(false);
                     </div>
                     
                     <div class="w-full mt-8 flex justify-center align-middle">
-                        <p v-if="experiments.length == 0" class="text-sm text-gray-600 dark:text-gray-400 flex items-center justify-center">No se encontraron entrypoints asociados.</p>
+                        <p v-if="experiments.length == 0" class="text-sm text-gray-600 dark:text-gray-400 flex items-center justify-center">No se encontraron experimentos.</p>
                         <template v-else>
                             <table class="rounded-sm shadow table-fixed w-full border-collapse">
                                 <thead class="border">
@@ -69,9 +70,14 @@ const showAll = ref(false);
                                             <td class="px-3 text-center">{{ experiment.status }}</td>
                                             <td class="px-3 flex gap-1 justify-center">
                                                 <PrimaryButton @click="showModal" title="Ver detalles"><i class="far fa-eye"></i></PrimaryButton>
+                                                <Link :href="route('experiment_information.edit', {id: experiment.id})">
+                                                    <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
+                                                </Link>
                                                 <Link :href="route('experiment.management', {id: experiment.id})">
                                                     <PrimaryButton title="Gestionar"><i class="fas fa-cog"></i></PrimaryButton>
                                                 </Link>
+
+                                                <DeleteExperimentForm :experiment_id="experiment.id" :experiment_name="experiment.name" />
                                                 
                                                 <Modal :show="showingModal" @close="closeModal">
                                                     <div class="py-6">

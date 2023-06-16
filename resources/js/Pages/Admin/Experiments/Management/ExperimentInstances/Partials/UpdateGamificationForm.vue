@@ -35,13 +35,6 @@ const sendForm = () => {
 
 
 <template>
-    <AuthenticatedLayout>
-        <Head title="Modificar gamificacion de instancia" />
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento / Instancia</h2>
-        </template>
-        
-        <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                     <section>
@@ -116,7 +109,7 @@ const sendForm = () => {
                                 <InputError class="mt-2" :message="form.errors.enable_leaderboard" />
                             </div>
 
-                            <div class="flex items-center gap-4 mt-10">
+                            <div class="flex items-center gap-1 mt-10">
 
                                 <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
 
@@ -130,6 +123,4 @@ const sendForm = () => {
                     </section>
                 </div>
             </div>
-        </div>
-    </AuthenticatedLayout>
 </template>

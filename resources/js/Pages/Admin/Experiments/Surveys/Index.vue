@@ -54,9 +54,9 @@ const types = {
                     </thead>
                     <tbody>
                         <tr class="border" v-for="(survey, index) in surveys" :key="index">
-                            <td class="px-3 text-justify">{{ survey.name }}</td>
-                            <td class="px-3 text-justify">{{ types[survey.type] }}</td>
-                            <td class="px-3 text-justify">{{ survey.description }}</td>
+                            <td class="px-3 text-center">{{ survey.name }}</td>
+                            <td class="px-3 text-center">{{ types[survey.type] }}</td>
+                            <td class="px-3 text-center">{{ survey.description }}</td>
                             <td class="px-3 flex gap-1 justify-center">
                                 <Link :href="route('surveys.edit', {id: experimentId, survey: survey.id})"><PrimaryButton><i class="fas fa-edit"></i></PrimaryButton></Link>
                             </td>

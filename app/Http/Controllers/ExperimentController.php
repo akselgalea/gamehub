@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Experiments\{ExperimentCreateRequest, ExperimentUpdateRequest};
+use App\Http\Requests\Experiments\{ExperimentCreateRequest, ExperimentUpdateRequest, ExperimentDeleteRequest};
 use App\Http\Requests\Experiments\Users\{UserAssociateRequest, UserDisassociateRequest};
 use App\Models\{Experiment, User, Game, Student};
 use App\Services\ExperimentService;
@@ -30,7 +30,7 @@ class ExperimentController extends Controller
 
     public function store(ExperimentCreateRequest $request) {
         $res = $this->experiment->store($request);
-        return redirect()->route('experiments.create')->with('notification', $res);
+        return redirect()->back()->with('notification', $res);
     }
 
     // Panel para gestionar un experimento
@@ -52,8 +52,8 @@ class ExperimentController extends Controller
 
     public function generalInformationUpdate($id, ExperimentUpdateRequest $request) {
         $res = $this->experiment->update($id, $request);
-        // return redirect()->route('experiment_information.edit', $id)->with('notification', $res);   // Te redirecciona al formulario ya modificado
-        return redirect()->route('experiment.management', $id)->with('notification', $res);  // Te redirecciona al panel de gestion de experimento
+        return redirect()->back()->with('notification', $res);   // Te redirecciona al formulario ya modificado
+        //return redirect()->route('experiment.management', $id)->with('notification', $res);  // Te redirecciona al panel de gestion de experimento
     }
 
     // Panel referente a la administracion de usuarios asociados a un experimento //
@@ -93,8 +93,9 @@ class ExperimentController extends Controller
         //
     }
 
-    public function destroy(Experiment $experiment)
+    public function destroy(ExperimentDeleteRequest $request)
     {
-        //
+        $res = $this->experiment->delete($request);
+        return redirect()->back()->with('notification', $res);
     }
 }

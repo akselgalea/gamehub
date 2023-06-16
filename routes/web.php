@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}', [ExperimentController::class, 'experimentManagement'])->name('experiment.management');
             Route::get('{id}/edit', [ExperimentController::class, 'generalInformationEdit'])->name('experiment_information.edit');
             Route::patch('{id}/update', [ExperimentController::class, 'generalInformationUpdate'])->name('experiment_information.update');
+            Route::delete('/{id}', [ExperimentController::class, 'destroy'])->name('experiment.destroy');
             
             Route::prefix('{id}/surveys')->group(function () {
                 // CRUD
