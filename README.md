@@ -1,66 +1,80 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## GameHub
+[](./public/assets/logo.svg)
+## Guía de instalación de GameHub --Levantamiento de aplicación en entorno local.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Prerrequisitos
 
-## About Laravel
+- **[PHP 8.1 o mayor](https://windows.php.net/download#php-8.2)** para descargar [haz click aquí](https://windows.php.net/downloads/releases/php-8.2.7-Win32-vs16-x64.zip)
+- **[MySQL](https://mariadb.org/)** para el motor de base de datos, en este caso MariaDB. Para descargar [haz click aquí](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.0.2&os=windows&cpu=x86_64&pkg=msi&m=insacom)
+- **[Composer](https://getcomposer.org/download/)** para instalar las librerías de PHP. Para descargar [haz click aquí](https://getcomposer.org/Composer-Setup.exe)
+- **[Nodejs NPM](https://nodejs.org/en/download)** para instalar las librerías de JavaScript. Para descargar [haz click aquí](https://nodejs.org/dist/v18.16.0/node-v18.16.0-x64.msi)
+- **[Git](https://git-scm.com/download/win)** para instalar las librerías de JavaScript. Para descargar [haz click aquí](https://nodejs.org/dist/v18.16.0/node-v18.16.0-x64.msi)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Para usar PHP desde la CMD tendremos que seguir los siguientes pasos:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Descomprimir la carpeta .zip de PHP en la ruta C:/Program Files/
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Crear una variable del de entorno del sistema
+    Para esto vamos a proceder a ir a la búsqueda en windows y buscar y acceder a *editar las variables de entorno del sistema* -> *variables de entorno* -> en el cuadro de abajo doble Click en la variable Path -> examinar -> seleccionamos la carpeta descomprimida de PHP
+    Aceptamos y cerramos.
 
-## Learning Laravel
+    Para comprobar su correcto funcionamiento abre una terminal y ejecuta el comando php --version
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+    Para que no haya problema con las extensiones de php pueden copiar este archivo [php.ini] y sobreescribir el suyo en.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+    Para que se refresquen los cambios deben ejecutar el comando php --ini
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+## Pasos a seguir post instalación de prerequisitos
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Primero clonamos el repositorio en nuestro dispositivo con el siguiente comando -> git clone https://github.com/akselgalea/gamehub.git
 
-### Premium Partners
+- composer install
+- npm install
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Generamos el archivo de [variables de entorno (.env)](./docs/.env.example) para conectar nuestra base de datos y nuestro mailer.
 
-## Contributing
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tu_basededatos
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_contraseña
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Cuando terminemos de definir nuestras variables ejecutamos el comando php artisan key:generate
 
-## Code of Conduct
+Luego corremos las migraciones (rellenamos la base de datos con las tablas y datos)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+php artisan migrate:fresh --seed
 
-## Security Vulnerabilities
+Y listo! Ya podemos inicar nuestra plataforma.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Para lanzar la plataforma en el entorno local lanza los siguientes comandos en 2 pestañas diferentes de la terminal o CMD
 
-## License
+php artisan serve
+npm run dev
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Eso es todo! Ahora puedes acceder a la plataforma mediante la siguiente URL [127.0.0.1:8000](127.0.0.1:8000)
+
+Para dejar de hostear la página puedes usar CTRL + C o simplemente cerrar la terminal.
+
+Al correr las migraciones se generan los siguientes usuarios de prueba:
+
+    Usuario administrador:
+        email: admin@pucv.cl
+        password: password
+
+    Usuario alumno:
+        email: e1@pucv.cl
+        password: password
+
+        email: e2@pucv.cl
+        password: password
+
+        email: e3@pucv.cl
+        password: password
+
+También dejaremos un [archivo .sql](./docs/gamehub.sql) para rellenar la base de datos con datos de juegos para que prueben todas las funcionalidades.
+(Para que estos estén en la plataforma deben descargar el .zip subido al aula virtual, ya que los juegos no se encuentran alojados en github)
+
+Para acceder a todas las funcionalidades del sistema recomendamos el uso del usuario administrador.
