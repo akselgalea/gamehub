@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { bgClouds, logo, icon } from '@/Helpers/assets';
+import { ref, watch, onMounted } from 'vue';
 
 defineProps({
     canLogin: {
@@ -9,6 +10,22 @@ defineProps({
     canRegister: {
         type: Boolean,
     },
+});
+
+const isPageVisible = ref(true);
+
+onMounted(() => {
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+            isPageVisible.value = true;
+        } else {
+            isPageVisible.value = false;
+        }
+    });
+
+    window.addEventListener('focus', function() {
+        isPageVisible.value = true;
+    }); 
 });
 </script>
 
@@ -44,7 +61,7 @@ defineProps({
         </div>
 
         <div class="w-10/12 mx-auto my-auto p-6 lg:p-8">
-            <img class="logo w-[0px] slide" :src="logo" />
+            <img ref="logoAnimado" :class="[{slide: isPageVisible}, 'logo w-[0px]'] " :src="logo" />
         </div>
     </div>
 </template>

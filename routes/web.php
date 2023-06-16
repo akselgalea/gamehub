@@ -122,9 +122,9 @@ Route::middleware('auth')->group(function () {
     
     Route::get('games/{slug}/play', [GameController::class, 'play'])->name('games.play');
     Route::get('/games', [GameController::class, 'myGames'])->name('games.my_games');
-    Route::get('/games/all', [GameController::class, 'index'])->name('games.index');
     
     Route::prefix('games')->middleware('role:admin')->group(function () {
+        Route::get('/all', [GameController::class, 'index'])->name('games.index');
         Route::get('/new', [GameController::class, 'create'])->name('games.create');
         Route::post('/new', [GameController::class, 'store'])->name('games.store');
         Route::get('/{slug}', [GameController::class, 'edit'])->name('games.edit');
