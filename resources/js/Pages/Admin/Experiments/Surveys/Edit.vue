@@ -12,7 +12,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Head title="Editar una prueba" />
+    <Head title="Editar una encuesta" />
 
     <AuthenticatedLayout>
         <template #header>

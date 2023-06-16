@@ -23,60 +23,68 @@
     
     const emits = defineEmits(['update:modelValue']);
 
-    const howMuch = ref(null);
+    const howMuch = ref('');
 
-    watch(howMuch, (oldVal, newVal) => {
+    watch(howMuch, (newVal, oldVal) => {
         emits('update:modelValue', newVal);
-        console.log(newVal);
     });
 </script>
 
 <template>
-    <fieldset>
-        <legend>{{ question }}</legend>
+    <fieldset class="m-5">
+        <div class="text-center font-semibold py-3">{{ question }}</div>
 
-        <div class="flex gap-2">
-            <p>{{ minText }}</p>
+        <div class="grid grid-cols-3 items-center">
+            <p class="mr-5 text-left">{{ minText }}</p>
             
-            <div class="flex gap-5">
+            <div class="flex flex-grow gap-5">
                 <div>
-                    <label for="max-4">
-                        <img width="40" height="40" :src="smile1" />
-                        <input type="radio" id="max-4" :name="`howMuch${index}`" value="1">
+                    <label class="cursor-pointer" :for="`max-4-${index}`">
+                        <div class="flex justify-center items-center flex-col gap-1">
+                            <img width="40" height="40" :src="smile1" />
+                            <input type="radio" :id="`max-4-${index}`" :name="`howMuch-${index}`" value="1" v-model="howMuch" />
+                        </div>
                     </label>
                 </div>
 
                 <div>
-                    <label for="max-3">
-                        <img width="40" height="40" :src="smile2" />
-                        <input type="radio" id="max-3" :name="`howMuch${index}`" value="2">
+                    <label class="cursor-pointer" :for="`max-3-${index}`">
+                        <div class="flex justify-center items-center flex-col gap-1">
+                            <img width="40" height="40" :src="smile2" />
+                            <input type="radio" :id="`max-3-${index}`" :name="`howMuch-${index}`" value="2" v-model="howMuch" />
+                        </div>
                     </label>
                 </div>
 
                 <div>
-                    <label for="max-2">
-                        <img width="40" height="40" :src="smile3" />
-                        <input type="radio" id="max-2" :name="`howMuch${index}`" value="3">
+                    <label class="cursor-pointer" :for="`max-2-${index}`">
+                        <div class="flex justify-center items-center flex-col gap-1">
+                            <img width="40" height="40" :src="smile3" />
+                            <input type="radio" :id="`max-2-${index}`" :name="`howMuch-${index}`" value="3" v-model="howMuch" />
+                        </div>
                     </label>
                 </div>
 
                 <div>
-                    <label for="max-1">
-                        <img width="40" height="40" :src="smile4" />
-                        <input type="radio" id="max-1" :name="`howMuch${index}`" value="4">
+                    <label class="cursor-pointer" :for="`max-1-${index}`">
+                        <div class="flex justify-center items-center flex-col gap-1">
+                            <img width="40" height="40" :src="smile4" />
+                            <input type="radio" :id="`max-1-${index}`" :name="`howMuch-${index}`" value="4" v-model="howMuch" />
+                        </div>
                     </label>
                 </div>
 
                 <div>
-                    <label for="max">
-                        <img width="40" height="40" :src="smile5" />
-                        <input type="radio" id="max" :name="`howMuch${index}`" value="5">
+                    <label class="cursor-pointer" :for="`max-${index}`">
+                        <div class="flex justify-center items-center flex-col gap-1">
+                            <img width="40" height="40" :src="smile5" />
+                            <input type="radio" :id="`max-${index}`" :name="`howMuch-${index}`" value="5" v-model="howMuch" />
+                        </div>
                     </label>
                 </div>
             </div>
 
-            <p>{{ maxText }}</p>
+            <p class="ml-5 text-right">{{ maxText }}</p>
         </div>
     </fieldset>
-
 </template>

@@ -5,19 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Experiments\Surveys\{SurveyCreateRequest, SurveyUpdateRequest, SurveyDeleteRequest};
 use App\Http\Requests\Experiments\Surveys\{SurveyQuestionCreateRequest, TestQuestionCreateRequest};
 use Illuminate\Http\Request;
-use App\Models\Survey;
+use App\Services\SurveyService;
 use Inertia\Inertia;
 
 class SurveyController extends Controller
 {
     private $survey;
 
-    public function __construct(Survey $survey) {
+    public function __construct(SurveyService $survey) {
         $this->survey = $survey;
     }
 
     public function run($experiment, $survey) {
-        return Inertia::render('Surveys/Run', ['experimentId' => $experiment, 'survey' => $this->survey->find($survey)]);
+        $survey = $this->survey->get($survey);
+        if(empty($survey))
+            return redirect()->back()->with('notification', $this->survey->notFoundText());
+
+        return Inertia::render('Surveys/Run', ['experimentId' => $experiment, 'survey' => $survey]);
     }
 
     public function create($id) {
@@ -39,12 +43,12 @@ class SurveyController extends Controller
     }
     
     public function update($experiment, $id, SurveyCreateRequest $request) {
-        $res = $this->survey->edit($id, $request);
+        $res = $this->survey->update($id, $request);
         return redirect()->back()->with('notification', $res);
     }
 
     public function destroy($experiment, $id, SurveyDeleteRequest $request) {
-        $res = $this->survey->erase($request);
+        $res = $this->survey->destroy($request);
         return redirect()->route('experiment.management', $experiment)->with('notification', $res);
     }
 
@@ -59,14 +63,4 @@ class SurveyController extends Controller
     public function testQuestionCreate(TestQuestionCreateRequest $request) {
         return redirect()->back();
     }
-
-    // public function update($id, SurveyUpdateRequest $request) {
-    //     $res = $this->survey->find($id)->edit($request);
-    //     return redirect()->route('games.edit', $request->game_id)->with('notification', $res);
-    // }
-
-    // public function destroy(SurveyDeleteRequest $request) {
-    //     $res = $this->survey->erase($request);
-    //     return redirect()->back()->with('notification', $res);
-    // }
 }

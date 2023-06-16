@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('survey_responses', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['in progress', 'finished'])->default('in progress');
-            $table->integer('checkpoint')->comment('Last answered question');
+            $table->enum('status', ['in progress', 'finished'])->nullable()->default('in progress');
+            $table->integer('checkpoint')->nullable()->comment('Last answered question');
             $table->json('body');
             $table->foreignId('user_id')->cascadeOnDelete();
             $table->foreignId('survey_id')->cascadeOnDelete();

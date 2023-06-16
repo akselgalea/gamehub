@@ -2,7 +2,7 @@
 
 use App\Models\{Experiment, Game};
 use App\Http\Controllers\{GameController, ParameterController, ExperimentController, EntryPointController, SurveyController, GameInstanceController, UserController};
-use App\Http\Controllers\{ProfileController, SchoolController, GradeController};
+use App\Http\Controllers\{ProfileController, SchoolController, GradeController, SurveyResponseController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -112,6 +112,7 @@ Route::middleware('auth')->group(function () {
         });
         
         Route::get('{id}/survey/{survey}', [SurveyController::class, 'run'])->name('surveys.run');
+        Route::post('{id}/survey/{survey}/response', [SurveyResponseController::class, 'store'])->name('surveys.response.store');
         Route::get('{id}/play', [GameInstanceController::class, 'selectInstance'])->name('game_instances.select_instance');
     });
     
