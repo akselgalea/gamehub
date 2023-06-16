@@ -24,6 +24,14 @@ class SurveyController extends Controller
         return Inertia::render('Surveys/Run', ['experimentId' => $experiment, 'survey' => $survey]);
     }
 
+    public function runTest($experiment, $survey) {
+        $survey = $this->survey->get($survey);
+        if(empty($survey))
+            return redirect()->back()->with('notification', $this->survey->notFoundText());
+
+        return Inertia::render('Surveys/Tests/Run', ['experimentId' => $experiment, 'survey' => $survey]);
+    }
+
     public function create($id) {
         return Inertia::render('Admin/Experiments/Surveys/Create', ['experimentId' => $id]);
     }

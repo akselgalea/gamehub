@@ -50,12 +50,12 @@ class Survey extends Model
 
     public function scopePrePlay(Builder $query): void
     {
-        $query->where('stage', 'pre');
+        $query->where('stage', 'pre')->orderBy('init_date', 'asc');
     }
 
     public function scopePostPlay(Builder $query): void
     {
-        $query->where('stage', 'post');
+        $query->where('stage', 'post')->orderBy('init_date', 'asc');
     }
 
     public function scopeActiveByDate(Builder $query, $date): void {

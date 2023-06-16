@@ -161,22 +161,26 @@ class GameInstanceService
     public function hasPendingSurvey($experiment) {
         $exp = Experiment::findOrFail($experiment);
         // Encuestas pre experimento
-        $survey = $exp->surveys()->prePlay()->first();
+        $surveys = $exp->surveys()->prePlay()->get();
+
+        foreach($surveys as $s)
+            if($this->surveyIsPending($experiment, $s))
+                return $s->type == 'test' ? $this->redirectToTest($experiment, $s->id) : $this->redirectToSurvey($experiment, $s->id);
         
-        if($this->surveyIsPending($experiment, $survey))
-            return $this->redirectToSurvey($experiment, $survey->id);
             
         // Encuestas programadas por fecha
-        $survey = $exp->surveys()->activeByDate(now()->toDateTimeString())->first();
+        $surveys = $exp->surveys()->activeByDate(now()->toDateTimeString())->get();
 
-        if($this->surveyIsPending($experiment, $survey))
-            return $this->redirectToSurvey($experiment, $survey->id);
+        foreach($surveys as $s)
+            if($this->surveyIsPending($experiment, $s))
+                return $s->type == 'test' ? $this->redirectToTest($experiment, $s->id) : $this->redirectToSurvey($experiment, $s->id);
 
         // Encuestas post experimento
-        $survey = $exp->surveys()->postPlay()->first();
+        $surveys = $exp->surveys()->postPlay()->get();
 
-        if($this->surveyIsPending($experiment, $survey))
-            return $this->redirectToSurvey($experiment, $survey->id);
+        foreach($surveys as $s)
+            if($this->surveyIsPending($experiment, $s))
+                return $s->type == 'test' ? $this->redirectToTest($experiment, $s->id) : $this->redirectToSurvey($experiment, $s->id);
         
         return false;
     }
@@ -184,7 +188,7 @@ class GameInstanceService
     public function surveyIsPending($experiment, $survey) {
         if(!$survey)
             return false;
-
+        
         $response = $survey->getUserResponse(Auth()->user()->id);
 
         if(!$response || $response->status === 'in progress')
@@ -195,6 +199,10 @@ class GameInstanceService
 
     public function redirectToSurvey($experiment, $survey) {
         return redirect()->route('surveys.run', [$experiment, $survey]);
+    }
+
+    public function redirectToTest($experiment, $survey) {
+        return redirect()->route('surveys.tests.run', [$experiment, $survey]);
     }
 
     public function getUserGameInstance($experiment, $userId = null) {
