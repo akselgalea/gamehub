@@ -32,7 +32,8 @@ class Game extends Model implements HasMedia
     ];
 
     protected $casts = [
-        'gm2game' => 'boolean'
+        'gm2game' => 'boolean',
+        'extra' => 'array'
     ];
 
     public function getSlugOptions(): SlugOptions {
