@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Checkbox from '@/Components/Checkbox.vue';
+import InputLabel from '@/Components/InputLabel.vue';
 import Modal from '@/Components/Modal.vue';
 import { ref } from 'vue';
 import DeleteExperimentForm from './Partials/DeleteExperimentForm.vue';
@@ -69,7 +70,7 @@ const showAll = ref(false);
                                             <td class="px-3 text-center">{{ experiment.description }}</td>
                                             <td class="px-3 text-center">{{ experiment.status }}</td>
                                             <td class="px-3 flex gap-1 justify-center">
-                                                <PrimaryButton @click="showModal" title="Ver detalles"><i class="far fa-eye"></i></PrimaryButton>
+                                                <PrimaryButton @click="showModal" title="Ver detalles"><i class="fas fa-eye"></i></PrimaryButton>
                                                 <Link :href="route('experiment_information.edit', {id: experiment.id})">
                                                     <PrimaryButton title="Editar"><i class="fas fa-edit"></i></PrimaryButton>
                                                 </Link>
@@ -78,26 +79,62 @@ const showAll = ref(false);
                                                 </Link>
 
                                                 <DeleteExperimentForm :experiment_id="experiment.id" :experiment_name="experiment.name" />
-                                                
-                                                <Modal :show="showingModal" @close="closeModal">
-                                                    <div class="py-6">
-                                                        
-                                                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                                                            <div class="p-4 sm:p-8 dark:bg-gray-800 shadow sm:rounded-lg">
-                                                                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">Informacion General</h2>
-                                                                <div class="mt-5">
-                                                                        <div class="first-letter:uppercase text-grey-900 dark:text-white">Experimento: {{ experiment.name }}</div>
-                                                                        <div class="first-letter:uppercase text-grey-900 dark:text-white">Estado: {{ experiment.status }}</div>
-                                                                        <div class="first-letter:uppercase text-grey-900 dark:text-white">Descripcion: {{ experiment.description }}</div>
-                                                                        <div class="first-letter:uppercase text-grey-900 dark:text-white">Tiempo limite: {{ experiment.time_limit }} minutos</div>
-                                                                    </div>
-                                                            </div>
-                                                        </div>
 
-                                                        <div class="mt-5 flex justify-center">
-                                                            <SecondaryButton @click="closeModal"> Cerrar </SecondaryButton>
+                                                <Modal :show="showingModal" @close="closeModal">
+                                                    <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                                                    <header>
+                                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Información del experimento</h2>
+                                                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                                            Esta es la informacion perteneciente al experimento.
+                                                        </p>
+                                                    </header>
+
+                                                    <div class="mt-6 space-y-6">
+                                                        <div>
+                                                            <InputLabel for="name" value="Nombre" />
+                                                            <InputLabel
+                                                                id="name"
+                                                                type="text"
+                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                                                :value="experiment.name"
+                                                                disabled
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <InputLabel for="status" value="Estado" />
+                                                            <InputLabel
+                                                                id="status"
+                                                                type="text"
+                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                                                :value="experiment.status"
+                                                                disabled
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <InputLabel for="description" value="Descripcion" />
+                                                            <InputLabel
+                                                                id="description"
+                                                                type="text"
+                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                                                :value="experiment.description"
+                                                                disabled
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <InputLabel for="time_limit" value="Tiempo limite (min)" />
+                                                            <InputLabel
+                                                                id="time_limit"
+                                                                type="text"
+                                                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                                                :value="experiment.time_limit"
+                                                                disabled
+                                                            />
+                                                        </div>
+                                                        <div class="flex justify-center items-center gap-4">
+                                                            <SecondaryButton @click="closeModal">Cerrar</SecondaryButton>
                                                         </div>
                                                     </div>
+                                                </div>
                                                 </Modal>
                                             </td>
                                         </template>
