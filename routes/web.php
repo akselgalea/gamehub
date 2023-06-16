@@ -26,9 +26,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::post('game-instances/data/load', [GameInstanceController::class, 'initialParams'])->name('game_instances.game.load');
-Route::post('game-instances/data/save', [GameInstanceController::class, 'saveData'])->name('game_instances.game.save');
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -139,6 +136,8 @@ Route::middleware('auth')->group(function () {
 
     // Obtener archivos juegos GameHub - GM2.
     Route::get('/game-instances/{instance}/{game}/{filename}', [GameController::class, 'getFile'])->where('filename', '(.*)');
+    Route::post('game-instances/data/load', [GameInstanceController::class, 'initialParams'])->name('game_instances.game.load');
+    Route::post('game-instances/data/save', [GameInstanceController::class, 'saveData'])->name('game_instances.game.save');
 
     Route::get('games/{slug}/play', [GameController::class, 'play'])->name('games.play');
     Route::get('/games', [GameController::class, 'myGames'])->name('games.my_games');

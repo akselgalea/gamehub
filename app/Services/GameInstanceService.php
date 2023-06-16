@@ -79,6 +79,18 @@ class GameInstanceService
         }
     }
 
+    public function updateGamification($req, $slug) {
+        $validated = $req->validated();
+        try {
+            $game_instance = GameInstance::findOrFail($slug);
+            $game_instance->update($validated);
+            
+            return ['status' => 200, 'message' => 'Gamificacion actualizada con éxito!'];
+        } catch (Exception $e) {
+            return ['status' => 500, 'message' => $e->getMessage()];
+        }
+    }
+
     public function getParams($slug) {
         try {
             $instance = $this->get($slug); // busca los datos de la instancia
@@ -122,24 +134,120 @@ class GameInstanceService
         }
     }
 
-    public function updateGamification($req, $slug) {
-        $validated = $req->validated();
+    public function selectInstance($experiment) {
+        $user = Auth::user();
+
         try {
-            $game_instance = GameInstance::findOrFail($slug);
-            $game_instance->update($validated);
-            
-            return ['status' => 200, 'message' => 'Gamificacion actualizada con éxito!'];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
+            // $survey = $this->hasPendingSurvey($experiment);
+
+            // if($survey)
+            //     return $survey;
+
+            $instance = $this->getUserGameInstance($experiment);
+
+            if(!$instance)
+                return redirect()->route('dashboard')->with('notification', ['status' => 404, 'message' => 'Este experimento no tiene instancias de juego']);
+
+            return redirect()->route('game_instances.play', [
+                $instance->game->slug,
+                $instance->slug,
+                't' => $this->encryptService->encrypt($instance->slug)
+            ]);
+        } catch(Exception $e) {
+            return redirect()->back()->with('notification', ['status' => 500, 'message' => $e->getMessage()]);
         }
+    }
+
+    public function hasPendingSurvey($experiment) {
+        $exp = Experiment::findOrFail($experiment);
+        // Encuestas pre experimento
+        $survey = $exp->surveys()->prePlay()->first();
+        
+        if($this->surveyIsPending($experiment, $survey))
+            return $this->redirectToSurvey($experiment, $survey->id);
+            
+        // Encuestas programadas por fecha
+        $survey = $exp->surveys()->activeByDate(now()->toDateTimeString())->first();
+
+        if($this->surveyIsPending($experiment, $survey))
+            return $this->redirectToSurvey($experiment, $survey->id);
+
+        // Encuestas post experimento
+        $survey = $exp->surveys()->postPlay()->first();
+
+        if($this->surveyIsPending($experiment, $survey))
+            return $this->redirectToSurvey($experiment, $survey->id);
+        
+        return false;
+    }
+
+    public function surveyIsPending($experiment, $survey) {
+        if(!$survey)
+            return false;
+
+        $response = $survey->getUserResponse(Auth()->user()->id);
+
+        if(!$response || $response->status === 'in progress')
+            return true;
+
+        return false;
+    }
+
+    public function redirectToSurvey($experiment, $survey) {
+        return redirect()->route('surveys.run', [$experiment, $survey]);
+    }
+
+    public function getUserGameInstance($experiment, $userId = null) {
+        if($userId)
+            $user = User::findOrFail($userId);
+        else
+            $user = Auth()->user();
+        $userInstance = $user->getInstanceByExperiment($experiment);
+
+        if(!$userInstance)
+            $instance = $this->instance->getInstanceWithLeastUsers($experiment);
+            
+        if(isset($instance) && $instance) {
+            $experimentUser = $user->experimentUser()->updateOrCreate(['experiment_id' => $experiment], ['game_instance_id' => $instance->id]);
+            $userInstance = $experimentUser->gameInstance;
+        }
+           
+        return $userInstance;
+    }
+
+    public function play($request) {
+        $instanceSlug = $request->instance;
+        $instance = $this->get($instanceSlug);
+        
+        if(empty($instance))
+            return $this->notFoundText();
+
+        $game = $instance->game;
+        
+
+        if(empty($game)) 
+            return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
+        
+        $filename = json_decode($game->extra)->filename;
+        
+        $location = "/game-instances/$game->slug/$instanceSlug/$filename.js";
+        
+        return ['game' => $game, 'location' => $location];
+    }
+
+    public function notFoundText() {
+        return ['status' => 404, 'message' => 'No se ha encontrado la instancia de juego'];
     }
 
     public function initGameData($request)
     {
-        $user = Auth::user();
-        $data = $request->all();
-
+        //Temporalmente se envían los datos por defecto
+        return response()->json($this->defaultParameters());
+        
         try {
+            $user = Auth::user();
+            $data = $request->all();
+
             // Cargar instancia de juego        
             $game_instance_slug = $this->encryptService->decrypt(urldecode($data['t']));
             $game_instance = $this->instance->findBySlug($game_instance_slug);
@@ -332,6 +440,7 @@ class GameInstanceService
             ],
             'p' => $parameters_json
         ];
+        
         # FIX: Corrige retorno de arreglo cuando corresponde a diccionario
         # PHP considera arreglo vació como arreglo, no hay forma de definir diccionaro (arr. asosciativo)
         if (count($arr['p']) == 0) {
@@ -339,6 +448,27 @@ class GameInstanceService
         }
 
         return $arr;
+    }
+
+    private function defaultParameters(): array {
+        return [
+            'u' => [
+                'name' => 'Demo 2.0.1',
+                'fullname' => 'Demo 2.0.1',
+                'username' => 'Demo 2.0.1',
+                'max_score' => 500,
+                'values' => [
+                    'ataques' => 12,
+                    'redes' => 0,
+                    'derribos' => 5,
+                    'capturas' => 0
+                ],
+                'time_left' => 90000,
+                'time_user' => 0,
+                'time_limit' => 10000
+            ],
+            'p' => []
+        ];
     }
 
     private function parametersToJson($parameters) {
@@ -360,110 +490,5 @@ class GameInstanceService
         ];
 
         return call_user_func($types[$type], $value);
-    }
-
-    public function notFoundText() {
-        return ['status' => 404, 'message' => 'No se ha encontrado la instancia de juego'];
-    }
-
-    public function surveyIsPending($experiment, $survey) {
-        if(!$survey)
-            return false;
-
-        $response = $survey->getUserResponse(Auth()->user()->id);
-
-        if(!$response || $response->status === 'in progress')
-            return true;
-
-        return false;
-    }
-
-    public function redirectToSurvey($experiment, $survey) {
-        return redirect()->route('surveys.run', [$experiment, $survey]);
-    }
-
-    public function hasPendingSurvey($experiment) {
-        $exp = Experiment::findOrFail($experiment);
-        // Encuestas pre experimento
-        $survey = $exp->surveys()->prePlay()->first();
-        
-        if($this->surveyIsPending($experiment, $survey))
-            return $this->redirectToSurvey($experiment, $survey->id);
-            
-        // Encuestas programadas por fecha
-        $survey = $exp->surveys()->activeByDate(now()->toDateTimeString())->first();
-
-        if($this->surveyIsPending($experiment, $survey))
-            return $this->redirectToSurvey($experiment, $survey->id);
-
-        // Encuestas post experimento
-        $survey = $exp->surveys()->postPlay()->first();
-
-        if($this->surveyIsPending($experiment, $survey))
-            return $this->redirectToSurvey($experiment, $survey->id);
-        
-        return false;
-    }
-
-    public function selectInstance($experiment) {
-        $user = Auth::user();
-
-        try {
-            // $survey = $this->hasPendingSurvey($experiment);
-
-            // if($survey)
-            //     return $survey;
-
-            $instance = $this->getUserGameInstance($experiment);
-
-            if(!$instance)
-                return redirect()->route('dashboard')->with('notification', ['status' => 404, 'message' => 'Este experimento no tiene instancias de juego']);
-
-            return redirect()->route('game_instances.play', [
-                $instance->slug,
-                $instance->game->slug,
-                't' => $this->encryptService->encrypt($instance->slug)
-            ]);
-        } catch(Exception $e) {
-            return redirect()->back()->with('notification', ['status' => 500, 'message' => $e->getMessage()]);
-        }
-    }
-
-    public function getUserGameInstance($experiment, $userId = null) {
-        if($userId)
-            $user = User::findOrFail($userId);
-        else
-            $user = Auth()->user();
-        $userInstance = $user->getInstanceByExperiment($experiment);
-
-        if(!$userInstance)
-            $instance = $this->instance->getInstanceWithLeastUsers($experiment);
-            
-        if(isset($instance) && $instance) {
-            $experimentUser = $user->experimentUser()->updateOrCreate(['experiment_id' => $experiment], ['game_instance_id' => $instance->id]);
-            $userInstance = $experimentUser->gameInstance;
-        }
-           
-        return $userInstance;
-    }
-
-    public function play($request) {
-        $instanceSlug = $request->instance;
-        $instance = $this->get($instanceSlug);
-        
-        if(empty($instance))
-            return $this->notFoundText();
-
-        $game = $instance->game;
-        
-
-        if(empty($game)) 
-            return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
-        
-        $filename = json_decode($game->extra)->filename;
-        
-        $location = "/game-instances/$game->slug/$instanceSlug/$filename.js";
-        
-        return ['game' => $game, 'location' => $location];
     }
 }

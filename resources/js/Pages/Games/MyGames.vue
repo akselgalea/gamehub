@@ -36,7 +36,7 @@ const props = defineProps({
                                 <div class="first-letter:uppercase text-xl font-bold text-gray-600 dark:text-gray-400">{{ game.name }}</div>
                                 
                                 <div class="flex gap-2">
-                                    <Link :href="game.gm2game ? route('game_instances.play', { game: game.slug, instance: game?.instance_slug }) : route('games.play', {slug: game.slug})">
+                                    <Link :href="game.gm2game ? route('game_instances.select_instance', {id: game?.experiment_id}) : route('games.play', {slug: game.slug})">
                                         <PrimaryButton>Jugar</PrimaryButton>
                                     </Link>
                                 </div>

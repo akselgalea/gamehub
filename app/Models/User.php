@@ -79,7 +79,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function instancesGames() {
         return $this->gameInstances()->with('game')->get()->map(function ($instance) {
             $game = $instance->game;
-            $game->instance_slug = $instance->slug;
+            $game->experiment_id = $instance->experiment_id;
             return $game;
         });
     }
@@ -87,6 +87,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getGamesICanPlay() {
         $allAccessGames = Game::allAccessGames()->get();
         $instanceGames = $this->instancesGames();
+        
         return $allAccessGames->concat($instanceGames);
     }
 
