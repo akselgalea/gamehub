@@ -32,6 +32,16 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    public function attributes(): array
+    {
+        return [
+            'email' => 'correo',
+            'password' => 'contraseña',
+        ];
+    }
+
+    
+
     /**
      * Attempt to authenticate the request's credentials.
      *

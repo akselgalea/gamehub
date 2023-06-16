@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Requests\Users\{UserCreateRequest};
 use Parental\HasChildren;
 use Illuminate\Support\Str;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasChildren;
 
