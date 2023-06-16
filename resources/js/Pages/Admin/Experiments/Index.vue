@@ -84,7 +84,6 @@ const showAll = ref(false);
                                                                         <div class="first-letter:uppercase text-grey-900 dark:text-white">Estado: {{ experiment.status }}</div>
                                                                         <div class="first-letter:uppercase text-grey-900 dark:text-white">Descripcion: {{ experiment.description }}</div>
                                                                         <div class="first-letter:uppercase text-grey-900 dark:text-white">Tiempo limite: {{ experiment.time_limit }} minutos</div>
-                                                                        
                                                                     </div>
                                                             </div>
                                                         </div>
@@ -101,44 +100,6 @@ const showAll = ref(false);
                             </table>
                         </template>
                     </div>
-
-                    <!-- <section class="mt-5">
-                        <p class="text-sm text-gray-600 dark:text-gray-400" v-if="experiments.length == 0">No se encontraron experimentos.</p>
-
-                        <div class="flex flex-wrap gap-10 w-full">
-                            <div v-for="(experiment, index) in experiments" :key="index">
-                                <div class="first-letter:uppercase text-gray-900  dark:text-white">Experimento: {{ experiment.name }}</div>
-                                <div class="first-letter:uppercase text-gray-900 dark:text-white">Estado: {{ experiment.status }}</div>
-
-                                <div class="flex gap-2">
-                                    
-                                    <PrimaryButton @click="showModal">Ver detalles</PrimaryButton>
-                                    <Link :href="route('experiment.management', {id: experiment.id})">
-                                        <PrimaryButton>Gestionar</PrimaryButton>
-                                    </Link>
-                                    <Modal :show="showingModal" @close="closeModal">
-                                        <div class="py-12">
-                                            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                                                <div class="p-4 sm:p-8 dark:bg-gray-800 shadow sm:rounded-lg">
-                                                    <section class="mt-5">
-                                                            <div class="first-letter:uppercase text-grey-900 dark:text-white">Experimento: {{ experiment.name }}</div>
-                                                            <div class="first-letter:uppercase text-grey-900 dark:text-white">Estado: {{ experiment.status }}</div>
-                                                            <div class="first-letter:uppercase text-grey-900 dark:text-white">Descripcion: {{ experiment.description }}</div>
-                                                            <div class="first-letter:uppercase text-grey-900 dark:text-white">Tiempo limite: {{ experiment.time_limit }} minutos</div>
-                                                            <div class="flex gap-2">
-                                                                <SecondaryButton @click="closeModal"> Cerrar </SecondaryButton>
-                                                            </div>
-                                                    </section>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Modal>
-                                </div>
-
-                                
-                            </div>
-                        </div>
-                    </section> -->
                 </div>
             </div>
         </div>
