@@ -6,6 +6,7 @@ use App\Models\Game;
 use Inertia\Inertia;
 use Madnest\Madzipper\Madzipper;
 use Exception;
+use Illuminate\Support\Facades\Response;
 
 class GameService
 {
@@ -60,8 +61,7 @@ class GameService
 
     public function deleteGame($id) {
         try {
-            $game = Game::findOrFail($id);
-
+            $game = $this->game->findOrFail($id);
             $gameFolder = $game->gm2game ? base_path() . $game->file : public_path($game->file);
 
             if ($this->fs->deleteFolder($gameFolder))
@@ -71,7 +71,7 @@ class GameService
 
             return ['status' => 200, 'message' => 'Juego eliminado con éxito!'];
         } catch(Exception $e) {
-            return ['status' => 500, 'message' => 'Ha ocurrido un error al eliminar el juego.'];
+            return ['status' => 500, 'message' => $e->getMessage()];
         }
     }
 
@@ -150,5 +150,29 @@ class GameService
         $location = $game->file . '/' .$game->extra['filename'] . '.js';
 
         return Inertia::render('Games/PlayGM2Game', ['game' => $game, 'location' => $location]);
+    }
+
+    public function getFile($gameSlug, $instance, $filename) {
+        $game = $this->get($gameSlug);
+
+        if(empty($game))
+            return $this->notFoundText();
+
+        if (substr($filename, 0, strlen('html5game')) == 'html5game') {
+            $filename = substr($filename, strlen('html5game'));
+        }
+        
+        $path = base_path() . $game->file . '/'. $filename;
+        
+        if(!$this->fs->exists($path)) {
+            return ['status' => 404, 'message' => 'File not found.', 'path' => $path, 'filename' => $filename];
+        }
+
+        $file = $this->fs->get($path);
+        $type = $this->fs->type($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+
+        return $response;
     }
 }

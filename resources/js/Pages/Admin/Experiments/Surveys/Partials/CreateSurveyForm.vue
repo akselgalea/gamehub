@@ -74,6 +74,8 @@ const deleteQuestion = (index) => {
                 A continuación puedes ingresar las preguntas y el formato que va a tener esta encuesta,
                 al momento de crear una encuesta de tipo prueba se le añadirá también el campo de respuesta correcta
                 a cada pregunta.
+                <br />
+                Se tomará en cuenta la fecha de inicio y la etapa para el orden en que se hagan las encuestas.
             </p>
         </header>
 

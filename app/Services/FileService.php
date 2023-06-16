@@ -15,6 +15,18 @@ class FileService
         $this->file = $f;
     }
 
+    public function get($path) {
+        return File::get($path);
+    }
+
+    public function type($path) {
+        return File::mimeType($path);
+    }
+
+    public function exists($path) {
+        return File::exists($path);
+    }
+
     public function deleteFolder($link) {
         try {
             File::deleteDirectory($link);

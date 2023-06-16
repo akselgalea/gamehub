@@ -448,22 +448,21 @@ class GameInstanceService
     }
 
     public function play($request) {
-        $instanceSlug = $request->segment(3);
-        $token = $request->input('t');
-
+        $instanceSlug = $request->instance;
         $instance = $this->get($instanceSlug);
         
         if(empty($instance))
             return $this->notFoundText();
 
         $game = $instance->game;
+        
 
         if(empty($game)) 
             return ['status' => 404, 'message' => 'No se ha encontrado el juego'];
         
         $filename = json_decode($game->extra)->filename;
         
-        $location = "/game-instances/$instanceSlug/$game->slug/$filename.js";
+        $location = "/game-instances/$game->slug/$instanceSlug/$filename.js";
         
         return ['game' => $game, 'location' => $location];
     }

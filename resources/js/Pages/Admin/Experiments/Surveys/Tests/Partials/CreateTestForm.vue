@@ -73,6 +73,8 @@ const deleteQuestion = (index) => {
                 Puedes realizar encuestas de tipo prueba a los estudiantes que participen del experimento.
                 A continuación puedes ingresar las preguntas y el formato que va a tener esta encuesta.
                 Al ser una prueba, todas las preguntas tendrán también una respuesta correcta.
+                <br />
+                Se tomará en cuenta la fecha de inicio y la etapa para el orden en que se hagan las encuestas.
             </p>
         </header>
 

@@ -50,11 +50,15 @@ class GameController extends Controller
     }
 
     public function destroy(GameDeleteRequest $request) {
-        $res = $this->gs->deleteGame($request);
+        $res = $this->gs->deleteGame($request->id);
         return redirect()->route('games.index')->with('notification', $res);
     }
 
     public function play($slug) {
         return $this->gs->play($slug);
+    }
+
+    public function getFile($game, $instance, $file) {
+        return $this->gs->getFile($game, $instance, $file);
     }
 }

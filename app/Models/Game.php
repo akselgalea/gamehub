@@ -73,4 +73,8 @@ class Game extends Model implements HasMedia
     public function getGm2Games() {
         return Game::Gm2Games()->get();
     }
+
+    public function findBySlug($slug) {
+        return Game::firstWhere('slug', $slug);
+    }
 }

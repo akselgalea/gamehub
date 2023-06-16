@@ -120,6 +120,26 @@ Route::middleware('auth')->group(function () {
     Route::get('register/{token}', [EntryPointController::class, 'register'])->name('entrypoints.register');
     Route::get('game-instances/{game}/{instance}/play', [GameInstanceController::class, 'play'])->name('game_instances.play');
     
+    //Obtener juegos que no son de GameMaker
+    Route::get('/uploads/games/{game}/{filename}', function($gameSlug, $filename) {
+        $game = Game::firstWhere('slug', $gameSlug);
+        $path = base_path() . $game->file . '/'. $filename;
+
+        if(!File::exists($path)) {
+            return response()->json(['message' => 'File not found.', 'path' => $path, 'filename' => $filename], 404);
+        }
+
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+
+        return $response;
+    })->where('filename', '(.*)');
+
+    // Obtener archivos juegos GameHub - GM2.
+    Route::get('/game-instances/{instance}/{game}/{filename}', [GameController::class, 'getFile'])->where('filename', '(.*)');
+
     Route::get('games/{slug}/play', [GameController::class, 'play'])->name('games.play');
     Route::get('/games', [GameController::class, 'myGames'])->name('games.my_games');
     
@@ -137,43 +157,6 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [ParameterController::class, 'destroy'])->name('games.params.destroy');
         });
     });
-
-    // Obtener archivos juegos GameHub.
-    Route::get('/uploads/games/{game}/{filename}', function($gameSlug, $filename) {
-        $game = Game::firstWhere('slug', $gameSlug);
-        $path = base_path() . $game->file . '/'. $filename;
-
-        if(!File::exists($path)) {
-            return response()->json(['message' => 'File not found.', 'path' => $path, 'filename' => $filename], 404);
-        }
-
-        $file = File::get($path);
-        $type = File::mimeType($path);
-        $response = Response::make($file, 200);
-        $response->header("Content-Type", $type);
-
-        return $response;
-    })->where('filename', '(.*)');
-
-    Route::get('/game-instances/{instance}/{game}/{filename}', function($instance, $gameSlug, $filename){
-        $game = Game::firstWhere('slug', $gameSlug);
-        
-        if (substr($filename, 0, strlen('html5game')) == 'html5game') {
-            $filename = substr($filename, strlen('html5game'));
-        }
-        
-        $path = base_path() . $game->file . '/'. $filename;
-        if(!File::exists($path)) {
-            return response()->json(['message' => 'File not found.', 'path' => $path, 'filename' => $filename], 404);
-        }
-
-        $file = File::get($path);
-        $type = File::mimeType($path);
-        $response = Response::make($file, 200);
-        $response->header("Content-Type", $type);
-        return $response;
-    })->where('filename', '(.*)');
-
 
     Route::prefix('schools')->middleware('role:admin')->group(function () {
         Route::get('/', [SchoolController::class, 'index'])->name('schools.index');
@@ -194,5 +177,5 @@ Route::middleware('auth')->group(function () {
     
 });
 
-require __DIR__.'/api.php';
+require __DIR__.'/api2.php';
 require __DIR__.'/auth.php';
