@@ -111,6 +111,7 @@ Route::middleware('auth')->group(function () {
             
         });
         
+        Route::get('{id}/survey/{survey}', [SurveyController::class, 'run'])->name('surveys.run');
         Route::get('{id}/survey/{survey}/test', [SurveyController::class, 'runTest'])->name('surveys.tests.run');
         Route::post('{id}/survey/{survey}/response', [SurveyResponseController::class, 'store'])->name('surveys.response.store');
         Route::get('{id}/play', [GameInstanceController::class, 'selectInstance'])->name('game_instances.select_instance');
