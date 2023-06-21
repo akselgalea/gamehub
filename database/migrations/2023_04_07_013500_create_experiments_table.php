@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->enum('status', ['detenido', 'activo'])->default('detenido'); // refiriendoce al estado del experimento
             $table->bigInteger('time_limit')->nullable(); // tiempo limite del experimento
-            $table->foreignId('admin_id'); // guarda el id del creador del experimento
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete(); // guarda el id del creador del experimento
             $table->timestamps();
             $table->softDeletes();
         });

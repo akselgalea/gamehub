@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('target');
             $table->string('type');
             $table->string('image');
-            $table->foreignId('game_id')->nullable()->nullOnDelete();
+            $table->foreignId('game_id')->nullable()->constrained()->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

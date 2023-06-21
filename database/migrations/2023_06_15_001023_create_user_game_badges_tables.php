@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('game_instance_scores', function (Blueprint $table) {
+        Schema::create('user_game_badges', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('max_score')->unsigned()->default(0);
-            $table->foreignId('user_id');
-            $table->foreignId('game_instance_id');
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('game_badge_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('game_instance_scores');
+        Schema::dropIfExists('user_game_badges');
     }
 };

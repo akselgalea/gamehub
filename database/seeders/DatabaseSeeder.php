@@ -13,19 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        /*---------- Poblado de roles --------- */
-
-        DB::table('roles')->insert([
-            'name' => 'usuario'
-        ]);
-
-        DB::table('roles')->insert([
-            'name' => 'administrador'
-        ]);
-
-        /*---------- Poblado de mails --------- */
-
-        // \App\Models\User::factory(10)->create();
+        /*---------- Poblado de usuarios --------- */
 
         \App\Models\User::factory()->create([
             'name' => 'admin',

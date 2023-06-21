@@ -21,8 +21,8 @@ return new class extends Migration
             $table->timestamp('time_start')->nullable();
             $table->timestamp('time_end')->nullable();
             $table->json('extra')->nullable();
-            $table->foreignId('user_id');
-            $table->foreignId('game_instance_id');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('game_instance_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

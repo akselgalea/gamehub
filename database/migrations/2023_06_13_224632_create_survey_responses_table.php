@@ -16,8 +16,8 @@ return new class extends Migration
             $table->enum('status', ['in progress', 'finished'])->nullable()->default('in progress');
             $table->integer('checkpoint')->nullable()->comment('Last answered question');
             $table->json('body');
-            $table->foreignId('user_id')->cascadeOnDelete();
-            $table->foreignId('survey_id')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('survey_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

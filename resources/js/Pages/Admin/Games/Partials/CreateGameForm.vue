@@ -106,7 +106,7 @@ const sendForm = () => {
             <div class="mt-5">
                 <InputLabel for="file" value="Archivo"/>
                 
-                <input type="file" class="dark:text-white" @input="form.file = $event.target.files[0]" required />
+                <input type="file" class="dark:text-white" @input="form.file = $event.target.files[0]" accept=".zip,.rar,.7zip" required />
 
                 <InputError class="mt-2" :message="form.errors.file" />
             </div>

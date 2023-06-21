@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->bigInteger('time_used');
-            $table->foreignId('user_id');
-            $table->foreignId('game_instance_id');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();;
+            $table->foreignId('game_instance_id')->constrained()->cascadeOnDelete();;
             $table->timestamps();
         });
     }

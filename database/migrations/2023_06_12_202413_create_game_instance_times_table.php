@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('parameters', function (Blueprint $table) {
+        Schema::create('game_instance_times', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->enum('type', ['int', 'float', 'string', 'boolean']);
-            $table->foreignId('game_id');
+            $table->date('date');
+            $table->integer('remaining_time');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('game_instance_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('parameters');
+        Schema::dropIfExists('game_instance_times');
     }
 };
