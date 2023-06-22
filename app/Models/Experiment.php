@@ -21,11 +21,11 @@ class Experiment extends Model
         'description',
         'status', // Detenido, Activo
         'time_limit', // In minutes
-        'admin_id',
+        'user_id',
     ];
 
     public function creator(): BelongsTo {
-        return $this->belongsTo(Admin::class, 'admin_id');
+        return $this->belongsTo(Admin::class, 'user_id');
     }
 
     public function instances(): HasMany {

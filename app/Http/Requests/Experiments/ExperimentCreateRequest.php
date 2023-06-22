@@ -27,7 +27,7 @@ class ExperimentCreateRequest extends FormRequest
             'description' => ['nullable', 'max:500'],
             'status' => ['required', Rule::in(['activo', 'detenido'])],
             'time_limit' => ['required', 'integer', 'nullable'],
-            'admin_id' => ['required', 'integer', 'exists:users,id'],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
         ];
     }
 
@@ -46,7 +46,7 @@ class ExperimentCreateRequest extends FormRequest
             'name' => 'nombre',
             'description' => 'descripcion',
             'status' => 'estado',
-            'time_limit' => 'tiempo_limite'
+            'time_limit' => 'tiempo limite'
         ];
     }
 }

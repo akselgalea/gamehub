@@ -14,7 +14,7 @@ const form = useForm({
     description: '',
     status: null,
     time_limit: null,
-    admin_id: user.id,
+    user_id: user.id,
 });
 
 const sendForm = () => {
