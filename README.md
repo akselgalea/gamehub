@@ -12,13 +12,13 @@ También hay aspectos y características abordadas de manera general, que tambi�
 
 - [Gestión de juegos y parámetros](./docs/learn/games.md)
 - [🧪 Experimentos](./docs/learn/experiments.md)
-    - [Encuestas](./docs/learn/surveys.md)
-    - 🆗 [🏁 Entrypoints](./docs/learn/entrypoints.md)
-    - [Instancias de juegos](./docs/learn/game-instances.md)
+    - [Encuestas](./docs/learn/experiments/surveys.md)
+    - 🆗 [🏁 Entrypoints](./docs/learn/experiments/entrypoints.md)
+    - [Instancias de juegos](./docs/learn/experiments/game-instances.md)
 
 En cuanto a configuraciones generales de Laravel, se puede indicar:
 
-- [Distribución de archivos](./docs/dd/roles.md)
+- [Distribución de archivos](./docs/file-distribution.md)
 
 
 ## Diccionario de datos
