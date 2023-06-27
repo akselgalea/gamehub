@@ -61,9 +61,9 @@ defineProps({
                                                     <PrimaryButton title="Editar"><i class="fas fa-cog"></i></PrimaryButton>
                                                 </Link>
 
-                                                <Link :href="route('game_instances.export', {id: instance.id})">
+                                                <a :href="route('game_instances.export', {id: instance.id})">
                                                     <PrimaryButton title="Descargar estadisticas"><i class="fas fa-download"></i></PrimaryButton>
-                                                </Link>
+                                                </a>
 
                                                 <DeleteGameInstanceForm :game_instance_id="instance.id" :game_instance_name="instance.name" />
                                             </td>

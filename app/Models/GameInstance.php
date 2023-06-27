@@ -69,6 +69,10 @@ class GameInstance extends Model
         return $this->belongsToMany(User::class, 'experiment_user' , 'user_id', 'game_instance_id');
     }
 
+    public function exercises(): HasMany {
+        return $this->hasMany(GameInstanceExercise::class);
+    }
+
     public function scopeFindByExperiment(Builder $query, $experiment): void {
         $query->where('game_instances.experiment_id', $experiment)->orderByDesc('created_at');
     }

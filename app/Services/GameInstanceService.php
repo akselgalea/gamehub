@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Services\{EncryptService, ExperienceService, TimeCounterService, ScoreService, ExerciseService};
 use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise, Experiment, ExperimentUser, SurveyResponse, User, Game};
 use Illuminate\Support\Facades\Auth;
-use App\Exports\GameInstanceExport;
-use Maatwebsite\Excel\Facades\Excel;
 use Exception;
 
 class GameInstanceService
@@ -427,11 +425,10 @@ class GameInstanceService
         return ['status' => 404, 'message' => 'No se ha encontrado la instancia de juego'];
     }
 
-    public function exportGameInstance($id) {
-        if ($id) {
-                $game_instance_exercises = GameInstanceExercise::all()->where('game_instance_id', $id);
-                return Excel::download(new GameInstanceExport($game_instance_exercises), 'game_instance_exercise.xlsx');
-        }else{
+    public function getExercises($id) {
+        try {
+            return GameInstanceExercise::where('game_instance_id', $id);
+        } catch(Exception $e) {
             return ['status' => 500, 'message' => 'No se pudo descargar el archivo xlsx.'];
         }
     }

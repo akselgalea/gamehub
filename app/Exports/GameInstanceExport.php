@@ -7,21 +7,22 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class GameInstanceExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize, WithMapping
 {
+    private $exercises;
+    private $gameInstance;
 
-    private $game_instance_exercises;
-
-    public function __construct($game_instance_exercises)
+    public function __construct($id)
     {
-        $this->game_instance_exercises = $game_instance_exercises;
+        $this->gameInstance = GameInstance::find($id);
+        $this->exercises = $this->gameInstance->exercises;
     }
 
     public function collection()
     {
-        return $this->game_instance_exercises;
+        return $this->exercises;
     }
     
     public function headings(): array
@@ -42,17 +43,11 @@ class GameInstanceExport implements FromCollection, WithHeadings, WithStyles, Sh
 
     public function map($row): array
     {
-        if($row->game_instance_id){
-            $row->game_instance_id = GameInstance::find($row->game_instance_id);
-        };
+        $user = User::find($row->user_id);
 
-        if($row->user_id){
-            $row->user_id = User::find($row->user_id);
-        };
-        
         return [
-            $row->game_instance_id->name ?? null,
-            $row->user_id->name ?? null,
+            $this->gameInstance->name ?? null,
+            $user->name ?? null,
             $row->round,
             $row->exercise,
             $row->user_response,
@@ -69,7 +64,7 @@ class GameInstanceExport implements FromCollection, WithHeadings, WithStyles, Sh
         return [
             1 => [
                 'font' => ['bold' => true],
-                'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'D3D3D3']],
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'D3D3D3']],
             ],
         ];
     }

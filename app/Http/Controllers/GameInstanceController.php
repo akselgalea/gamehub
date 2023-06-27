@@ -7,6 +7,9 @@ use App\Http\Requests\Experiments\GameInstances\Gamification\{GamificationUpdate
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Services\{GameInstanceService, ExperimentService, GameService};
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\GameInstanceExport;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class GameInstanceController extends Controller
 {
@@ -137,6 +140,8 @@ class GameInstanceController extends Controller
     }
 
     public function exportGameInstance($id) {
-        return $this->gis->exportGameInstance($id);
+        $fileName = 'game_instance_exercises.xlsx';
+
+        return Excel::download(new GameInstanceExport($id), $fileName);
     }
 }
