@@ -30,7 +30,7 @@ class ExerciseService
         return true;
     }
 
-    public function recordGameExercise($user_id, $game_instance, $item)
+    public function recordGameExercise($game_instance, $user_id, $item)
     {
         try {
             $gexercise = new GameInstanceExercise();
