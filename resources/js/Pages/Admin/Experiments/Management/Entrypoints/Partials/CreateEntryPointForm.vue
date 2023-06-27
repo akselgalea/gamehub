@@ -5,10 +5,9 @@ import TextArea from '@/Components/TextArea.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
-
-const user = usePage().props.auth.user;
+import { noti } from '@/Helpers/notifications';
 
 const props = defineProps({
     experiment_id: {
@@ -29,6 +28,7 @@ const sendForm = () => {
         route('entrypoints.store'), {
             onSuccess: () => {
                 form.reset();
+                noti('success', 'Entrypoint creado con éxito', 'top-center');
             }
         }
     )

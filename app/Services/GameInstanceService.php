@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Services\EncryptService;
-use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise, Experiment, SurveyResponse, User, Game};
+use App\Services\{EncryptService, ExperienceService, TimeCounterService, ScoreService, ExerciseService};
+use App\Models\{GameInstance, GameInstanceScore, GameInstanceTime, GameInstanceTimeCounter, GameInstanceParameter, GameInstanceExercise, Experiment, ExperimentUser, SurveyResponse, User, Game};
 use Illuminate\Support\Facades\Auth;
 use Exception;
 
@@ -11,30 +11,31 @@ class GameInstanceService
 {
     private $encryptService;
     private $instance;
-    private $instanceScore;
-    private $instanceTime;
-    private $instanceTimeCounter;
     private $instanceParameter;
-    private $instanceExercise;
+    private $expService;
+    private $timeCounterService;
+    private $scoreService;
+    private $exerService;
     const DEFAULT_TIME_PER_DAY = 90000;
 
     public function __construct(
         EncryptService $es,
         GameInstance $gi,
-        GameInstanceScore $gis,
         GameInstanceTime $git,
-        GameInstanceTimeCounter $gitc,
         GameInstanceParameter $gitp,
-        GameInstanceExercise $gie,
-
+        ExperienceService $expService,
+        TimeCounterService $timeCounterService,
+        ScoreService $scoreService,
+        ExerciseService $exerService
     ) {
         $this->encryptService = $es;
         $this->instance = $gi;
-        $this->instanceScore = $gis;
         $this->instanceTime = $git;
-        $this->instanceTimeCounter = $gitc;
         $this->instanceParameter = $gitp;
-        $this->instanceExercise = $gie;
+        $this->expService = $expService;
+        $this->timeCounterService = $timeCounterService;
+        $this->scoreService = $scoreService;
+        $this->exerService = $exerService;
     }
 
     public function get($slug) {
@@ -240,18 +241,14 @@ class GameInstanceService
         
         $location = "/game-instances/$game->slug/$instanceSlug/$filename.js";
         
-        return ['game' => $game, 'location' => $location];
-    }
-
-    public function notFoundText() {
-        return ['status' => 404, 'message' => 'No se ha encontrado la instancia de juego'];
+        return ['game' => $game, 'location' => $location, 't' => $this->encryptService->encrypt($instanceSlug)];
     }
 
     public function initGameData($request)
     {
-        //Temporalmente se envían los datos por defecto
-        return response()->json($this->defaultParameters());
-        
+        #Temporalmente se envían los datos por defecto
+        #return response()->json($this->defaultParameters());
+      
         try {
             $user = Auth::user();
             $data = $request->all();
@@ -260,179 +257,117 @@ class GameInstanceService
             $game_instance_slug = $this->encryptService->decrypt(urldecode($data['t']));
             $game_instance = $this->instance->findBySlug($game_instance_slug);
     
-            // Recupera puntaje máximo
-            $max_score = $this->instanceScore->userMaxScore($user->id, $game_instance->id)->max_score ?? 0;
-    
-            // Recupera tiempo restante
-            $instance_time = $this->instanceTime->timeLeft($user->id, $game_instance->id)->remaining_time ?? self::DEFAULT_TIME_PER_DAY;
-    
             // Rescate de parámetros
             $parameters = $game_instance->gameInstanceParameters()->get();
             $parameters_json = $this->parametersToJson($parameters);
-            $time_limit = $game_instance->experiment->time_limit;
-    
-            $time_counter = $this->instanceTimeCounter->userInstanceTimeCounter($user->id, $game_instance->id)->time_used ?? 0;
-            # Carga de total de ejercicios
-            $total_exercises_count = $this->instanceExercise->userTotalExercises($user->id, $game_instance->id);
             
-            $res = $this->setJsonData($user->name, $max_score, $time_counter, $game_instance, $time_limit, $total_exercises_count, $parameters_json);
+            $res = $this->setJsonData($user, $game_instance, $parameters_json);
+
+
             return response()->json($res);
         } catch(Exception $e) {
             return $e->getMessage();
         }
     }
 
-    public function saveData(Request $request) {
+    public function saveData($request) {
         $user = Auth::user();
         $game_data = $request->input('game');
         $exercise_list = $request->input('exercises');
+        $exercise_list = is_string($exercise_list) ? json_decode($exercise_list) : $exercise_list;
 
         # Comprueba si hay presencia de token
-        if (isset($game_data['token'])) {
-            $game_instance_slug = $this->encryptService->decrypt(urldecode($game_data['token']));
-            $game_instance = $this->instance->findBySlug($game_instance_slug);
+        if(!isset($game_data['token']))
+            return $this->saveDataErrorResponse('Invalid token');
 
-            // Agrega experiencia al usuario
-            if (isset($game_data['experience'])) {
-                $user_experience = $experienceService->addUserAmount($user->id, $game_instance->id, $game_data['experience']);
+        $game_instance_slug = $this->encryptService->decrypt(urldecode($game_data['token']));
+        $game_instance = $this->instance->findBySlug($game_instance_slug);
+
+        if(!$game_instance)
+            return $this->saveDataErrorResponse('Invalid token');
+
+        $response = [
+            'result' => 0 #Resultado exitoso
+        ];
+
+        // Agrega experiencia al usuario
+        if (isset($game_data['experience'])) {
+            if(! $this->expService->addUserExperience($user->id, $game_instance->id, $game_data['experience'])) {
+                return $this->saveDataErrorResponse('Error al guardar la experiencia del usuario');
             }
-
-            // Agrega registro de tiempo
-            if (isset($game_data['time_used'])) {
-                // Recupera instancia de tiempo
-                $instance_time = GameInstanceTimeCounter::where('user_id', $user->id)
-                    ->where('game_instance_id', $game_instance->id)
-                    ->where('date', \Carbon\Carbon::now()->toDateString())
-                    ->first();
-
-                if (!empty($instance_time)) {
-                    // Edita puntaje de instancia de tiempo existente
-                    $instance_time->time_used = $instance_time->time_used + $game_data['time_used'];
-                } else {
-                    // Crea primera instancia de tiempo
-                    $instance_time = new GameInstanceTimeCounter();
-                    $instance_time->date = \Carbon\Carbon::now();
-                    $instance_time->time_used = $game_data['time_used'];
-                    $instance_time->game_instance_id = $game_instance->id;
-                    $instance_time->user_id = $user->id;
-                }
-                $instance_time->save();
-            }
-
-            // Agregar puntaje máximo
-            if (isset($game_data['max_score'])) {
-                $instance_score = GameInstanceScore::where('user_id', $user->id)
-                    ->where('game_instance_id', $game_instance->id)
-                    ->first();
-
-                if ($instance_score) {
-                    // Edita puntaje de instancia de puntaje existente
-                    // Solo si el puntaje actual es mayor al anterior
-                    if ($instance_score->max_score < $game_data['max_score']) {
-                        $instance_score->max_score = $game_data['max_score'];
-                        $instance_score->save();
-                    }
-                } else {
-                    // Crea primera instancia de puntaje
-                    $instance_score = new GameInstanceScore();
-                    $instance_score->max_score = $game_data['max_score'];
-                    $instance_score->game_instance_id = $game_instance->id;
-                    $instance_score->user_id = $user->id;
-                    $instance_score->save();
-                }
-            }
-
-            // Almacena monedas, si es test, tiene currency, tiene un evento 3
-            // ** Utilizado para entregar monedas al terminar un test (in-game) **
-            if (isset($game_data['add_currency'])) {
-                // Realiza transaccion de monto
-                $user_currency = $currencyService->addUserAmount($user->id, $game_instance->id, $game_data['add_currency']);
-            }
-
-            # Si no definió test, graba ejercicio
-            if (!isset($game_data['test'])) {
-				
-                foreach ($exercise_list as $exercise_item) {
-                    # [FIX] Corrige entrada de eventos de modo string
-                    if (is_string($exercise_item)) {
-                        $exercise_item = json_decode($exercise_item, true);
-                    }
-                    # Registra evento de ejercicio
-                    $this->record_game_exercise($game_instance, $user->id, $exercise_item, $game_data);
-                }
-            } else {
-
-                # Si definió test, graba en ejercicio de test
-                foreach ($exercise_list as $exercise_item) {
-
-                    # [FIX] Corrige entrada de eventos de modo string
-                    if (is_string($exercise_item)) {
-                        $exercise_item = json_decode($exercise_item, true);
-                    }
-
-                    # Registra evento de test
-                    $this->record_test_exercise($game_instance, $user->id, $exercise_item, $game_data);
-                }
-            }
-
-
-
-
-            $badge_list = $request->input('badges');
-
-            if (isset($badge_list)) {
-
-                foreach ($badge_list as $badge_item) {
-
-                    # [FIX] Corrige entrada de eventos de modo string
-                    if (is_string($badge_item)) {
-                        $badge_item = json_decode($badge_item, true);
-                    }
-
-                    # Registra evento de medalla
-                    $this->record_badge($game_instance->game->id, $user->id, $badge_list);
-                }
-            }
-
-
-	
-			$user_experiment = UserExperiment::where('game_instance_id', $game_instance->id)
-                ->where('user_id', $user->id)
-                ->first();
-            $json = [
-                'result' => 0
-            ];
-            if (!empty($expected_advance)) {
-                $upped_value = $user_experiment->actual_responses >= $expected_advance->responses_expected;
-            } else {
-                $upped_value = false;
-            }
-            if (isset($game_data['time_used'])) {
-                $json['game'] = [
-                    'time_used' => $instance_time->time_used,
-                    'timeout' => ($instance_time->time_used >= $game_instance->experiment->time_limit)
-                ];
-            } 
-            
-            $json['game']['complete'] = $upped_value;
-
-            return response()->json($json);
-        } else {
-            return response()->json([
-                'result' => -1,
-                'message' => 'Invalid token'
-            ]);
         }
+        
+        // Agrega registro de tiempo
+        if (isset($game_data['time_used'])) {
+            // Recupera instancia de tiempo
+            $instanceTime = $this->timeCounterService->updateTimeCounter($user->id, $game_instance->id, $game_data['time_used']);
+
+            if(!$instanceTime)
+                return $this->saveDataErrorResponse('Error al actualizar el tiempo utilizado');
+
+            $timeout = $instanceTime->time_used >= ($game_instance->experiment->time_limit * 60);
+            
+            $response['game'] = [
+                'time_used' => $instanceTime->time_used,
+                'timeout' =>  $timeout,
+                'complete' => $timeout ?? false
+            ];
+        }
+
+        // Agregar puntaje máximo
+        if (isset($game_data['max_score'])) {
+            if(!$this->scoreService->updateMaxScore($user->id, $game_instance->id, $game_data['max_score']))
+                return $this->saveDataErrorResponse('Error al actualizar la puntuación máxima');
+        }
+
+        if (isset($exercise_list)) {
+            if(!$this->exerService->saveGameExercises($user->id, $game_instance->id, $exercise_list))
+                return $this->saveDataErrorResponse('Error al guardar los ejercicios');
+        }
+
+        return response()->json($response); 
     }
 
-    private function setJsonData($user, $max_score, $time_counter, $game_instance, $time_limit, $total_exercises_count, $parameters_json) {
+    private function defaultParameters(): array {
+        return [
+            'u' => [
+                'name' => 'Demo 2.0.1',
+                'fullname' => 'Demo 2.0.1',
+                'username' => 'Demo 2.0.1',
+                'max_score' => 500,
+                'values' => [
+                    'ataques' => 12,
+                    'redes' => 0,
+                    'derribos' => 5,
+                    'capturas' => 0
+                ],
+                'time_left' => 90000,
+                'time_user' => 0,
+                'time_limit' => 10000
+            ],
+            'p' => []
+        ];
+    }
+
+    private function setJsonData($user, $game_instance, $parameters_json) {
+        // Recupera puntaje máximo
+        $max_score = $this->scoreService->getUserMaxScore($user->id, $game_instance->id)->max_score ?? 0;
+    
+        // Recupera tiempo restante
+        $time_limit = $game_instance->experiment->time_limit * 60;
+        $instance_time = $this->instanceTime->timeLeft($user->id, $game_instance->id)->remaining_time ?? self::DEFAULT_TIME_PER_DAY;
+    
+        $time_counter = $this->timeCounterService->getTimeUsed($user->id, $game_instance->id) ?? 0;
+        # Carga de total de ejercicios
+        $total_exercises_count = $this->exerService->getUserTotalExercises($user->id, $game_instance->id);
+        
         $arr = [
             'u' => [
                 # Parámetros de juego
-                'name' => $user,                    # Nombre de usuario
-                'fullname' => $user,                # Nombre completo del usuario
-                'username' => $user,                # Nombre de usuario
-                'highScore' => 100, #$max_score,          # Puntaje máximo (record) de juego
+                'name' => $user->name,                    # Nombre de usuario
+                'fullname' => $user->name,                # Nombre completo del usuario
+                'username' => $user->name,                # Nombre de usuario
+                'highScore' => $max_score,                # Puntaje máximo (record) de juego
 
                 # Parámetros de gamificación
                 'currency' => 10, #$currencyAmount,  # Cantidad de monedas actual
@@ -458,27 +393,6 @@ class GameInstanceService
         return $arr;
     }
 
-    private function defaultParameters(): array {
-        return [
-            'u' => [
-                'name' => 'Demo 2.0.1',
-                'fullname' => 'Demo 2.0.1',
-                'username' => 'Demo 2.0.1',
-                'max_score' => 500,
-                'values' => [
-                    'ataques' => 12,
-                    'redes' => 0,
-                    'derribos' => 5,
-                    'capturas' => 0
-                ],
-                'time_left' => 90000,
-                'time_user' => 0,
-                'time_limit' => 10000
-            ],
-            'p' => []
-        ];
-    }
-
     private function parametersToJson($parameters) {
         $json = array();
         
@@ -498,5 +412,16 @@ class GameInstanceService
         ];
 
         return call_user_func($types[$type], $value);
+    }
+    
+    public function saveDataErrorResponse($message) {
+        return response()->json([
+            'result' => -1,
+            'message' => $message
+        ]);
+    }
+
+    public function notFoundText() {
+        return ['status' => 404, 'message' => 'No se ha encontrado la instancia de juego'];
     }
 }

@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import { bgGame } from '@/Helpers/assets';
 
 const props = defineProps({
     games: {
@@ -32,10 +33,13 @@ const props = defineProps({
                         <p class="text-sm text-gray-600 dark:text-gray-400" v-if="games.length == 0">No se encontraron juegos.</p>
                         
                         <div class="flex flex-wrap gap-10 w-full">
-                            <div v-for="(game, index) in games" :key="index">
-                                <div class="first-letter:uppercase text-xl font-bold text-gray-600 dark:text-gray-400">{{ game.name }}</div>
-                                
-                                <div class="flex gap-2">
+                            <div v-for="(game, index) in games" :key="index" class="grid grid-cols-3 gap-5 bg-gray-900 p-2 rounded-md min-h-[100px] min-w-[200px] max-sm:w-full">
+                                <div class="col-span-1 bg-cover bg-center rounded-sm" :style="`background-image: url(${bgGame})`">
+                                </div>
+
+                                <div class="col-span-2 w-full flex flex-col justify-between items-end">
+                                    <div class="first-letter:uppercase text-right text-md font-bold text-gray-100">{{ game.name }}</div>
+                                    
                                     <Link :href="route('games.edit', {slug: game.slug})">
                                         <PrimaryButton>Gestionar</PrimaryButton>
                                     </Link>

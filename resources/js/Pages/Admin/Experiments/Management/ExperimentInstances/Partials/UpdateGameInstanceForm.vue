@@ -51,74 +51,76 @@ const sendForm = () => {
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Experimento / Instancia</h2>
         </template>
-            <div class="py-6 col-span-3 row-span-1">
-                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                    <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                        <section>
-                            <header>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Editar informacion de la instancia de juego</h2>
 
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    En este apartado puedes modificar los datos asociados a la instancia de juego.
-                                </p>
-                            </header>
+        <div class="py-6 col-span-3 row-span-1">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                    <section>
+                        <header>
+                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Editar informacion de la instancia de juego</h2>
 
-                            <form @submit.prevent="sendForm()" class="mt-7">
-                                <div>
-                                    <InputLabel for="game" value="Juego"/>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                En este apartado puedes modificar los datos asociados a la instancia de juego.
+                            </p>
+                        </header>
 
-                                    <select id="game" v-model="form.game_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                                        <option :value="!form.game_id ? form.game_id : ''" hidden :selected="!form.game_id">Elige una opción</option>
-                                        <option v-for="(game, index) in games" :key="index" :value="game.id">{{ game.name }}</option>
-                                    </select>
+                        <form @submit.prevent="sendForm()" class="mt-7">
+                            <div>
+                                <InputLabel for="game" value="Juego"/>
 
-                                    <InputError class="mt-2" :message="form.errors.game_id" />
-                                </div>
+                                <select id="game" v-model="form.game_id" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                    <option :value="!form.game_id ? form.game_id : ''" hidden :selected="!form.game_id">Elige una opción</option>
+                                    <option v-for="(game, index) in games" :key="index" :value="game.id">{{ game.name }}</option>
+                                </select>
 
-                                <div class="mt-5">
-                                    <InputLabel for="name" value="Nombre"/>
-                                    
-                                    <TextInput 
-                                        id="name"
-                                        type="text"
-                                        class="mt-1 block w-full"
-                                        v-model="form.name"
-                                        required
-                                        autofocus
-                                    />
+                                <InputError class="mt-2" :message="form.errors.game_id" />
+                            </div>
 
-                                    <InputError class="mt-2" :message="form.errors.name" />
-                                </div>
+                            <div class="mt-5">
+                                <InputLabel for="name" value="Nombre"/>
+                                
+                                <TextInput 
+                                    id="name"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.name"
+                                    required
+                                    autofocus
+                                />
 
-                                <div class="mt-5">
-                                    <InputLabel for="description" value="Descripcion"/>
-                                    
-                                    <TextArea
-                                        id="description"
-                                        class="mt-1 block w-full"
-                                        v-model="form.description"
-                                        rows="4"
-                                    />
+                                <InputError class="mt-2" :message="form.errors.name" />
+                            </div>
 
-                                    <InputError class="mt-2" :message="form.errors.description" />
-                                </div>
+                            <div class="mt-5">
+                                <InputLabel for="description" value="Descripcion"/>
+                                
+                                <TextArea
+                                    id="description"
+                                    class="mt-1 block w-full"
+                                    v-model="form.description"
+                                    rows="4"
+                                />
 
-                                <div class="flex items-center gap-1 mt-10">
+                                <InputError class="mt-2" :message="form.errors.description" />
+                            </div>
 
-                                    <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
+                            <div class="flex items-center gap-1 mt-10">
 
-                                    <SecondaryButton type="button" onclick="history.back()">Cancelar</SecondaryButton>
-                                    
-                                    <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
-                                        <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
-                                    </Transition>
-                                </div>
-                            </form>
-                        </section>
-                    </div>
+                                <PrimaryButton type="submit" :disabled="form.processing">Guardar</PrimaryButton>
+
+                                <SecondaryButton type="button" onclick="history.back()">Cancelar</SecondaryButton>
+                                
+                                <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" class="transition ease-in-out">
+                                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
+                                </Transition>
+                            </div>
+                        </form>
+                    </section>
                 </div>
             </div>
-            <EditParam :experiment_id = "experiment_id" :parameters="parameters" :slug = "game_instance.slug"/>
+
+            <EditParam class="mt-7" :experiment_id = "experiment_id" :parameters="parameters" :slug = "game_instance.slug" />
             <UpdateGamification class="mt-7" :game_instance = "game_instance" :experiment_id = "experiment_id" />
+        </div>
     </AuthenticatedLayout>
 </template>

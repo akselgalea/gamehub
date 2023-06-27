@@ -6,17 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{belongsToMany, BelongsTo, HasMany};
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\JoinClause;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
+use App\Services\EncryptService;
 
 class GameInstance extends Model
 {
     use HasFactory, HasSlug;
 
     protected $table = 'game_instances';
+
     protected $fillable = [
         'name',
         'slug',
@@ -36,11 +35,18 @@ class GameInstance extends Model
         'enable_leaderboard' => 'boolean'
     ];
 
+    protected $appends = ['crypted_slug'];
+
     public function getSlugOptions() : SlugOptions
     {
         return SlugOptions::create()
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
+    }
+
+    public function getCryptedSlugAttribute()
+    {
+        return (new EncryptService())->encrypt($this->slug);  
     }
 
     public function game(): BelongsTo {

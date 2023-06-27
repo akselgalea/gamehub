@@ -18,6 +18,8 @@ return new class extends Migration
             $table->text('exercise')->nullable();
             $table->text('user_response')->nullable();
             $table->text('response')->nullable();
+            $table->integer('score')->nullable();
+            $table->integer('lives')->nullable();
             $table->timestamp('time_start')->nullable();
             $table->timestamp('time_end')->nullable();
             $table->json('extra')->nullable();

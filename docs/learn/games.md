@@ -11,8 +11,7 @@ Actualmente, la plataforma es compatible con juegos HTML5 que no reciben paráme
 ### Requisitos juegos normales HTML5
 
 - Debe ser subido en una carpeta comprimida.
-- La carpeta comprimida debe pesar como máximo 10MB.
-    - Si se quiere subir un juego más pesado se tienen que subir los archivos manualmente e insertar una fila en la tabla games en la base de datos.
+- La carpeta comprimida debe pesar como máximo 20MB. (Configurable [aquí](../../config/media-library.php))
 
 ### Requisitos de juegos a cargar de GameMaker 2
 

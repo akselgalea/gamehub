@@ -49,6 +49,7 @@ class EntryPointController extends Controller
     public function store(EntryPointCreateRequest $request)
     {
         $res = $this->entrypoint->store($request);
+        return redirect()->back()->with('notification', $res);
     }
 
     public function show($id)

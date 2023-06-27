@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo};
 
-class GameInstanceTimeCounter extends Model
+class UserExperience extends Model
 {
     use HasFactory;
 
-    protected $table = 'game_instance_time_counter';
+    protected $table = 'user_experiences';
 
     protected $fillable = [
-        'date',
-        'time_used',
+        'amount',
         'user_id',
         'game_instance_id'
     ];
@@ -25,13 +24,5 @@ class GameInstanceTimeCounter extends Model
 
     public function gameInstance(): BelongsTo {
         return $this->belongsTo(GameInstance::class);
-    }
-
-    public function getUserInstanceTimeCounter($user, $instance) {
-        return GameInstanceTimeCounter::where('game_instance_id', $instance)
-            ->where('user_id', $user)
-            ->where('date', \Carbon\Carbon::now()->toDateString())
-            ->orderBy('date', 'DESC')
-            ->first();
     }
 }

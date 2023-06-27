@@ -23,10 +23,12 @@ class GameInstanceController extends Controller
     public function show($id)
     {
         $experiment = $this->exp->get($id);
+        
         if(!$experiment)
             return redirect()->back()->with('notication', $this->exp->notFoundText());
         
         $instances = $experiment->gameInstances()->with('game')->get();
+
         return Inertia::render(
             'Admin/Experiments/Management/ExperimentInstances/Edit',
             ['games_instances' => $instances, 'experiment_id' => $id]
@@ -111,11 +113,14 @@ class GameInstanceController extends Controller
         $res = $this->gis->updateGamification($request, $slug);
         return redirect()->back()->with('notification', $res); 
     }
-
     
     public function initialParams(Request $request)
     {
         return $this->gis->initGameData($request);
+    }
+
+    public function saveData(Request $request) {
+        return $this->gis->saveData($request);
     }
 
     public function selectInstance($experiment) {

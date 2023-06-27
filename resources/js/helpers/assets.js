@@ -3,13 +3,13 @@ export const logo = '/assets/logo.svg';
 export const icon = '/assets/icon.png';
 
 // Gamification
-export const badge = '/assets/badge_default.png';
 export const bgClouds = '/assets/bg-clouds.jpg';
-export const bgGame = '/assets/bg-game-default.jpg';
-export const bgProfile = '/assets/bg-profile.gif';
-export const coin = '/assets/coin.gif';
-export const experience = '/assets/experience.gif';
-export const cofre = '/assets/gold-cofre.png';
+export const badge = '/assets/gamification/badge_default.png';
+export const bgGame = '/assets/gamification/bg-game-default.jpg';
+export const bgProfile = '/assets/gamification/bg-profile.gif';
+export const coin = '/assets/gamification/coin.gif';
+export const experience = '/assets/gamification/experience.gif';
+export const cofre = '/assets/gamification/gold-cofre.png';
 
 // Faces
 export const smile1 = '/assets/likert/smile_1.png';
