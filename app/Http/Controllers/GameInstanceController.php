@@ -135,4 +135,8 @@ class GameInstanceController extends Controller
 
         return Inertia::render('Games/PlayInstance', $res);
     }
+
+    public function exportGameInstance($id) {
+        return $this->gis->exportGameInstance($id);
+    }
 }
