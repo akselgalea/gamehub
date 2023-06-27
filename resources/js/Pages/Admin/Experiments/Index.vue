@@ -50,6 +50,7 @@ const showAll = ref(false);
                     <div class="mt-8">
                     <Checkbox
                         v-model="showAll"
+                        :checked="false"
                     /> <span class="mt-1 font-semibold text-sm text-gray-600 dark:text-white">Ver todos los experimentos</span>
                     </div>
                     
