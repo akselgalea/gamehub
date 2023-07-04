@@ -18,7 +18,7 @@ class ParameterController extends Controller
     }
 
     public function update($slug, $id, ParameterUpdateRequest $request) {
-        $res = $this->param->update($request);
+        $res = $this->param->update($id, $request);
         return redirect()->route('games.edit', $slug)->with('notification', $res);
     }
 
